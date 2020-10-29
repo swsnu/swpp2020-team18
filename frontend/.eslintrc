@@ -9,6 +9,7 @@
   },
   "extends": [
     "eslint:recommended",
+    "plugin:react/recommended",
     "eslint-config-prettier"
   ],
   "rules": {
@@ -16,5 +17,10 @@
   },
   "env": {
     "browser": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }
