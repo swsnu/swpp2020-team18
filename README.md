@@ -69,4 +69,14 @@ python manage.py runserver
 
 ### Frontend
 
-To be updated.
+1. Install dependencies
+
+``` bash
+yarn
+```
+
+2. Run dev server
+
+``` bash
+yarn start
+```
