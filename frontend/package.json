@@ -15,7 +15,12 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint --ignore-path .gitignore --ext .js,.jsx .",
+    "prettier": "prettier --ignore-path .gitignore --write \"**/*.+(js|jsx|json)\"",
+    "force-format": "npm run prettier -- --write",
+    "check-format": "npm run prettier -- --list-different",
+    "integrate": "npm-run-all --parallel check-types check-format lint build"
   },
   "eslintConfig": {
     "extends": [
@@ -34,5 +39,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint": "^7.12.1",
+    "eslint-config-prettier": "^6.15.0",
+    "prettier": "^2.1.2"
   }
 }
