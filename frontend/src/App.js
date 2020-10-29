@@ -1,9 +1,25 @@
 import React from 'react'
-import { Route, Redirect, Switch } from 'react-router-dom';
-import { ConnectedRouter } from 'connected-react-router';
+import { Route, Redirect, Switch } from 'react-router-dom'
+import { ConnectedRouter } from 'connected-react-router'
+import Landing from './containers/Landing'
+import PropTypes from 'prop-types'
 
-const App = (props) => {
-  return <div>team 18</div>
+function App(props) {
+  return (
+    <ConnectedRouter history={props.history}>
+      <div className='App'>
+        <Switch>
+          <Route path='/terminator' exact render={() => <Landing />} />
+          <Redirect exact from='/' to='terminator' />
+          <Route render={() => <h1>Not Found</h1>} />
+        </Switch>
+      </div>
+    </ConnectedRouter>
+  )
+}
+
+App.propTypes = {
+  history: PropTypes.any,
 }
 
 export default App
