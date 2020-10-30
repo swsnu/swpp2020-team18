@@ -1,10 +1,11 @@
 from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseBadRequest, JsonResponse
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth import authenticate, login, logout
 import json
 from json import JSONDecodeError
 
+User = get_user_model()
 
 @ensure_csrf_cookie
 def token(request):
@@ -55,7 +56,7 @@ def signup(request):
         try:
             User.objects.create_user(username, email, password=password)
         except (Exception) as e:
-            return HttpResponseBadRequest()
+            return HttpResponseBadRequest()         # TODO: Specify Error Code when there is a duplicate account
         return HttpResponse(status=201)
     else:
         return HttpResponseNotAllowed(['POST'])
@@ -68,7 +69,7 @@ def signin(request):
     In **POST**: Log in to the account
     
     POST parameters:
-        POST['username']: Unique username
+        POST['email']: Unique email
         POST['password']: Password
 
     :param request: a HTTP request
@@ -81,11 +82,11 @@ def signin(request):
     if request.method == 'POST':
         try:
             req_data = json.loads(request.body.decode())
-            username = req_data['username']
+            email = req_data['email']
             password = req_data['password']
         except (KeyError, JSONDecodeError) as e:
             return HttpResponseBadRequest()
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
             return HttpResponse(status=204)
