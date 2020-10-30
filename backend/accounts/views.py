@@ -1,9 +1,13 @@
-from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseBadRequest, JsonResponse
+"""
+Views of accounts
+"""
+import json
+from json import JSONDecodeError
+from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseBadRequest
 from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth import authenticate, login, logout
-import json
-from json import JSONDecodeError
+from django.db import IntegrityError
 
 User = get_user_model()
 
@@ -11,7 +15,7 @@ User = get_user_model()
 def token(request):
     """
     Return CSRF token.
-    
+
     In **GET**: Returns a CSRF token
 
     :param request: a HTTP request
@@ -30,9 +34,9 @@ def token(request):
 def signup(request):
     """
     Create account.
-    
+
     In **POST**: Create a new account
-    
+
     POST parameters:
         POST['username']: Unique username
         POST['email']: Email address
@@ -41,7 +45,7 @@ def signup(request):
     :param request: a HTTP request
     :type request: HttpRequest
 
-    :returns: a HTTP response 
+    :returns: a HTTP response
     :rtype: HttpResponse
 
     """
@@ -51,12 +55,12 @@ def signup(request):
             username = req_data['username']
             email = req_data['email']
             password = req_data['password']
-        except (KeyError, JSONDecodeError) as e:
+        except (KeyError, JSONDecodeError):
             return HttpResponseBadRequest()
         try:
             User.objects.create_user(username, email, password=password)
-        except (Exception) as e:
-            return HttpResponseBadRequest()         # TODO: Specify Error Code when there is a duplicate account
+        except IntegrityError:
+            return HttpResponse(status=409)
         return HttpResponse(status=201)
     else:
         return HttpResponseNotAllowed(['POST'])
@@ -65,9 +69,9 @@ def signup(request):
 def signin(request):
     """
     Log in to the provided account.
-    
+
     In **POST**: Log in to the account
-    
+
     POST parameters:
         POST['email']: Unique email
         POST['password']: Password
@@ -75,7 +79,7 @@ def signin(request):
     :param request: a HTTP request
     :type request: HttpRequest
 
-    :returns: a HTTP response 
+    :returns: a HTTP response
     :rtype: HttpResponse
 
     """
@@ -84,7 +88,7 @@ def signin(request):
             req_data = json.loads(request.body.decode())
             email = req_data['email']
             password = req_data['password']
-        except (KeyError, JSONDecodeError) as e:
+        except (KeyError, JSONDecodeError):
             return HttpResponseBadRequest()
         user = authenticate(request, email=email, password=password)
         if user is not None:
@@ -99,13 +103,13 @@ def signin(request):
 def signout(request):
     """
     Log out from the current account.
-    
+
     In **GET**: Log out from the account
 
     :param request: a HTTP request
     :type request: HttpRequest
 
-    :returns: a HTTP response 
+    :returns: a HTTP response
     :rtype: HttpResponse
 
     """

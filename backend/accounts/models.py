@@ -1,3 +1,6 @@
+"""
+Models of accounts
+"""
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
@@ -59,7 +62,8 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     """
     A class to represent user account.
-    It extends :class:`django.contrib.auth.models.AbstractBaseUser` and :class:`django.contrib.auth.models.PermissionsMixin` classes.
+    It extends :class:`django.contrib.auth.models.AbstractBaseUser`
+    and :class:`django.contrib.auth.models.PermissionsMixin` classes.
 
     :param email: User's email address (identifier)
     :type email: class:`django.db.models.EmailField`
