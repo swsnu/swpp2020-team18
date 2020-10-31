@@ -118,7 +118,7 @@ class AccountsTestCase(TestCase):
             }),
             content_type='application/json'
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 409)
 
         response = client.post(
             '/api/accounts/signup',
