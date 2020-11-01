@@ -3,7 +3,7 @@ Views of accounts
 """
 import json
 from json import JSONDecodeError
-from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseBadRequest, JsonResponse
 from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth import authenticate, login, logout
@@ -58,10 +58,15 @@ def signup(request):
         except (KeyError, JSONDecodeError):
             return HttpResponseBadRequest()
         try:
-            User.objects.create_user(username, email, password=password)
+            user = User.objects.create_user(email, username, password=password)
         except IntegrityError:
             return HttpResponse(status=409)
-        return HttpResponse(status=201)
+        return JsonResponse({
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,    
+        }
+        , safe=False, status=201)
     else:
         return HttpResponseNotAllowed(['POST'])
 
@@ -93,7 +98,12 @@ def signin(request):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            return HttpResponse(status=204)
+            return JsonResponse({
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,    
+            }
+            , safe=False, status=200)
         else:
             return HttpResponse(status=401)
     else:

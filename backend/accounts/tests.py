@@ -163,7 +163,7 @@ class AccountsTestCase(TestCase):
             json.dumps({'email': 'testuser1@test.com', 'password': 'TEST_PASSWORD_1'}),
             content_type='application/json'
         )
-        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.status_code, 200)
 
 
     def test_signout(self):

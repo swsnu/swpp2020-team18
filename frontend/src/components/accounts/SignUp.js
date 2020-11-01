@@ -11,6 +11,10 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import { useState } from 'react'
+import { Redirect } from 'react-router-dom'
+import * as accounts from '../../ducks/accounts'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 function Copyright() {
   return (
@@ -45,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function SignUp() {
+function SignUp(props) {
   const classes = useStyles()
 
   const [email, setEmail] = useState('')
@@ -54,9 +58,11 @@ export default function SignUp() {
 
   const submitHandler = () => {
     console.log('Submit')
-    console.log(email)
-    console.log(username)
-    console.log(password)
+    props.onSignUp({ email: email, username: username, password: password })
+  }
+
+  if (props.user) {
+    return <Redirect to='/' />
   }
 
   return (
@@ -134,3 +140,18 @@ export default function SignUp() {
     </Container>
   )
 }
+
+const mapStateToProps = (state) => ({
+  user: state.accounts.user,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  onSignUp: (accountInfo) => dispatch(accounts.signUp(accountInfo)),
+})
+
+SignUp.propTypes = {
+  user: PropTypes.object,
+  onSignUp: PropTypes.func,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp)
