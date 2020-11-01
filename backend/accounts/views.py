@@ -64,7 +64,7 @@ def signup(request):
         return JsonResponse({
             'id': user.id,
             'username': user.username,
-            'email': user.email,    
+            'email': user.email,
         }
         , safe=False, status=201)
     else:
@@ -101,7 +101,7 @@ def signin(request):
             return JsonResponse({
                 'id': user.id,
                 'username': user.username,
-                'email': user.email,    
+                'email': user.email,
             }
             , safe=False, status=200)
         else:
