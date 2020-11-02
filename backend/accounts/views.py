@@ -61,6 +61,7 @@ def signup(request):
             user = User.objects.create_user(email, username, password=password)
         except IntegrityError:
             return HttpResponse(status=409)
+        login(request, user)
         return JsonResponse({
             'id': user.id,
             'username': user.username,
