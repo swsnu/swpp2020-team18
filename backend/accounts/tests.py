@@ -74,7 +74,6 @@ class AccountsTestCase(TestCase):
 
         response = client.get('/api/token')
         csrftoken = response.cookies['csrftoken'].value  # Get csrf token from cookie
-
         response = client.post(
             '/api/accounts/signup',
             json.dumps({'username': 'chris', 'email': 'chirs@foo.net', 'password': 'chris'}),
@@ -82,6 +81,8 @@ class AccountsTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 201)  # Pass csrf protection
 
+        response = client.get('/api/token')
+        csrftoken = response.cookies['csrftoken'].value  # Get csrf token from cookie
         response = client.post(
             '/api/token',
             json.dumps({'username': 'chris', 'password': 'chris'}),
