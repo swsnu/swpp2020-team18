@@ -9,8 +9,8 @@
 
 ### Features
 #### Completed
-#### To be implemented
 - Account management
+#### To be implemented
 - Provide personalized vocabulary quiz by ML
 - Create & Update user’s custom word list
 - Examine and standardize each user’s knowledge by ML
