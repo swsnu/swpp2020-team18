@@ -74,6 +74,13 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+5. Make documentation [optional]
+
+``` bash
+cd backend/docs
+make html
+```
+
 
 ### Frontend
 
