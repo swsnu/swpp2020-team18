@@ -2,6 +2,14 @@
 
 # Term'inator
 
+[![Build
+Status](https://travis-ci.org/swsnu/swpp2020-team18.svg?branch=main)](https://travis-ci.org/swsnu/swpp2020-team18)
+[![Quality Gate
+Status](https://sonarcloud.io/api/project_badges/measure?project=swsnu_swpp2020-team18&metric=alert_status)](https://sonarcloud.io/dashboard?id=swsnu_swpp2020-team18)
+[![Coverage
+Status](https://coveralls.io/repos/github/swsnu/swpp2020-team18/badge.svg?branch=main)](https://coveralls.io/github/swsnu/swpp2020-team18?branch=main)
+
+
 ## Project Overview
 
 ### Our mission
@@ -9,8 +17,8 @@
 
 ### Features
 #### Completed
-#### To be implemented
 - Account management
+#### To be implemented
 - Provide personalized vocabulary quiz by ML
 - Create & Update user’s custom word list
 - Examine and standardize each user’s knowledge by ML
@@ -64,6 +72,13 @@ python manage.py migrate
 
 ``` bash
 python manage.py runserver
+```
+
+5. Make documentation [optional]
+
+``` bash
+cd backend/docs
+make html
 ```
 
 
