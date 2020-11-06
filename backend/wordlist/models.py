@@ -2,9 +2,13 @@
 # model을 어떤 방식으로 사용할지 정한 후에 TODO 처리해야 한다.
 
 from django.db import models
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+# from accounts.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate
+User = get_user_model()
 
 # Create your models here.
 class Phrase(models.Model):

@@ -1,8 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse
 from wordlist.models import Phrase, Wordlist, AddPhrase
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+# from accounts.models import User
 import json
+from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate
+User = get_user_model()
 
 # Create your views here.
 def wordlist(request):
