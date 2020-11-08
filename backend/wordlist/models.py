@@ -14,9 +14,12 @@ User = get_user_model()
 class Phrase(models.Model):
     phrase_content = models.TextField(blank=True, default="")
     phrase_keyword = models.CharField(max_length=100)
+    confidence = models.IntegerField(null=True, blank=True)
+    korean_meaning = models.CharField(max_length=100)
+    difficulty = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return self.phrase_keyword
+        return f'핵심단어: {str(self.phrase_keyword)}, 뜻: {str(self.korean_meaning)}'
 
 class Wordlist(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
@@ -57,3 +60,8 @@ class AddPhrase(models.Model):
     wordlist = models.ForeignKey(Wordlist, on_delete=models.CASCADE)
     phrase = models.ForeignKey(Phrase, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
+# TODO
+# Word model이 필요할 상황이 생기면 아래 수정해서 사용
+# class Word(models.Model):
+#     phrase = models.OneToOneField(Phrase, on_delete=models.CASCADE, null=False)

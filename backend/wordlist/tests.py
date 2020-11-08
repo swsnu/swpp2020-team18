@@ -10,16 +10,16 @@ User = get_user_model()
 class WordlistTestCase(TestCase):
     def setUp(self):
         user = User.objects.create_user('testuser1@test.com', 'TEST_USER_1', password='TEST_PASSWORD_1')
-        phrase = Phrase(phrase_content="example sentence", phrase_keyword="example")
+        phrase = Phrase(phrase_content="example sentence", phrase_keyword="example", korean_meaning="예시", difficulty=1)
         phrase.save()
         phrase_to_add = Phrase(phrase_content="sentence to add", phrase_keyword="add")
         phrase_to_add.save()
         user.wordlist.added_phrase.add(phrase)
-    
+
     # model test
     def test_phrase_print(self):
         phrase = Phrase.objects.first()
-        self.assertEqual(str(phrase), phrase.phrase_keyword)
+        self.assertEqual(str(phrase), f'핵심단어: {str(phrase.phrase_keyword)}, 뜻: {str(phrase.korean_meaning)}')
 
     def test_wordlist_print(self):
         wordlist = Wordlist.objects.first()

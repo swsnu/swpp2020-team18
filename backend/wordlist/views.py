@@ -13,19 +13,24 @@ def wordlist(request):
 
     """
     Get or adjust the Wordlist model.
-    In **GET**: Returns all the words and phrases in the user's wordlist.
+    In **GET**: Returns all the words and phrases in the user's wordlist
+
     :param request: a HTTP request
     :type request: HttpRequest
+
     :returns: a JSON response with all words and phrases
     :rtype: JsonResponse
 
-    In **PATCH**: Add or remove a phrase(word) to user's wordlist.
+    In **PATCH**: Add or remove a phrase(word) to user's wordlist
+
     PATCH parameters:
         PATCH['word']: Word
         PATCH['phrase']: Phrase
         PATCH['action']: Add or remove
+
     :param request: a HTTP request
     :type request: HttpRequest
+
     :returns: a HTTP response
     :rtype: HttpResponse
     """
