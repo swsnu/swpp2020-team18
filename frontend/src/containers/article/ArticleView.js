@@ -16,6 +16,22 @@ import StepButton from '@material-ui/core/StepButton'
 import Divider from '@material-ui/core/Divider'
 import { makeStyles } from '@material-ui/core/styles'
 
+const articleObject = {
+  title: 'The Shadow Side of Greatness',
+  author: 'James Clear',
+  content:
+    'Pablo Picasso. He is one of the most famous artists of the 20th century and a household name even among people who, like myself, consider themselves to be complete novices in the art world. \
+            I recently went to a Picasso exhibition. What impressed me the most was not any individual piece of art, but rather his remarkably prolific output. Researchers have catalogued 26,075 pieces of art created by Picasso and some people believe the total number is closer to 50,000. \
+            When I discovered that Picasso lived to be 91 years old, I decided to do the math. Picasso lived for a total of 33,403 days. With 26,075 published works, that means Picasso averaged 1 new piece of artwork every day of his life from age 20 until his death at age 91. He created something new, every day, for 71 years. \
+            This unfathomable output not only played a large role in Picasso’s international fame, but also enabled him to amass a huge net worth of approximately $500 million by the time of his death in 1973. His work became so famous and so numerous that, according to the Art Loss Register, Picasso is the most stolen artist in history with over 550 works currently missing. \
+            What made Picasso great was not just how much art he produced, but also how he produced it. He co-founded the movement of Cubism and created the style of collage. He was the artist his contemporaries copied. Any discussion of the most well-known artists in history would have to include his name.',
+  phrases: [
+    { word: 'famous', choices: ['A1', 'A2', 'A3', 'A4'], index: 0 },
+    { word: 'unfathomable', choices: ['A1', 'A2', 'A3', 'A4'], index: 0 },
+    { word: 'include', choices: ['A1', 'A2', 'A3', 'A4'], index: 0 },
+  ],
+}
+
 function Copyright() {
   return (
     <Typography variant='body2' color='textSecondary' align='center'>
@@ -49,22 +65,131 @@ const useStyles = makeStyles((theme) => ({
   },
   highlighted: {
     color: 'red',
-    display: 'inline-block',
+    display: 'inline',
     backgroundColor: '#FFFF00',
     cursor: 'pointer',
+  },
+  greylighted: {
+    display: 'inline',
+    backgroundColor: 'lightgrey',
+    cursor: 'pointer',
+  },
+  normallighted: {
+    display: 'inline',
   },
 }))
 
 function ArticleView(props) {
   const classes = useStyles()
-  const steps = ['a', 'b', 'c', 'a', 'b', 'c', 'a', 'b', 'c', 'a']
+  const steps = articleObject.phrases.map((phrase) => phrase.word)
 
   const [activeStep, setActiveStep] = React.useState(0)
-  const [completed, setCompleted] = React.useState({})
+  const [completed] = React.useState({})
   const handleStep = (step) => () => {
     setActiveStep(step)
-    setCompleted({ ...completed, [step]: true })
+    // setCompleted({ ...completed, [step]: true })
   }
+
+  const nthIndex = (content, word, index) => {
+    var i = -1
+
+    while (index-- && i++ < content.length) {
+      i = content.indexOf(word, i)
+      if (i < 0) break
+    }
+
+    return i
+  }
+
+  const nextAlphabetIndex = (content, index) => {
+    while (
+      index != content.length &&
+      !(
+        (content[index] >= 'a' && content[index] <= 'z') ||
+        (content[index] >= 'A' && content[index] <= 'Z')
+      )
+    )
+      index++
+    return index
+  }
+
+  const periodsIndex = (content, index) => {
+    let startIdx = content.lastIndexOf('.', index)
+    let endIdx = content.indexOf('.', index)
+    startIdx = startIdx < 0 ? 0 : startIdx
+    endIdx = endIdx < 0 ? content.length : endIdx
+
+    return [startIdx, endIdx]
+  }
+
+  const processContent = (articleObject) => {
+    var outputPairList = []
+    var indexPairList = []
+    const content = articleObject.content
+    const loweredContent = content.toLowerCase()
+    articleObject.phrases.forEach((phrase) => {
+      const word = phrase.word
+      const index = phrase.index
+      const loweredWord = word.toLowerCase()
+
+      const wordIdx = nthIndex(loweredContent, loweredWord, index + 1)
+
+      const idxPair = periodsIndex(loweredContent, wordIdx)
+      const modifiedPair = [
+        nextAlphabetIndex(loweredContent, idxPair[0]),
+        idxPair[1] + 1,
+      ]
+
+      indexPairList.push(modifiedPair)
+    })
+    indexPairList = indexPairList.sort((a, b) => a[0] - b[0])
+
+    var start = 0
+    var end = 0
+    indexPairList.forEach((pair) => {
+      end = pair[0]
+      outputPairList.push([start, end, false])
+      start = pair[0]
+      end = pair[1]
+      outputPairList.push([start, end, true])
+      start = pair[1]
+    })
+    end = loweredContent.length
+    outputPairList.push([start, end, false])
+
+    var output
+    var emphasizedPhraseCount = -1
+    output = outputPairList.map((pair, idx) => {
+      if (pair[2] == true) {
+        emphasizedPhraseCount++
+        return emphasizedPhraseCount === activeStep ? (
+          <Typography key={idx} className={classes.highlighted}>
+            {content.substring(pair[0], pair[1])}
+          </Typography>
+        ) : (
+          <Typography
+            key={idx}
+            onClick={handleStep(emphasizedPhraseCount)}
+            className={classes.greylighted}
+          >
+            {content.substring(pair[0], pair[1])}
+          </Typography>
+        )
+      } else
+        return (
+          <Typography
+            key={idx}
+            onClick={handleStep(emphasizedPhraseCount)}
+            className={classes.normallighted}
+          >
+            {content.substring(pair[0], pair[1])}
+          </Typography>
+        )
+    })
+    return output
+  }
+
+  const processedContent = processContent(articleObject)
   // const handleComplete = () => {
   //   const newCompleted = completed;
   //   newCompleted[activeStep] = true;
@@ -96,54 +221,7 @@ function ArticleView(props) {
             </Stepper>
           </Grid>
           <Grid item xs={8}>
-            <div>
-              {' '}
-              Lorem ipsum dolor{' '}
-              <Typography display='inline' className={classes.highlighted}>
-                sit amet
-              </Typography>
-              , consectetur adipiscing elit. Sed euismod risus a feugiat
-              sagittis. Phasellus libero enim, commodo non tellus non, tempus
-              porttitor velit. Pellentesque mauris dui, imperdiet in dui non,
-              dictum maximus diam. Cras non lorem ac sem dictum aliquam. Nam
-              iaculis dignissim nisi nec convallis. Aenean eu sagittis nisi.
-              Curabitur non nulla in justo accumsan maximus. Aliquam scelerisque
-              a nibh sit amet feugiat. Curabitur non massa quis ligula dignissim
-              laoreet vel quis ante. Donec a libero sed eros fringilla imperdiet
-              eu et nulla. Donec vitae justo porttitor, egestas quam sed, porta
-              lacus. Cras elementum venenatis risus id pretium. Nunc vehicula
-              efficitur dictum. Mauris vestibulum bibendum turpis, vitae
-              consectetur magna feugiat quis. Nunc eu blandit neque. Nulla mattis
-              sit amet ex ac malesuada. Cras ac metus sapien. Sed augue mauris,
-              eleifend et aliquet quis, pellentesque id arcu. Suspendisse nisi
-              augue, ultricies ac rhoncus a, iaculis at lacus. Proin quis
-              hendrerit mi, eu venenatis lacus. Phasellus ut euismod urna. Sed
-              tincidunt accumsan turpis a aliquet. Praesent est felis, mattis ac
-              scelerisque ut, tristique in eros. Nullam commodo nisl purus,
-              consequat viverra ligula congue sit amet. Fusce odio sem, convallis
-              id sem sed, sollicitudin lobortis nunc. Quisque velit arcu,
-              tincidunt at auctor at, porttitor quis ipsum. Morbi luctus lectus
-              et tincidunt lobortis. Aliquam egestas porttitor enim a mollis.
-              Nunc ornare et ipsum eget porta. Curabitur et hendrerit diam.
-              Aenean quis rhoncus lacus. Ut sit amet scelerisque risus. Proin nec
-              porta enim. Nulla odio odio, mollis vitae purus sit amet, fermentum
-              aliquet diam. Nullam eu tristique tellus, sed finibus enim.
-              Pellentesque aliquet consequat ex ut scelerisque. Vestibulum
-              vestibulum justo non tellus tempor pellentesque. Ut eget tellus
-              vehicula, facilisis turpis ac, aliquam urna. Curabitur id
-              vestibulum metus. Aenean pulvinar augue felis, nec viverra purus
-              imperdiet at. Donec viverra ut risus non accumsan. Curabitur auctor
-              sodales augue. Proin consectetur sem sit amet augue imperdiet
-              eleifend. Nulla dolor erat, rhoncus vel fermentum in, laoreet et
-              nisi. Nulla semper nunc risus, et sollicitudin dui rhoncus
-              tincidunt. Quisque sed varius orci. Pellentesque eget facilisis
-              augue. Curabitur ac ex sollicitudin, faucibus arcu vel, tempor
-              odio. Vivamus maximus, mi at eleifend vulputate, lorem urna
-              malesuada lacus, vitae porttitor orci diam eget nunc. Cras
-              tincidunt, ante vel condimentum suscipit, velit elit finibus enim,
-              eget lobortis enim enim eget sapien. Nunc tempus consectetur quam
-              sed pharetra.{' '}
-            </div>
+            <div>{processedContent}</div>
           </Grid>
           <Divider flexItem orientation='vertical' />
           <Grid item xs={3}>
