@@ -1,9 +1,4 @@
-# TODO
-# model을 어떤 방식으로 사용할지 정한 후에 TODO 처리해야 한다.
-
 from django.db import models
-# from django.contrib.auth.models import User
-# from accounts.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
@@ -11,24 +6,50 @@ from django.contrib.auth import authenticate
 User = get_user_model()
 
 # Create your models here.
-class Phrase(models.Model):
-    phrase_content = models.TextField(blank=True, default="")
-    phrase_keyword = models.CharField(max_length=100)
-    confidence = models.IntegerField(null=True, blank=True)
+class Word(models.Model):
+    """
+    A class to manage words.
+    :param content: word itself (identifier)
+    :type content: class:`django.db.models.CharField`
+    :param korean_meaning: word's korean meaning
+    :type korean_meaning: class:`django.db.models.CharField`
+    :param difficulty: word's difficulty
+    :type difficulty: class:`django.db.models.IntegerField`
+    """
+    content = models.CharField(max_length=100)
     korean_meaning = models.CharField(max_length=100)
     difficulty = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return f'핵심단어: {str(self.phrase_keyword)}, 뜻: {str(self.korean_meaning)}'
+        return self.content
+
+class Phrase(models.Model):
+    """
+    A class to manage phrases.
+    :param content: phrase itself (identifier)
+    :type content: class:`django.db.models.TextField`
+    :param word: keyword in phrase
+    :type word: class:`django.db.models.ForeignKey`
+    :param confidence: user's confidence about phrase
+    :type confidence: class:`django.db.models.IntegerField`
+    """
+    content = models.TextField(blank=False, unique=True)
+    word = models.ForeignKey(Word, on_delete=models.CASCADE)
+    confidence = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f'문장: {str(self.content)}, 단어: {str(self.word.content)}'
 
 class Wordlist(models.Model):
+    """
+    A class to manage wordlist.
+    :param user: user who own's the wordlist (identifier)
+    :type user: class:`django.db.models.OneToOneField`
+    :param added_phrase: added phrases in wordlist
+    :type added_phrase: class:`django.db.models.ManyToManyField`
+    """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # TODO
-    # null=True에 대해 다시 생각해볼 필요가 있다.
-
-    # TODO
-    # added_word = models.ManyToManyField(Word, through='AddWord', blank=True)
-    added_phrase = models.ManyToManyField(Phrase, through='AddPhrase', blank=True)
+    added_phrase = models.ManyToManyField(Phrase, through='WordlistPhrase', blank=True)
 
     def __str__(self):
         return f'단어장 소유: {str(self.user.username)}'
@@ -43,25 +64,16 @@ def create_user_wordlist(sender, instance, created, **kwargs):
 def save_user_wordlist(sender, instance, **kwargs):  
     instance.wordlist.save()
 
-# TODO
-# class Word(models.Model):
-#     word_name = models.CharField(max_length=100)
-
-#     def __str__(self):
-#         return self.word_name
-
-# TODO
-# class AddWord(models.Model):
-#     wordlist = models.ForeignKey(Wordlist, on_delete=models.CASCADE)
-#     word = models.ForeignKey(Word, on_delete=models.CASCADE)
-#     created_at = models.DateTimeField(auto_now_add=True)
-
-class AddPhrase(models.Model):
+class WordlistPhrase(models.Model):
+    """
+    A class to manage relationship between wordlist and phrase.
+    :param wordlist: wordlist in the relation
+    :type wordlist: class:`django.db.models.ForeignKey`
+    :param phrase: phrase in the relation
+    :type phrase: class:`django.db.models.ForeignKey`
+    :param created_at: time the phrase is added to wordlist
+    :type created_at: class:`django.db.models.DateTimeField`
+    """
     wordlist = models.ForeignKey(Wordlist, on_delete=models.CASCADE)
     phrase = models.ForeignKey(Phrase, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-
-# TODO
-# Word model이 필요할 상황이 생기면 아래 수정해서 사용
-# class Word(models.Model):
-#     phrase = models.OneToOneField(Phrase, on_delete=models.CASCADE, null=False)
