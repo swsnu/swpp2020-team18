@@ -7,8 +7,15 @@ User = get_user_model()
 from wordlist.models import Phrase, Wordlist, AddPhrase
 
 class Question(models.Model):
-    nunmber = models.IntegerField(default=0)
-    question = models.ForeignKey(Phrase, on_delete=models.CASCADE)
+    taker = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+    question = models.ForeignKey(
+        Phrase,
+        on_delete=models.CASCADE
+    )
+    number = models.IntegerField(default=0)
     answer1 = models.CharField(max_length=100)
     answer2 = models.CharField(max_length=100)
     answer3 = models.CharField(max_length=100)
@@ -18,13 +25,16 @@ class Question(models.Model):
 
 # save test result
 class TestResult(models.Model):
-    TEST_TYPE = ('article', 'wordlist')
+    TEST_TYPE = [
+        ('AR','article'),
+        ('WL','wordlist'),
+    ]
 
     test_date = models.DateTimeField()
     test_type = models.CharField(max_length=10, choices=TEST_TYPE)
     question_count = models.IntegerField(default=20)
     solution_count = models.IntegerField(null=True)
-    score = models.DecimalField()
+    score = models.DecimalField(max_digits=4, decimal_places=2)
 
     def __str__(self):
         return "test score: %d" % score
