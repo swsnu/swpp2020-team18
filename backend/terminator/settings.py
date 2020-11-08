@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
+    'article.apps.ArticleConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -119,6 +120,23 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+
+# Celery Configuration Options
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_BEAT_SCHEDULE = {
+    'send-summary-every-hour': {
+        'task': 'summary',
+        'schedule': 10,
+        'args': ('We don’t need any',),
+    },
+    # 'send-notification-on-friday-afternoon': {
+    #     'task': 'my_app.tasks.send_notification',
+    #     'schedule': crontab(hour=16, day_of_week=5),
+    # }, 
+}
 
 
 # Static files (CSS, JavaScript, Images)

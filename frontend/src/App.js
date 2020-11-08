@@ -6,6 +6,7 @@ import PropTypes from 'prop-types'
 import SignIn from './components/accounts/SignIn'
 import SignUp from './components/accounts/SignUp'
 import AccountBox from './containers/accounts/AccountBox'
+import ArticleView from './containers/article/ArticleView'
 
 function App(props) {
   return (
@@ -24,6 +25,7 @@ function App(props) {
           />
           <Route path='/signin' exact render={() => <SignIn />} />
           <Route path='/signup' exact render={() => <SignUp />} />
+          <Route path='/article/:id' exact component={ArticleView} />
           <Redirect exact from='/' to='terminator' />
           <Route render={() => <h1>Not Found</h1>} />
         </Switch>
