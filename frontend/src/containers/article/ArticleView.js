@@ -4,6 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import Link from '@material-ui/core/Link'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
+import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
 import { Redirect } from 'react-router-dom'
@@ -70,6 +71,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+  },
+  stepper: {
+    backgroundColor: '#fafafa',
   },
   avatar: {
     margin: theme.spacing(1),
@@ -265,10 +269,20 @@ function ArticleView(props) {
   return (
     <Container component='main' maxWidth='md'>
       <CssBaseline />
+      <Grid container justify='center' alignItems='center'>
+        <Typography variant='h3' component='h2' gutterBottom>
+          Practice with Article!
+        </Typography>
+      </Grid>
       <div>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Stepper alternativeLabel nonLinear activeStep={activeStep}>
+            <Stepper
+              alternativeLabel
+              nonLinear
+              className={classes.stepper}
+              activeStep={activeStep}
+            >
               {steps.map((label, index) => (
                 <Step key={label}>
                   <StepButton
@@ -281,16 +295,33 @@ function ArticleView(props) {
               ))}
             </Stepper>
           </Grid>
+          <Grid item xs={12}>
+            <Grid container justify='center' alignItems='center'>
+              <Typography wrap variant='h4' component='h3' gutterBottom>
+                {articleObject.title}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container justify='center' alignItems='center'>
+              <Typography wrap variant='h6' component='h6' gutterBottom>
+                {articleObject.author}
+              </Typography>
+            </Grid>
+          </Grid>
           <Grid item xs={8}>
             <div>{processedContent}</div>
           </Grid>
           <Divider flexItem orientation='vertical' />
           <Grid item xs={3}>
-            <ArticleSideTest
-              selectedPhrase={articleObject.phrases[activeStep]}
-              onAnswerChoice={handleAnswerChoice(activeStep)}
-              answer={selectedAnswers[activeStep]}
-            />
+            <Box flexDirection='column'>
+              <ArticleSideTest
+                selectedPhrase={articleObject.phrases[activeStep]}
+                onAnswerChoice={handleAnswerChoice(activeStep)}
+                answer={selectedAnswers[activeStep]}
+              />
+              <Button>Next</Button>
+            </Box>
           </Grid>
         </Grid>
       </div>
