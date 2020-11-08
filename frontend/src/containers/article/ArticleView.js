@@ -134,6 +134,9 @@ function ArticleView(props) {
 
     // setCompleted({ ...completed, [step]: true })
   }
+  const handleSubmit = () => {
+    console.log('Submit!')
+  }
 
   const nthIndex = (content, word, index) => {
     var i = -1
@@ -314,14 +317,48 @@ function ArticleView(props) {
           </Grid>
           <Divider flexItem orientation='vertical' />
           <Grid item xs={3}>
-            <Box flexDirection='column'>
-              <ArticleSideTest
-                selectedPhrase={articleObject.phrases[activeStep]}
-                onAnswerChoice={handleAnswerChoice(activeStep)}
-                answer={selectedAnswers[activeStep]}
-              />
-              <Button>Next</Button>
-            </Box>
+            <Grid container spacing={8}>
+              <Grid item xs={12}>
+                <ArticleSideTest
+                  selectedPhrase={articleObject.phrases[activeStep]}
+                  onAnswerChoice={handleAnswerChoice(activeStep)}
+                  answer={selectedAnswers[activeStep]}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Grid container>
+                  <Grid item xs={6}>
+                    <Button
+                      variant='outlined'
+                      disabled={activeStep === 0}
+                      onClick={() => handleStep(activeStep - 1)()}
+                    >
+                      Prev
+                    </Button>
+                  </Grid>
+                  <Grid item xs={6}>
+                    {activeStep === steps.length - 1 ? (
+                      <Button
+                        variant='contained'
+                        color='primary'
+                        disabled={completed.some((e) => e === false)}
+                        onClick={() => handleSubmit()}
+                      >
+                        Submit
+                      </Button>
+                    ) : (
+                      <Button
+                        variant='outlined'
+                        color='primary'
+                        onClick={() => handleStep(activeStep + 1)()}
+                      >
+                        Next
+                      </Button>
+                    )}
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </div>
