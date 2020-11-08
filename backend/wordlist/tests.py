@@ -10,7 +10,7 @@ class WordlistTestCase(TestCase):
         user = User.objects.create_user('testuser1@test.com', 'TEST_USER_1', password='TEST_PASSWORD_1')
         word = Word(content="example", korean_meaning="예시", difficulty=1)
         word.save()
-        phrase = Phrase(content="example sentence", word=word, confidence=1)
+        phrase = Phrase(content="example sentence", word=word)
         phrase.save()
         phrase_to_add = Phrase(content="example sentence to add", word=word)
         phrase_to_add.save()
@@ -24,6 +24,10 @@ class WordlistTestCase(TestCase):
     def test_wordlist_print(self):
         wordlist = Wordlist.objects.first()
         self.assertEqual(str(wordlist), f'단어장 소유: {str(wordlist.user.username)}')
+
+    def test_word_print(self):
+        word = Word.objects.first()
+        self.assertEqual(str(word), str(word.content))
 
     # wordlist get
     def test_get_wordlist(self):
@@ -92,3 +96,10 @@ class WordlistTestCase(TestCase):
         client.login(email='testuser1@test.com', password='TEST_PASSWORD_1')
         response = client.put('/api/wordlist/', json.dumps({'phrase': 'example sentence', 'action': 'remove'}), content_type='application/json')
         self.assertEqual(response.status_code, 405)
+
+    # parameter action not add nor remove
+    def test_wordlist_parameter_action_wrong(self):
+        client = Client()
+        client.login(email='testuser1@test.com', password='TEST_PASSWORD_1')
+        response = client.patch('/api/wordlist/', json.dumps({'phrase': 'example sentence', 'action': 'wrong'}), content_type='application/json')
+        self.assertEqual(response.status_code, 404)
