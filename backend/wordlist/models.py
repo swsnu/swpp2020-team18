@@ -35,7 +35,6 @@ class Phrase(models.Model):
     """
     content = models.TextField(blank=False, unique=True)
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
-    confidence = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return f'문장: {str(self.content)}, 단어: {str(self.word.content)}'
@@ -77,3 +76,4 @@ class WordlistPhrase(models.Model):
     wordlist = models.ForeignKey(Wordlist, on_delete=models.CASCADE)
     phrase = models.ForeignKey(Phrase, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    confidence = models.IntegerField(default=1)
