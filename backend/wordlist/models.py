@@ -22,7 +22,7 @@ class Phrase(models.Model):
         return f'핵심단어: {str(self.phrase_keyword)}, 뜻: {str(self.korean_meaning)}'
 
 class Wordlist(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     # TODO
     # null=True에 대해 다시 생각해볼 필요가 있다.
 
