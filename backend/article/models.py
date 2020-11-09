@@ -2,7 +2,7 @@
 Models of accounts
 """
 from django.db import models
-# from wordlist import Phrase
+from wordlist.models import Phrase
 
 class Article(models.Model):
   """
@@ -24,7 +24,7 @@ class Article(models.Model):
   author = models.CharField(max_length=200)
   content = models.TextField()
   difficulty = models.IntegerField(default=5)
-  # phrases = models.ManyToManyField(Phrase)
+  phrases = models.ManyToManyField(Phrase)
 
   registered_date = models.DateTimeField(
           blank=True, null=True, auto_now_add=True)
