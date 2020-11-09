@@ -2,50 +2,45 @@
 from celery import shared_task
 from celery.utils.log import get_task_logger
 
-from article import models as article_model
+from article.models import Article
 from terminator import sensitive
 
 import requests
 from bs4 import BeautifulSoup
-# We can have either registered task 
-# @task(name='summary') 
-# def send_import_summary():
-# 	logger.info('Whoowho I\'m')
-    # Magic happens here ... 
-# or 
-@shared_task 
-def send_notifiction():
-  test = article_model.Article();
-  test.title = "Hey";
-  test.content = "Hello, Celery";
-  test.save()
-  print('Here I\'m')
-    # Another trick
 
 @shared_task
-def fetch_article():
+def fetch_article_nytimes():
+  """
+    Fetch today's most popular news and
+    Save it as **Article** model.
+    This task can be scheduled via either 
+    Django admin console or settings.py
+
+  """
   try:
     url = r"https://api.nytimes.com/svc/mostpopular/v2/viewed/1.json?api-key=%s" % sensitive.NYTIMES_API_KEY
     response = requests.get(url)
     data = response.json()
-    # print(data)
 
     num = data['num_results']
     results = data['results']
 
     for result in results:
-      print(result['url'])
       response = requests.get(result['url'])
+      title = result['title']
       author = result['byline']
       soup = BeautifulSoup(response.text, 'html.parser')
+      category = result['section']
+      subcategory = result['subsection']
+
       article = soup.select('article')[0]
-      abstract = article[0].select('.css-8hvvyd')[0]
-      print(abstract)
+      section = article[0].select('section')[0]
+      text = section.text
+      original_url = result['url']
 
-
+      article_model = Article(title=title, author=author, content=text)
+      article_model.save()
+      
   except Exception as e:
-    print("Something went wrong while fetching article:", e)
+    print("Something went wrong: ", e)
 
-@shared_task
-def add(a, b):
-  return a+b

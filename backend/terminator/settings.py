@@ -128,17 +128,16 @@ USE_TZ = True
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
-CELERY_BEAT_SCHEDULE = {
-    # 'send-summary-every-hour': {
-    #     'task': 'summary',
-    #     'schedule': 10,
-    #     'args': ('We don’t need any',),
-    # },
-    'send-notification-on-friday-afternoon': {
-        'task': 'article.tasks.send_notification',
-        'schedule': 10,
-    }, 
-}
+# CELERY_BEAT_SCHEDULE = {
+#     # 'send-summary-every-hour': {
+#     #     'task': 'summary',
+#     #     'schedule': 10,
+#     # },
+#     'send-notification-on-friday-afternoon': {
+#         'task': 'article.tasks.send_notification',
+#         'schedule': 10,
+#     }, 
+# }
 CELERY_RESULT_BACKEND = 'django-db'
 
 # Static files (CSS, JavaScript, Images)
