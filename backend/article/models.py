@@ -1,3 +1,6 @@
+"""
+Models of accounts
+"""
 from django.db import models
 # from wordlist import Phrase
 

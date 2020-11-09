@@ -1,10 +1,8 @@
 # from celery import task
 from celery import shared_task
 from celery.utils.log import get_task_logger
-
 from article.models import Article
 from terminator import sensitive
-
 import requests
 from bs4 import BeautifulSoup
 
@@ -34,13 +32,13 @@ def fetch_article_nytimes():
       subcategory = result['subsection']
 
       article = soup.select('article')[0]
-      section = article[0].select('section')[0]
+      section = article.select('section')[-1]
       text = section.text
       original_url = result['url']
 
       article_model = Article(title=title, author=author, content=text)
       article_model.save()
-      
+
   except Exception as e:
-    print("Something went wrong: ", e)
+    print("Something went wrong: ", repr(e))
 
