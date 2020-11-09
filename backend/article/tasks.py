@@ -5,6 +5,11 @@ from article.models import Article
 from terminator import sensitive
 import requests
 from bs4 import BeautifulSoup
+import logging
+from gensim.summarization import keywords
+from nltk.stem import WordNetLemmatizer
+
+logger = logging.getLogger(__name__)
 
 @shared_task
 def fetch_article_nytimes():
@@ -23,22 +28,96 @@ def fetch_article_nytimes():
     num = data['num_results']
     results = data['results']
 
+    logger.debug('Fetching articles from NYTimes...')
     for result in results:
       response = requests.get(result['url'])
+      original_url = result['url']
       title = result['title']
       author = result['byline']
       soup = BeautifulSoup(response.text, 'html.parser')
       category = result['section']
       subcategory = result['subsection']
 
+      logger.debug('Fetching from: %s' % original_url)
+      logger.debug('Title: %s' % title)
+      logger.debug('Author: %s' % author)
+
+
       article = soup.select('article')[0]
       section = article.select('section')[-1]
       text = section.text
-      original_url = result['url']
+      logger.debug('Content: %s' % text)
+
+      keywords = extract_keywords(text, 10)
+
 
       article_model = Article(title=title, author=author, content=text)
       article_model.save()
 
+    logger.debug('Fetching Completed!')
+
   except Exception as e:
     print("Something went wrong: ", repr(e))
 
+
+def extract_phrases(content, number):
+  """
+    Return list of extracted phrases from content
+
+    :param content: content from which phrases are extracted
+    :type content: str
+    :param number: number of phrases returned
+    :type number: int
+
+    :returns: a list of phrases
+    :rtype: list
+
+  """
+  keywords = extract_keywords(content, number)
+  sentences = nltk.tokenize.sent_tokenize(content)
+  # TODO: not completed methods (work in progress)
+
+
+def extract_keywords(content, number, lemmatize=True, get_both=False):
+  """
+    Return list of extracted keywords from content
+
+    :param content: content from which keywords are extracted
+    :type content: str
+    :param number: number of keywords returned
+    :type number: int
+    :param lemmatize: get lemmatized keywords
+    :type lemmatize: boolean
+    :param get_both: get both lemmatized and not lemmatized keywords
+    :type get_both: boolean
+
+    :returns: a list of keywords
+    :rtype: list
+
+  """
+  lemmatizer = WordNetLemmatizer()
+  pre_keywords = keywords(content).split('\n')
+
+  temp_keywords = []
+  count = 0
+
+  for keyword in pre_keywords:
+    if keyword.find(' ') == -1:
+      temp_keywords.append(keyword)
+      count += 1
+    if count == number:
+      break
+
+  if not lemmatize:
+    return temp_keywords
+
+  processed_keywords = map(
+    lambda kw: lemmatizer.lemmatize(kw, 'v'), temp_keywords
+  )
+
+  logger.debug('Extracted keywords: ', processed_keywords)\
+
+  if get_both:
+    return [processed_keywords, temp_keywords]
+
+  return processed_keywords
