@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'wordlist.apps.WordlistConfig',
     'accounts.apps.AccountsConfig',
     'article.apps.ArticleConfig',
     'django.contrib.admin',
