@@ -1,43 +1,39 @@
 import React, { Fragment } from 'react'
-// import { connect } from 'react-redux';
 import articleImage from '../images/article.png'
 import wordlistImage from '../images/wordlist.svg'
 import testImage from '../images/exam.svg'
-import statisticsImage from '../images/bar-chart.svg'
-import '../App.css'
+import statisticsImage from '../images/statistics.svg'
 import './Landing.css'
-import logoImage from '../images/logo.png'
 import { makeStyles } from '@material-ui/core/styles'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
-// import IconButton from '@material-ui/core/IconButton';
-// import MenuIcon from '@material-ui/icons/Menu';
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { Link as RouterLink } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import Card from '@material-ui/core/Card'
 import CardActionArea from '@material-ui/core/CardActionArea'
-// import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
 import Link from '@material-ui/core/Link'
+import Box from '@material-ui/core/Box'
+import CustomAppBar from '../components/details/CustomAppBar'
 
-const useStyles = makeStyles((theme) => ({
+function Copyright() {
+  return (
+    <Typography variant='body2' color='textSecondary' align='center'>
+      {'Copyright © '}
+      <Link color='inherit' href='https://material-ui.com/'>
+        Term&#39;inator
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  )
+}
+
+const useStyles = makeStyles(() => ({
   root: {
-    flexGrow: 1,
-  },
-  logoutButton: {
-    Right: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-  logo: {
-    marginRight: theme.spacing(2),
-    maxWidth: 160,
+    color: '#f5f5f5',
   },
   card: {
     padding: 10,
@@ -52,32 +48,60 @@ const useStyles = makeStyles((theme) => ({
   cover: {
     width: 151,
   },
+  content: {
+    flex: '1 0 auto',
+    textAlign: 'left',
+  },
+  side: {
+    display: 'flex',
+    height: '100%',
+    justifyContent: 'space-between',
+  },
+  copyright: {
+    backgroundColor: '#f5f5f5',
+  },
+  container: {
+    display: 'grid',
+    alignItems: 'stretch',
+    justifyItems: 'stretch',
+    rowGap: '10px',
+    columnGap: '60px',
+    gridTemplateColumns: '0 1fr 1fr',
+    gridTemplateRows: '1fr 1fr 1fr',
+    gridTemplateAreas: `"left article wordlist right"
+       "left article test right"
+       "left article stats right"`,
+    paddingTop: '5vw',
+    paddingBottom: '5vw',
+    backgroundColor: '#f5f5f5',
+  },
+  article: {
+    gridArea: 'article',
+  },
+  wordlist: {
+    gridArea: 'wordlist',
+  },
+  test: {
+    gridArea: 'test',
+  },
+  stats: {
+    gridArea: 'stats',
+  },
 }))
 
 function Landing(props) {
   const classes = useStyles()
 
-  if (props.user) {
+  if (!props.user) {
     return <Redirect to='/signin' />
   }
 
   return (
-    <Fragment className='frame flex-center'>
-      <div className={classes.root}>
-        <AppBar position='static'>
-          <Toolbar>
-            <img src={logoImage} alt='terminator' className={classes.logo} />
-            <Typography variant='h6' className={classes.title}></Typography>
-            <Button className={classes.logoutButton} color='inherit'>
-              Logout
-            </Button>
-          </Toolbar>
-        </AppBar>
-      </div>
-
-      <div className='container'>
+    <Fragment className={classes.root}>
+      <CustomAppBar />
+      <div className={classes.container}>
         <Link
-          className='item article'
+          className={`${classes.article} item`}
           underline='none'
           component={RouterLink}
           to='/terminator/article'
@@ -87,10 +111,8 @@ function Landing(props) {
               <CardMedia
                 component='img'
                 alt='Article'
-                // height='100%'
                 image={articleImage}
                 title='Article'
-                // inline-block='false'
               />
               <CardContent>
                 <Typography gutterBottom variant='h5' component='h2'>
@@ -104,30 +126,82 @@ function Landing(props) {
             </CardActionArea>
           </Card>
         </Link>
-        <Card className='item wordlist'>
-          <div className={classes.details}>
-            <CardContent className={classes.content}>
-              <Typography component='h5' variant='h5'>
-                Live From Space
-              </Typography>
-              <Typography variant='subtitle1' color='textSecondary'>
-                Mac Miller
-              </Typography>
-            </CardContent>
-          </div>
-          <CardMedia
-            className={classes.cover}
-            image={wordlistImage}
-            title='Live from space album cover'
-          />
-        </Card>
-        <button className='item test'>
-          <img src={testImage} width='30%' alt='test' />
-        </button>
-        <button className='item stats'>
-          <img src={statisticsImage} width='30%' alt='stats' />
-        </button>
+        <Link
+          className={`${classes.wordlist} item`}
+          underline='none'
+          component={RouterLink}
+          to='/terminator/wordlist'
+        >
+          <Card className={classes.side}>
+            <div className={classes.details}>
+              <CardContent className={classes.content}>
+                <Typography component='h5' variant='h4'>
+                  Wordlist
+                </Typography>
+                <Typography variant='body2' color='textSecondary' component='p'>
+                  Look around your customized wordlist and review them!
+                </Typography>
+              </CardContent>
+            </div>
+            <CardMedia
+              className={classes.cover}
+              image={wordlistImage}
+              title='Live from space album cover'
+            />
+          </Card>
+        </Link>
+        <Link
+          className={`${classes.test} item`}
+          underline='none'
+          component={RouterLink}
+          to='/terminator/test'
+        >
+          <Card className={classes.side}>
+            <div className={classes.details}>
+              <CardContent className={classes.content}>
+                <Typography component='h5' variant='h4'>
+                  Review Test
+                </Typography>
+                <Typography variant='body2' color='textSecondary' component='p'>
+                  Take a review test so you can see your progress.
+                </Typography>
+              </CardContent>
+            </div>
+            <CardMedia
+              className={classes.cover}
+              image={testImage}
+              title='Live from space album cover'
+            />
+          </Card>
+        </Link>
+        <Link
+          className={`${classes.stats} item`}
+          underline='none'
+          component={RouterLink}
+          to='/terminator/statistics'
+        >
+          <Card className={classes.side}>
+            <div className={classes.details}>
+              <CardContent className={classes.content}>
+                <Typography component='h5' variant='h4'>
+                  Statistics
+                </Typography>
+                <Typography variant='body2' color='textSecondary' component='p'>
+                  Go and see how far you have reached.
+                </Typography>
+              </CardContent>
+            </div>
+            <CardMedia
+              className={classes.cover}
+              image={statisticsImage}
+              title='Live from space album cover'
+            />
+          </Card>
+        </Link>
       </div>
+      <Box className={classes.copyright}>
+        <Copyright />
+      </Box>
     </Fragment>
   )
 }
