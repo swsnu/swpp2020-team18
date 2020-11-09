@@ -3,7 +3,7 @@ import os
 from celery import Celery
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'terminator.settings')
-app = Celery('terminator')
+app = Celery('terminator', broker=r'amqp://localhost')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 

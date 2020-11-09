@@ -17,7 +17,7 @@ from bs4 import BeautifulSoup
 def send_notifiction():
   test = article_model.Article();
   test.title = "Hey";
-  test.text = "Hello, Celery";
+  test.content = "Hello, Celery";
   test.save()
   print('Here I\'m')
     # Another trick
@@ -45,3 +45,7 @@ def fetch_article():
 
   except Exception as e:
     print("Something went wrong while fetching article:", e)
+
+@shared_task
+def add(a, b):
+  return a+b
