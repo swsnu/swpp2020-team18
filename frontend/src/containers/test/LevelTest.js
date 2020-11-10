@@ -182,7 +182,7 @@ function LevelTest() {
               color='inherit'
               onClick={() => {
                 if (questionNumber == 9) {
-                  history.push('/terminator')
+                  history.push('/')
                 } else {
                   onClickNext(questionNumber + 1)
                 }
