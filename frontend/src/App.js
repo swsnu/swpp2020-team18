@@ -10,6 +10,8 @@ import { ThemeProvider } from '@material-ui/styles'
 import { createMuiTheme } from '@material-ui/core/styles'
 import Article from 'containers/article/Article'
 import Wordlist from 'containers/wordlist/Wordlist'
+import Example1 from 'containers/wordlist/example1'
+import Example2 from 'containers/wordlist/example2'
 import Statistics from 'containers/statistics/Statistics'
 import Test from 'containers/test/Test'
 
@@ -56,6 +58,26 @@ function App(props) {
               render={() => (
                 <>
                   <Wordlist />
+                </>
+              )}
+            />
+            {/* example1 */}
+            <Route
+              path='/terminator/wordlist1'
+              exact
+              render={() => (
+                <>
+                  <Example1 />
+                </>
+              )}
+            />
+            {/* example2 */}
+            <Route
+              path='/terminator/wordlist2'
+              exact
+              render={() => (
+                <>
+                  <Example2 />
                 </>
               )}
             />

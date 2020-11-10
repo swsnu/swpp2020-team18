@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Table from '@material-ui/core/Table'
@@ -8,52 +8,86 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
+import { connect } from 'react-redux'
+import * as wordlist from '../../ducks/wordlist'
+import PropTypes from 'prop-types'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 const columns = [
-  { id: 'word', label: 'Word', minWidth: 100 },
-  { id: 'phrase', label: 'Phrase', minWidth: 170 },
+  { id: 'word', label: 'Word', minWidth: 100, align: 'center' },
+  { id: 'phrase', label: 'Phrase', minWidth: 170, align: 'center' },
   {
     id: 'meaning',
     label: 'Meaning',
     minWidth: 100,
+    align: 'center',
   },
   {
     id: 'confidence',
     label: 'Confidence',
     minWidth: 100,
+    align: 'center',
   },
   {
-    id: 'deleteButton',
+    id: 'deleteIcon',
     label: '',
     minWidth: 100,
+    align: 'center',
   },
 ]
 
-function createData(word, phrase, meaning, confidence) {
+function createData(word, phrase, meaning, confidence, createdAt) {
   // const delete =
   // <IconButton edge="end" aria-label="delete">
   //   <DeleteIcon />
   // </IconButton>
-  return { word, phrase, meaning, confidence }
+  return {
+    word,
+    phrase,
+    meaning,
+    confidence,
+    createdAt,
+    deleteIcon: <DeleteIcon />,
+  }
 }
 
-const rows = [
-  createData('India', 'IN', 1324171354, 3287263),
-  createData('China', 'CN', 1403500365, 9596961),
-  createData('Italy', 'IT', 60483973, 301340),
-  createData('United States', 'US', 327167434, 9833520),
-  createData('Canada', 'CA', 37602103, 9984670),
-  createData('Australia', 'AU', 25475400, 7692024),
-  createData('Germany', 'DE', 83019200, 357578),
-  createData('Ireland', 'IE', 4857000, 70273),
-  createData('Mexico', 'MX', 126577691, 1972550),
-  createData('Japan', 'JP', 126317000, 377973),
-  createData('France', 'FR', 67022000, 640679),
-  createData('United Kingdom', 'GB', 67545757, 242495),
-  createData('Russia', 'RU', 146793744, 17098246),
-  createData('Nigeria', 'NG', 200962417, 923768),
-  createData('Brazil', 'BR', 210147125, 8515767),
-]
+// const handleClick = (event, name) => {
+//   const selectedIndex = selected.indexOf(name);
+//   let newSelected = [];
+
+//   if (selectedIndex === -1) {
+//     newSelected = newSelected.concat(selected, name);
+//   } else if (selectedIndex === 0) {
+//     newSelected = newSelected.concat(selected.slice(1));
+//   } else if (selectedIndex === selected.length - 1) {
+//     newSelected = newSelected.concat(selected.slice(0, -1));
+//   } else if (selectedIndex > 0) {
+//     newSelected = newSelected.concat(
+//       selected.slice(0, selectedIndex),
+//       selected.slice(selectedIndex + 1),
+//     );
+//   }
+
+//   setSelected(newSelected);
+// };
+
+// const rows = [
+//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
+//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
+//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
+//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
+//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
+//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
+//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
+//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
+//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
+//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
+//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
+//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
+//   createData('Russia', 'RU', 146793744, 17098246),
+//   createData('Nigeria', 'NG', 200962417, 923768),
+//   createData('Brazil', 'BR', 210147125, 8515767),
+// ]
 
 const StyledTableCell = withStyles(() => ({
   head: {
@@ -75,10 +109,12 @@ const useStyles = makeStyles({
   },
 })
 
-export default function StickyHeadTable() {
+function StickyHeadTable(props) {
   const classes = useStyles()
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(10)
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [rows, setRows] = useState([])
+  // const [selectedPhrase, setSelectedPhrase] = useState('')
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -88,6 +124,33 @@ export default function StickyHeadTable() {
     setRowsPerPage(+event.target.value)
     setPage(0)
   }
+
+  useEffect(() => {
+    props.onWordlistOpen().then((res) => {
+      let tempRowData = []
+      res.data.map((rowData) => {
+        tempRowData.push(
+          createData(
+            rowData['word'],
+            rowData['phrase'],
+            rowData['korean_meaning'],
+            rowData['confidence'],
+            rowData['created_at']
+          )
+        )
+      })
+      tempRowData.sort(function (a, b) {
+        if (a.createdAt < b.createdAt) {
+          return 1
+        }
+        if (a.createdAt > b.createdAt) {
+          return -1
+        }
+        return 0
+      })
+      setRows(tempRowData)
+    })
+  }, [])
 
   return (
     <Paper className={classes.root}>
@@ -140,3 +203,15 @@ export default function StickyHeadTable() {
     </Paper>
   )
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onWordlistOpen: () => dispatch(wordlist.getWordlist()),
+  }
+}
+
+StickyHeadTable.propTypes = {
+  onWordlistOpen: PropTypes.func,
+}
+
+export default connect(null, mapDispatchToProps)(StickyHeadTable)
