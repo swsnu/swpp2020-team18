@@ -72,25 +72,25 @@ class TestResult(models.Model):
 
 # one user should have one TestHistory model
 # create TestHistory when user created
-class TestHistory(TestResult):
-    """
-    A class to save the user's test history
-    :param user_id: user id who own this model
-    :type user_id: class:`django.db.models.ForeignKey`
-    :param test_id: test id which mean order of the test
-    :type test_id: class:`django.db.models.IntegerField`
-    """
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    test_id = models.IntegerField(primary_key=True,blank=False)
+# class TestHistory(TestResult):
+#     """
+#     A class to save the user's test history
+#     :param user_id: user id who own this model
+#     :type user_id: class:`django.db.models.ForeignKey`
+#     :param test_id: test id which mean order of the test
+#     :type test_id: class:`django.db.models.IntegerField`
+#     """
+#     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+#     test_id = models.IntegerField(primary_key=True,blank=True)
 
-    def __str__(self):
-        return "%s's test result history" % self.user_id.username
+#     def __str__(self):
+#         return "%s's test result history" % self.user.username
     
-@receiver(post_save, sender=User)
-def create_test_history(sender, instance, created, **kwargs):
-    if created:
-        TestHistory.objects.create(user_id=instance)
+# @receiver(post_save, sender=User)
+# def create_test_history(sender, instance, created, **kwargs):
+#     if created:
+#         TestHistory.objects.create(user=instance)
 
-@receiver(post_save, sender=User)
-def save_test_history(sender, instance, **kwargs):
-    instance.TestHistory.save()
+# @receiver(post_save, sender=User)
+# def save_test_history(sender, instance, **kwargs):
+#     instance.testhistory.save()
