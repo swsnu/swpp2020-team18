@@ -76,6 +76,7 @@ def signin(request):
     """
     Log in to the provided account.
 
+    In **GET**: Get login status
     In **POST**: Log in to the account
 
     POST parameters:
@@ -89,7 +90,18 @@ def signin(request):
     :rtype: HttpResponse
 
     """
-    if request.method == 'POST':
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            user = request.user
+            return JsonResponse({
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+            }
+            , safe=False, status=200)
+        else:
+            return HttpResponse(status=200)
+    elif request.method == 'POST':
         try:
             req_data = json.loads(request.body.decode())
             email = req_data['email']

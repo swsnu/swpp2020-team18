@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 def fetch_article_nytimes():
   """
     Fetch today's most popular news and
-    Save it as **Article** model.
+    # Save it as **Article** model.
     This task can be scheduled via either 
     Django admin console or settings.py
   """
@@ -58,17 +58,17 @@ def fetch_article_nytimes():
       phrases, keywords = extract_phrases_and_keywords(text, 7)
 
       article_model = Article(title=title, author=author, content=text)
-      article_model.save()
+      # article_model.save()
 
       for (phrase, keyword) in zip(phrases, keywords):
         # TODO: Change korean meaning to real korean meaning
         try:
           korean_meaning = search_daum_endic(keyword)
           word_model = Word(content=keyword, korean_meaning=korean_meaning, difficulty=5)
-          word_model.save()
+          # word_model.save()
           phrase_model = Phrase(content=phrase, word=word_model)
-          phrase_model.save()
-          article_model.phrases.add(phrase_model.id)
+          # phrase_model.save()
+          # article_model.phrases.add(phrase_model.id)
         except IntegrityError:
           logger.debug('Duplicate data')
           pass
@@ -94,11 +94,17 @@ def extract_phrases_and_keywords(content, number):
   output_phrases_list = []
   output_keywords_list = []
 
+  print("---------------------")
+  print("raw_keywords", raw_keywords)
+  print("keywords", keywords)
+
   for (raw_keyword, keyword) in zip(raw_keywords, keywords):
     for i in range(len(sentences)):
       sentence = sentences[i]
       if raw_keyword in sentence:
         if not (sentence in output_phrases_list):
+          print(sentence)
+          print(raw_keyword)
           output_phrases_list.append(sentence)
           output_keywords_list.append(raw_keyword)
           continue

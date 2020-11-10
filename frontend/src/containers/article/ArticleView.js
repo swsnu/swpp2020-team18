@@ -18,6 +18,7 @@ import StepButton from '@material-ui/core/StepButton'
 import Divider from '@material-ui/core/Divider'
 import { makeStyles } from '@material-ui/core/styles'
 import ArticleSideTest from '../../components/article/ArticleSideTest'
+import { withRouter } from 'react-router-dom'
 
 function Copyright() {
   return (
@@ -106,6 +107,7 @@ function ArticleView(props) {
   }
   const handleSubmit = () => {
     console.log('Submit!')
+    props.history.push('/')
   }
 
   const nthIndex = (content, word, index) => {
@@ -234,14 +236,19 @@ function ArticleView(props) {
   //   handleNext();
   // };
 
-  if (props.user) {
+  if (!props.user) {
     return <Redirect to='/' />
   }
 
   // if (props.article)
   //   console.log(props.article.phrases[0])
 
-  if (loading || !props.article || !props.article.phrases) {
+  if (
+    loading ||
+    !props.article ||
+    !props.article.content ||
+    !props.article.phrases
+  ) {
     console.log(props.article)
     console.log('not yet')
     return null
@@ -312,7 +319,7 @@ function ArticleView(props) {
           <Grid item xs={3}>
             <Grid container spacing={8}>
               <Grid item xs={12}>
-                {!articleObject ? null : (
+                {!articleObject || !articleObject.phrases ? null : (
                   <ArticleSideTest
                     selectedPhrase={articleObject.phrases[activeStep]}
                     onAnswerChoice={handleAnswerChoice(activeStep)}
@@ -386,6 +393,10 @@ ArticleView.propTypes = {
       id: PropTypes.number,
     }),
   }),
+  history: PropTypes.any,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ArticleView)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(ArticleView))

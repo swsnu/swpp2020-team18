@@ -85,7 +85,7 @@ function SignIn(props) {
             id='email'
             label='Email Address'
             name='email'
-            autoComplete='email'
+            autoComplete='username'
             autoFocus
             onChange={(event) => setEmail(event.target.value)}
           />

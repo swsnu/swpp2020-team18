@@ -45,6 +45,7 @@ export default handleActions(
         return {
           ...state,
           article: {
+            ...state.article,
             content: action.payload.data.content,
             title: action.payload.data.title,
             author: action.payload.data.author,

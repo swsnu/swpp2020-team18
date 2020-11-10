@@ -1,4 +1,5 @@
 import React from 'react'
+import { useEffect, useState } from 'react'
 import { Route, Redirect, Switch } from 'react-router-dom'
 import { ConnectedRouter } from 'connected-react-router'
 import Landing from './containers/Landing'
@@ -9,10 +10,20 @@ import AccountBox from './containers/accounts/AccountBox'
 import ArticleView from './containers/article/ArticleView'
 import { ThemeProvider } from '@material-ui/styles'
 import { createMuiTheme } from '@material-ui/core/styles'
+import * as accounts from './ducks/accounts'
+import { connect } from 'react-redux'
 
 const theme = createMuiTheme({})
 
 function App(props) {
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    setLoading(true)
+    props.getAuthentication().then(() => setLoading(false))
+  }, [])
+
+  if (loading) return null
+
   return (
     <ConnectedRouter history={props.history}>
       <ThemeProvider theme={theme}>
@@ -40,8 +51,18 @@ function App(props) {
   )
 }
 
+const mapStateToProps = (state) => ({
+  user: state.accounts.user,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  getAuthentication: () => dispatch(accounts.checkLogin()),
+})
+
 App.propTypes = {
   history: PropTypes.any,
+  user: PropTypes.object,
+  getAuthentication: PropTypes.func,
 }
 
-export default App
+export default connect(mapStateToProps, mapDispatchToProps)(App)
