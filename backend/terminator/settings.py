@@ -129,6 +129,9 @@ USE_L10N = True
 USE_TZ = True
 
 
+CSRF_COOKIE_NAME = "csrftoken"
+
+
 # Celery Configuration Options
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_TRACK_STARTED = True
