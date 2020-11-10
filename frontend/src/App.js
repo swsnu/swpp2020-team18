@@ -1,4 +1,5 @@
 import React from 'react'
+import { useEffect, useState } from 'react'
 import { Route, Redirect, Switch } from 'react-router-dom'
 import { ConnectedRouter } from 'connected-react-router'
 import Landing from './containers/Landing'
@@ -12,6 +13,9 @@ import Article from 'containers/article/Article'
 import Wordlist from 'containers/wordlist/Wordlist'
 import Statistics from 'containers/statistics/Statistics'
 import Test from 'containers/test/Test'
+import { connect } from 'react-redux'
+import * as accounts from './ducks/accounts'
+import ArticleView from './containers/article/ArticleView'
 
 const theme = createMuiTheme({
   palette: {
@@ -27,6 +31,14 @@ const theme = createMuiTheme({
 })
 
 function App(props) {
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    setLoading(true)
+    props.getAuthentication().then(() => setLoading(false))
+  }, [])
+
+  if (loading) return null
+
   return (
     <ConnectedRouter history={props.history}>
       <ThemeProvider theme={theme}>
@@ -79,6 +91,7 @@ function App(props) {
             />
             <Route path='/signin' exact render={() => <SignIn />} />
             <Route path='/signup' exact render={() => <SignUp />} />
+            <Route path='/article/:id' exact component={ArticleView} />
             <Redirect exact from='/' to='terminator' />
             <Route render={() => <h1>Not Found</h1>} />
           </Switch>
@@ -88,8 +101,18 @@ function App(props) {
   )
 }
 
+const mapStateToProps = (state) => ({
+  user: state.accounts.user,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  getAuthentication: () => dispatch(accounts.checkLogin()),
+})
+
 App.propTypes = {
   history: PropTypes.any,
+  user: PropTypes.object,
+  getAuthentication: PropTypes.func,
 }
 
-export default App
+export default connect(mapStateToProps, mapDispatchToProps)(App)
