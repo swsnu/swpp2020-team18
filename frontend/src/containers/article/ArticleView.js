@@ -1,4 +1,5 @@
 import React from 'react'
+import { useEffect } from 'react'
 // import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Link from '@material-ui/core/Link'
@@ -8,7 +9,7 @@ import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
 import { Redirect } from 'react-router-dom'
-import * as accounts from '../../ducks/accounts'
+import * as article from '../../ducks/article'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Stepper from '@material-ui/core/Stepper'
@@ -17,37 +18,6 @@ import StepButton from '@material-ui/core/StepButton'
 import Divider from '@material-ui/core/Divider'
 import { makeStyles } from '@material-ui/core/styles'
 import ArticleSideTest from '../../components/article/ArticleSideTest'
-
-const articleObject = {
-  title: 'The Shadow Side of Greatness',
-  author: 'James Clear',
-  content:
-    'Pablo Picasso. He is one of the most famous artists of the 20th century and a household name even among people who, like myself, consider themselves to be complete novices in the art world. \
-      I recently went to a Picasso exhibition. What impressed me the most was not any individual piece of art, but rather his remarkably prolific output. Researchers have catalogued 26,075 pieces of art created by Picasso and some people believe the total number is closer to 50,000. \
-      When I discovered that Picasso lived to be 91 years old, I decided to do the math. Picasso lived for a total of 33,403 days. With 26,075 published works, that means Picasso averaged 1 new piece of artwork every day of his life from age 20 until his death at age 91. He created something new, every day, for 71 years. \
-      This unfathomable output not only played a large role in Picasso’s international fame, but also enabled him to amass a huge net worth of approximately $500 million by the time of his death in 1973. His work became so famous and so numerous that, according to the Art Loss Register, Picasso is the most stolen artist in history with over 550 works currently missing. \
-      What made Picasso great was not just how much art he produced, but also how he produced it. He co-founded the movement of Cubism and created the style of collage. He was the artist his contemporaries copied. Any discussion of the most well-known artists in history would have to include his name.',
-  phrases: [
-    {
-      content:
-        'He is one of the most famous artists of the 20th century and a household name even among people who, like myself, consider themselves to be complete novices in the art world.',
-      keyword: 'famous',
-      choices: ['재밌는', '유명한', '뛰어난', '배고픈'],
-    },
-    {
-      content:
-        'This unfathomable output not only played a large role in Picasso’s international fame, but also enabled him to amass a huge net worth of approximately $500 million by the time of his death in 1973.',
-      keyword: 'unfathomable',
-      choices: ['가까운', '심오한', '빠른', '느린'],
-    },
-    {
-      content:
-        'Any discussion of the most well-known artists in history would have to include his name.',
-      keyword: 'include',
-      choices: ['포함하다', '뛰다', '던지다', '올라가다'],
-    },
-  ],
-}
 
 function Copyright() {
   return (
@@ -111,25 +81,28 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function ArticleView(props) {
-  const classes = useStyles()
-  const steps = articleObject.phrases.map((phrase) => phrase.word)
-  const [selectedAnswers, setSelectedAnswers] = React.useState(
-    Array(steps.length).fill(null)
-  )
+  const [loading, setLoading] = React.useState(true)
+  const [selectedAnswers, setSelectedAnswers] = React.useState([])
   const [activeStep, setActiveStep] = React.useState(0)
-  const completed = selectedAnswers.map((answer) => (answer ? true : false))
+  useEffect(() => {
+    setLoading(true)
+    props.getArticle(props.match.params.id)
+    props.getArticleTest(props.match.params.id)
+    setLoading(false)
+  }, [])
+  const classes = useStyles()
+
   const handleAnswerChoice = (idx) => (newAnswer) => {
     setSelectedAnswers(
       selectedAnswers.map((currentChoice, i) =>
         idx === i ? newAnswer : currentChoice
       )
     )
+    console.log(selectedAnswers)
   }
-  console.log(selectedAnswers)
+
   const handleStep = (step) => () => {
     setActiveStep(step)
-
-    // setCompleted({ ...completed, [step]: true })
   }
   const handleSubmit = () => {
     console.log('Submit!')
@@ -254,7 +227,6 @@ function ArticleView(props) {
     return output
   }
 
-  const processedContent = processContent(articleObject)
   // const handleComplete = () => {
   //   const newCompleted = completed;
   //   newCompleted[activeStep] = true;
@@ -265,6 +237,28 @@ function ArticleView(props) {
   if (props.user) {
     return <Redirect to='/' />
   }
+
+  // if (props.article)
+  //   console.log(props.article.phrases[0])
+
+  if (loading || !props.article || !props.article.phrases) {
+    console.log(props.article)
+    console.log('not yet')
+    return null
+  }
+
+  const articleObject = props.article
+  console.log(loading)
+  console.log(props)
+  const steps = articleObject.phrases.map((phrase) => phrase.word)
+
+  console.log(selectedAnswers)
+  if (selectedAnswers.length == 0) {
+    console.log('WHWHWH')
+    setSelectedAnswers(Array(steps.length).fill(null))
+  }
+
+  const completed = selectedAnswers.map((answer) => (answer ? true : false))
 
   return (
     <Container component='main' maxWidth='md'>
@@ -283,44 +277,48 @@ function ArticleView(props) {
               className={classes.stepper}
               activeStep={activeStep}
             >
-              {steps.map((label, index) => (
-                <Step key={label}>
-                  <StepButton
-                    onClick={handleStep(index)}
-                    completed={completed[index]}
-                  >
-                    {label}
-                  </StepButton>
-                </Step>
-              ))}
+              {!steps
+                ? null
+                : steps.map((label, index) => (
+                    <Step key={label}>
+                      <StepButton
+                        onClick={handleStep(index)}
+                        completed={completed[index]}
+                      >
+                        {label}
+                      </StepButton>
+                    </Step>
+                  ))}
             </Stepper>
           </Grid>
           <Grid item xs={12}>
             <Grid container justify='center' alignItems='center'>
-              <Typography wrap variant='h4' component='h3' gutterBottom>
-                {articleObject.title}
+              <Typography variant='h4' component='h3' gutterBottom>
+                {!articleObject ? null : articleObject.title}
               </Typography>
             </Grid>
           </Grid>
           <Grid item xs={12}>
             <Grid container justify='center' alignItems='center'>
-              <Typography wrap variant='h6' component='h6' gutterBottom>
-                {articleObject.author}
+              <Typography variant='h6' component='h6' gutterBottom>
+                {!articleObject ? null : articleObject.author}
               </Typography>
             </Grid>
           </Grid>
           <Grid item xs={8}>
-            <div>{processedContent}</div>
+            <div>{!articleObject ? null : processContent(articleObject)}</div>
           </Grid>
           <Divider flexItem orientation='vertical' />
           <Grid item xs={3}>
             <Grid container spacing={8}>
               <Grid item xs={12}>
-                <ArticleSideTest
-                  selectedPhrase={articleObject.phrases[activeStep]}
-                  onAnswerChoice={handleAnswerChoice(activeStep)}
-                  answer={selectedAnswers[activeStep]}
-                />
+                {!articleObject ? null : (
+                  <ArticleSideTest
+                    selectedPhrase={articleObject.phrases[activeStep]}
+                    onAnswerChoice={handleAnswerChoice(activeStep)}
+                    answer={selectedAnswers[activeStep]}
+                  />
+                )}
               </Grid>
               <Grid item xs={12}>
                 <Grid container>
@@ -368,15 +366,26 @@ function ArticleView(props) {
 
 const mapStateToProps = (state) => ({
   user: state.accounts.user,
+  article: state.article.article,
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  onSignUp: (accountInfo) => dispatch(accounts.signUp(accountInfo)),
+  getArticle: (id) => {
+    return dispatch(article.getArticle(id))
+  },
+  getArticleTest: (id) => dispatch(article.getArticleTest(id)),
 })
 
 ArticleView.propTypes = {
   user: PropTypes.object,
-  onSignUp: PropTypes.func,
+  article: PropTypes.object,
+  getArticle: PropTypes.func,
+  getArticleTest: PropTypes.func,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.number,
+    }),
+  }),
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ArticleView)

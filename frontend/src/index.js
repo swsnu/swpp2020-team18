@@ -8,11 +8,13 @@ import { connectRouter, routerMiddleware } from 'connected-react-router'
 import { createBrowserHistory } from 'history'
 import penderMiddleware from 'redux-pender'
 import accountsReducer from './ducks/accounts'
+import articleReducer from './ducks/article'
 
 const history = createBrowserHistory()
 
 const rootReducer = combineReducers({
   accounts: accountsReducer,
+  article: articleReducer,
   router: connectRouter(history),
 })
 

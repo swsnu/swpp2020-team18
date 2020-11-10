@@ -9,20 +9,26 @@ import {
 import PropTypes from 'prop-types'
 
 function ArticleSideTest(props) {
+  console.log(props)
   const value = props.answer
   const setValue = props.onAnswerChoice
   const handleChange = (event) => {
     setValue(event.target.value)
   }
 
-  console.log(props.selectedPhrase)
-  const options = props.selectedPhrase.choices.map((choice, idx) => {
-    return (
-      <React.Fragment key={idx}>
-        <FormControlLabel value={choice} control={<Radio />} label={choice} />
-      </React.Fragment>
-    )
-  })
+  const options = !props.selectedPhrase.choices
+    ? null
+    : props.selectedPhrase.choices.map((choice, idx) => {
+        return (
+          <React.Fragment key={idx}>
+            <FormControlLabel
+              value={choice}
+              control={<Radio />}
+              label={choice}
+            />
+          </React.Fragment>
+        )
+      })
 
   return (
     <FormControl component='fieldset'>
