@@ -30,7 +30,6 @@ def token(request):
     else:
         return HttpResponseNotAllowed(['GET'])
 
-
 def signup(request):
     """
     Create account.

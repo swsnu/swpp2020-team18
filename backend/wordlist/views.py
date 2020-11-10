@@ -34,7 +34,13 @@ def wordlist(request):
 
     if request.method == 'GET':
         if request.user.is_authenticated:
-            word_all_list = [{'word': Word.objects.get(id=phrase['word_id']).content, 'phrase': phrase['content'], 'korean_meaning': Word.objects.get(id=phrase['word_id']).korean_meaning} for phrase in Wordlist.objects.get(user = request.user).added_phrase.all().values()]
+            word_all_list = \
+                [{'word': Word.objects.get(id=phrase['word_id']).content, \
+                    'phrase': phrase['content'], \
+                        'korean_meaning': Word.objects.get(id=phrase['word_id']).korean_meaning, \
+                            'confidence': WordlistPhrase.objects.get(phrase = Phrase.objects.get(content=phrase['content']), wordlist = Wordlist.objects.get(user = request.user)).confidence, \
+                                'created_at': WordlistPhrase.objects.get(phrase = Phrase.objects.get(content=phrase['content']), wordlist = Wordlist.objects.get(user = request.user)).created_at \
+                                    } for phrase in Wordlist.objects.get(user = request.user).added_phrase.all().values()]
             return JsonResponse(word_all_list, safe=False, json_dumps_params={'ensure_ascii': False})
         else:
             return HttpResponse(status=401)
