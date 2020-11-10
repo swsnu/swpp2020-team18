@@ -16,26 +16,26 @@ function ArticleSideTest(props) {
     setValue(event.target.value)
   }
 
-  const options = !props.selectedPhrase.choices
-    ? null
-    : props.selectedPhrase.choices.map((choice, idx) => {
-        return (
-          <React.Fragment key={idx}>
-            <FormControlLabel
-              value={choice}
-              control={<Radio />}
-              label={choice}
-            />
-          </React.Fragment>
-        )
-      })
+  const options =
+    !props.selectedPhrase || !props.selectedPhrase.choices
+      ? null
+      : props.selectedPhrase.choices.map((choice, idx) => {
+          return (
+            <React.Fragment key={idx}>
+              <FormControlLabel
+                value={choice}
+                control={<Radio />}
+                label={choice}
+              />
+            </React.Fragment>
+          )
+        })
 
   return (
     <FormControl component='fieldset'>
       <FormLabel component='legend'>{props.selectedPhrase.keyword}</FormLabel>
       <RadioGroup
         aria-label={props.selectedPhrase.keyword}
-        name='gender1'
         value={value}
         onChange={handleChange}
       >

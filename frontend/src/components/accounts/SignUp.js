@@ -62,7 +62,7 @@ function SignUp(props) {
   }
 
   if (props.user) {
-    return <Redirect to='/' />
+    return <Redirect to='/leveltest' />
   }
 
   return (
