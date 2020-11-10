@@ -25,7 +25,10 @@ SECRET_KEY = 'kts-=g!2d0k#h!^nvxyyilyr71n*=!*^%^e5mb0#)l*0bb1j@g'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '.term-inator.site',
+    'localhost'
+]
 
 
 # Application definition
