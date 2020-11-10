@@ -46,7 +46,7 @@ function Wordlist() {
           variant='contained'
           color='primary'
           className={classes.button}
-          onClick={() => history.push('/test')}
+          onClick={() => history.push('/reviewtest')}
         >
           Review Test
         </Button>

@@ -150,7 +150,7 @@ function Landing(props) {
           className={`${classes.test} item`}
           underline='none'
           component={RouterLink}
-          to='/test'
+          to='/reviewtest'
         >
           <Card className={classes.side}>
             <div className={classes.details}>

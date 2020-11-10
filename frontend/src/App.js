@@ -13,6 +13,7 @@ import Article from 'containers/article/Article'
 import Wordlist from 'containers/wordlist/Wordlist'
 import Statistics from 'containers/statistics/Statistics'
 import ReviewTest from 'containers/test/ReviewTest'
+import LevelTest from 'containers/test/LevelTest'
 import { connect } from 'react-redux'
 import * as accounts from './ducks/accounts'
 import ArticleView from './containers/article/ArticleView'
@@ -73,11 +74,20 @@ function App(props) {
               )}
             />
             <Route
-              path='/test'
+              path='/reviewtest'
               exact
               render={() => (
                 <>
                   <ReviewTest />
+                </>
+              )}
+            />
+            <Route
+              path='/leveltest'
+              exact
+              render={() => (
+                <>
+                  <LevelTest />
                 </>
               )}
             />
