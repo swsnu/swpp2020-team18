@@ -1,0 +1,630 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>wordlist package &#8212; Term&#39;inator  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="wordlist-package">
+<h1>wordlist package<a class="headerlink" href="#wordlist-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-wordlist.admin">
+<span id="wordlist-admin-module"></span><h2>wordlist.admin module<a class="headerlink" href="#module-wordlist.admin" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-wordlist.apps">
+<span id="wordlist-apps-module"></span><h2>wordlist.apps module<a class="headerlink" href="#module-wordlist.apps" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="wordlist.apps.WordlistConfig">
+<em class="property">class </em><code class="sig-prename descclassname">wordlist.apps.</code><code class="sig-name descname">WordlistConfig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">app_name</span></em>, <em class="sig-param"><span class="n">app_module</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.apps.WordlistConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.apps.config.AppConfig</span></code></p>
+<dl class="py attribute">
+<dt id="wordlist.apps.WordlistConfig.name">
+<code class="sig-name descname">name</code><em class="property"> = 'wordlist'</em><a class="headerlink" href="#wordlist.apps.WordlistConfig.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-wordlist.models">
+<span id="wordlist-models-module"></span><h2>wordlist.models module<a class="headerlink" href="#module-wordlist.models" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="wordlist.models.Phrase">
+<em class="property">class </em><code class="sig-prename descclassname">wordlist.models.</code><code class="sig-name descname">Phrase</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.models.Phrase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>A class to manage phrases.
+:param content: phrase itself (identifier)
+:type content: class:<cite>django.db.models.TextField</cite>
+:param word: keyword in phrase
+:type word: class:<cite>django.db.models.ForeignKey</cite>
+:param confidence: user’s confidence about phrase
+:type confidence: class:<cite>django.db.models.IntegerField</cite></p>
+<dl class="py exception">
+<dt id="wordlist.models.Phrase.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#wordlist.models.Phrase.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="wordlist.models.Phrase.MultipleObjectsReturned">
+<em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#wordlist.models.Phrase.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.Phrase.article_set">
+<code class="sig-name descname">article_set</code><a class="headerlink" href="#wordlist.models.Phrase.article_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">Topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.Phrase.content">
+<code class="sig-name descname">content</code><a class="headerlink" href="#wordlist.models.Phrase.content" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.Phrase.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#wordlist.models.Phrase.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.Phrase.objects">
+<code class="sig-name descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#wordlist.models.Phrase.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.Phrase.word">
+<code class="sig-name descname">word</code><a class="headerlink" href="#wordlist.models.Phrase.word" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.Phrase.word_id">
+<code class="sig-name descname">word_id</code><a class="headerlink" href="#wordlist.models.Phrase.word_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.Phrase.wordlist_set">
+<code class="sig-name descname">wordlist_set</code><a class="headerlink" href="#wordlist.models.Phrase.wordlist_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">Topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.Phrase.wordlistphrase_set">
+<code class="sig-name descname">wordlistphrase_set</code><a class="headerlink" href="#wordlist.models.Phrase.wordlistphrase_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Parent.children</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="wordlist.models.Word">
+<em class="property">class </em><code class="sig-prename descclassname">wordlist.models.</code><code class="sig-name descname">Word</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.models.Word" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>A class to manage words.
+:param content: word itself (identifier)
+:type content: class:<cite>django.db.models.CharField</cite>
+:param korean_meaning: word’s korean meaning
+:type korean_meaning: class:<cite>django.db.models.CharField</cite>
+:param difficulty: word’s difficulty
+:type difficulty: class:<cite>django.db.models.IntegerField</cite></p>
+<dl class="py exception">
+<dt id="wordlist.models.Word.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#wordlist.models.Word.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="wordlist.models.Word.MultipleObjectsReturned">
+<em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#wordlist.models.Word.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.Word.content">
+<code class="sig-name descname">content</code><a class="headerlink" href="#wordlist.models.Word.content" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.Word.difficulty">
+<code class="sig-name descname">difficulty</code><a class="headerlink" href="#wordlist.models.Word.difficulty" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.Word.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#wordlist.models.Word.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.Word.korean_meaning">
+<code class="sig-name descname">korean_meaning</code><a class="headerlink" href="#wordlist.models.Word.korean_meaning" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.Word.objects">
+<code class="sig-name descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#wordlist.models.Word.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.Word.phrase_set">
+<code class="sig-name descname">phrase_set</code><a class="headerlink" href="#wordlist.models.Word.phrase_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Parent.children</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="wordlist.models.Wordlist">
+<em class="property">class </em><code class="sig-prename descclassname">wordlist.models.</code><code class="sig-name descname">Wordlist</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.models.Wordlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>A class to manage wordlist.
+:param user: user who own’s the wordlist (identifier)
+:type user: class:<cite>django.db.models.OneToOneField</cite>
+:param added_phrase: added phrases in wordlist
+:type added_phrase: class:<cite>django.db.models.ManyToManyField</cite></p>
+<dl class="py exception">
+<dt id="wordlist.models.Wordlist.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#wordlist.models.Wordlist.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="wordlist.models.Wordlist.MultipleObjectsReturned">
+<em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#wordlist.models.Wordlist.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.Wordlist.added_phrase">
+<code class="sig-name descname">added_phrase</code><a class="headerlink" href="#wordlist.models.Wordlist.added_phrase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">Topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.Wordlist.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#wordlist.models.Wordlist.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.Wordlist.objects">
+<code class="sig-name descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#wordlist.models.Wordlist.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.Wordlist.user">
+<code class="sig-name descname">user</code><a class="headerlink" href="#wordlist.models.Wordlist.user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a one-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Restaurant</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">place</span> <span class="o">=</span> <span class="n">OneToOneField</span><span class="p">(</span><span class="n">Place</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;restaurant&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Restaurant.place</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardOneToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.Wordlist.user_id">
+<code class="sig-name descname">user_id</code><a class="headerlink" href="#wordlist.models.Wordlist.user_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.Wordlist.wordlistphrase_set">
+<code class="sig-name descname">wordlistphrase_set</code><a class="headerlink" href="#wordlist.models.Wordlist.wordlistphrase_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Parent.children</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="wordlist.models.WordlistPhrase">
+<em class="property">class </em><code class="sig-prename descclassname">wordlist.models.</code><code class="sig-name descname">WordlistPhrase</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.models.WordlistPhrase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>A class to manage relationship between wordlist and phrase.
+:param wordlist: wordlist in the relation
+:type wordlist: class:<cite>django.db.models.ForeignKey</cite>
+:param phrase: phrase in the relation
+:type phrase: class:<cite>django.db.models.ForeignKey</cite>
+:param created_at: time the phrase is added to wordlist
+:type created_at: class:<cite>django.db.models.DateTimeField</cite></p>
+<dl class="py exception">
+<dt id="wordlist.models.WordlistPhrase.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#wordlist.models.WordlistPhrase.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="wordlist.models.WordlistPhrase.MultipleObjectsReturned">
+<em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#wordlist.models.WordlistPhrase.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.WordlistPhrase.confidence">
+<code class="sig-name descname">confidence</code><a class="headerlink" href="#wordlist.models.WordlistPhrase.confidence" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.WordlistPhrase.created_at">
+<code class="sig-name descname">created_at</code><a class="headerlink" href="#wordlist.models.WordlistPhrase.created_at" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="wordlist.models.WordlistPhrase.get_next_by_created_at">
+<code class="sig-name descname">get_next_by_created_at</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">field=&lt;django.db.models.fields.DateTimeField: created_at&gt;</em>, <em class="sig-param">is_next=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.models.WordlistPhrase.get_next_by_created_at" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="wordlist.models.WordlistPhrase.get_previous_by_created_at">
+<code class="sig-name descname">get_previous_by_created_at</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">field=&lt;django.db.models.fields.DateTimeField: created_at&gt;</em>, <em class="sig-param">is_next=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.models.WordlistPhrase.get_previous_by_created_at" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.WordlistPhrase.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#wordlist.models.WordlistPhrase.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.WordlistPhrase.objects">
+<code class="sig-name descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#wordlist.models.WordlistPhrase.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.WordlistPhrase.phrase">
+<code class="sig-name descname">phrase</code><a class="headerlink" href="#wordlist.models.WordlistPhrase.phrase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.WordlistPhrase.phrase_id">
+<code class="sig-name descname">phrase_id</code><a class="headerlink" href="#wordlist.models.WordlistPhrase.phrase_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.WordlistPhrase.wordlist">
+<code class="sig-name descname">wordlist</code><a class="headerlink" href="#wordlist.models.WordlistPhrase.wordlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="wordlist.models.WordlistPhrase.wordlist_id">
+<code class="sig-name descname">wordlist_id</code><a class="headerlink" href="#wordlist.models.WordlistPhrase.wordlist_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="wordlist.models.create_user_wordlist">
+<code class="sig-prename descclassname">wordlist.models.</code><code class="sig-name descname">create_user_wordlist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sender</span></em>, <em class="sig-param"><span class="n">instance</span></em>, <em class="sig-param"><span class="n">created</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.models.create_user_wordlist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="wordlist.models.save_user_wordlist">
+<code class="sig-prename descclassname">wordlist.models.</code><code class="sig-name descname">save_user_wordlist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sender</span></em>, <em class="sig-param"><span class="n">instance</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.models.save_user_wordlist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-wordlist.tests">
+<span id="wordlist-tests-module"></span><h2>wordlist.tests module<a class="headerlink" href="#module-wordlist.tests" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="wordlist.tests.WordlistTestCase">
+<em class="property">class </em><code class="sig-prename descclassname">wordlist.tests.</code><code class="sig-name descname">WordlistTestCase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">methodName</span><span class="o">=</span><span class="default_value">'runTest'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.tests.WordlistTestCase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="py method">
+<dt id="wordlist.tests.WordlistTestCase.setUp">
+<code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.tests.WordlistTestCase.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="wordlist.tests.WordlistTestCase.test_get_wordlist">
+<code class="sig-name descname">test_get_wordlist</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.tests.WordlistTestCase.test_get_wordlist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="wordlist.tests.WordlistTestCase.test_get_wordlist_not_logged_in">
+<code class="sig-name descname">test_get_wordlist_not_logged_in</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.tests.WordlistTestCase.test_get_wordlist_not_logged_in" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="wordlist.tests.WordlistTestCase.test_get_wordlist_wrong_request">
+<code class="sig-name descname">test_get_wordlist_wrong_request</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.tests.WordlistTestCase.test_get_wordlist_wrong_request" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="wordlist.tests.WordlistTestCase.test_phrase_print">
+<code class="sig-name descname">test_phrase_print</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.tests.WordlistTestCase.test_phrase_print" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="wordlist.tests.WordlistTestCase.test_word_print">
+<code class="sig-name descname">test_word_print</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.tests.WordlistTestCase.test_word_print" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="wordlist.tests.WordlistTestCase.test_wordlist_add">
+<code class="sig-name descname">test_wordlist_add</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.tests.WordlistTestCase.test_wordlist_add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="wordlist.tests.WordlistTestCase.test_wordlist_add_non_existing_phrase">
+<code class="sig-name descname">test_wordlist_add_non_existing_phrase</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.tests.WordlistTestCase.test_wordlist_add_non_existing_phrase" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="wordlist.tests.WordlistTestCase.test_wordlist_add_not_logged_in">
+<code class="sig-name descname">test_wordlist_add_not_logged_in</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.tests.WordlistTestCase.test_wordlist_add_not_logged_in" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="wordlist.tests.WordlistTestCase.test_wordlist_add_wrong_request">
+<code class="sig-name descname">test_wordlist_add_wrong_request</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.tests.WordlistTestCase.test_wordlist_add_wrong_request" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="wordlist.tests.WordlistTestCase.test_wordlist_parameter_action_wrong">
+<code class="sig-name descname">test_wordlist_parameter_action_wrong</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.tests.WordlistTestCase.test_wordlist_parameter_action_wrong" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="wordlist.tests.WordlistTestCase.test_wordlist_print">
+<code class="sig-name descname">test_wordlist_print</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.tests.WordlistTestCase.test_wordlist_print" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="wordlist.tests.WordlistTestCase.test_wordlist_remove">
+<code class="sig-name descname">test_wordlist_remove</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.tests.WordlistTestCase.test_wordlist_remove" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="wordlist.tests.WordlistTestCase.test_wordlist_remove_non_existing_phrase">
+<code class="sig-name descname">test_wordlist_remove_non_existing_phrase</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.tests.WordlistTestCase.test_wordlist_remove_non_existing_phrase" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="wordlist.tests.WordlistTestCase.test_wordlist_remove_not_logged_in">
+<code class="sig-name descname">test_wordlist_remove_not_logged_in</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.tests.WordlistTestCase.test_wordlist_remove_not_logged_in" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="wordlist.tests.WordlistTestCase.test_wordlist_remove_wrong_request">
+<code class="sig-name descname">test_wordlist_remove_wrong_request</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.tests.WordlistTestCase.test_wordlist_remove_wrong_request" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-wordlist.urls">
+<span id="wordlist-urls-module"></span><h2>wordlist.urls module<a class="headerlink" href="#module-wordlist.urls" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-wordlist.views">
+<span id="wordlist-views-module"></span><h2>wordlist.views module<a class="headerlink" href="#module-wordlist.views" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="wordlist.views.wordlist">
+<code class="sig-prename descclassname">wordlist.views.</code><code class="sig-name descname">wordlist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wordlist.views.wordlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get or adjust the Wordlist model.
+In <strong>GET</strong>: Returns all the words and phrases in the user’s wordlist</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – a HTTP request</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a JSON response with all words and phrases</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JsonResponse</p>
+</dd>
+</dl>
+<p>In <strong>PATCH</strong>: Add or remove a phrase(word) to user’s wordlist</p>
+<dl class="simple">
+<dt>PATCH parameters:</dt><dd><p>PATCH[‘phrase’]: Phrase
+PATCH[‘action’]: Add or remove</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – a HTTP request</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a HTTP response</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-wordlist">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-wordlist" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Term'inator</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, swpp2020-team18.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/wordlist.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

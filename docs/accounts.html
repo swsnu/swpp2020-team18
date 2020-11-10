@@ -1,0 +1,490 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>accounts package &#8212; Term&#39;inator  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="accounts-package">
+<h1>accounts package<a class="headerlink" href="#accounts-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="accounts.migrations.html">accounts.migrations package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="accounts.migrations.html#module-accounts.migrations">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-accounts.admin">
+<span id="accounts-admin-module"></span><h2>accounts.admin module<a class="headerlink" href="#module-accounts.admin" title="Permalink to this headline">¶</a></h2>
+<p>Register accounts models to admin site</p>
+</div>
+<div class="section" id="module-accounts.apps">
+<span id="accounts-apps-module"></span><h2>accounts.apps module<a class="headerlink" href="#module-accounts.apps" title="Permalink to this headline">¶</a></h2>
+<p>AppConfig of accounts</p>
+<dl class="py class">
+<dt id="accounts.apps.AccountsConfig">
+<em class="property">class </em><code class="sig-prename descclassname">accounts.apps.</code><code class="sig-name descname">AccountsConfig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">app_name</span></em>, <em class="sig-param"><span class="n">app_module</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.apps.AccountsConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.apps.config.AppConfig</span></code></p>
+<p>A class to manage app config of accounts
+It extends <code class="xref py py-class docutils literal notranslate"><span class="pre">django.apps.AppConfig</span></code> class.</p>
+<dl class="py attribute">
+<dt id="accounts.apps.AccountsConfig.name">
+<code class="sig-name descname">name</code><em class="property"> = 'accounts'</em><a class="headerlink" href="#accounts.apps.AccountsConfig.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-accounts.models">
+<span id="accounts-models-module"></span><h2>accounts.models module<a class="headerlink" href="#module-accounts.models" title="Permalink to this headline">¶</a></h2>
+<p>Models of accounts</p>
+<dl class="py class">
+<dt id="accounts.models.User">
+<em class="property">class </em><code class="sig-prename descclassname">accounts.models.</code><code class="sig-name descname">User</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.User" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.base_user.AbstractBaseUser</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.models.PermissionsMixin</span></code></p>
+<p>A class to represent user account.
+It extends <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.models.AbstractBaseUser</span></code>
+and <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.models.PermissionsMixin</span></code> classes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> (class:<cite>django.db.models.EmailField</cite>) – User’s email address (identifier)</p></li>
+<li><p><strong>username</strong> (class:<cite>django.db.models.CharField</cite>) – User’s username</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py exception">
+<dt id="accounts.models.User.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#accounts.models.User.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="accounts.models.User.MultipleObjectsReturned">
+<em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#accounts.models.User.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.User.REQUIRED_FIELDS">
+<code class="sig-name descname">REQUIRED_FIELDS</code><em class="property"> = ['username']</em><a class="headerlink" href="#accounts.models.User.REQUIRED_FIELDS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.User.USERNAME_FIELD">
+<code class="sig-name descname">USERNAME_FIELD</code><em class="property"> = 'email'</em><a class="headerlink" href="#accounts.models.User.USERNAME_FIELD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.User.backend">
+<code class="sig-name descname">backend</code><em class="property"> = 'accounts.backend.AuthBackend'</em><a class="headerlink" href="#accounts.models.User.backend" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.User.date_joined">
+<code class="sig-name descname">date_joined</code><a class="headerlink" href="#accounts.models.User.date_joined" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.User.email">
+<code class="sig-name descname">email</code><a class="headerlink" href="#accounts.models.User.email" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="accounts.models.User.get_next_by_date_joined">
+<code class="sig-name descname">get_next_by_date_joined</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">field=&lt;django.db.models.fields.DateTimeField: date_joined&gt;</em>, <em class="sig-param">is_next=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.User.get_next_by_date_joined" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="accounts.models.User.get_previous_by_date_joined">
+<code class="sig-name descname">get_previous_by_date_joined</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">field=&lt;django.db.models.fields.DateTimeField: date_joined&gt;</em>, <em class="sig-param">is_next=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.User.get_previous_by_date_joined" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.User.groups">
+<code class="sig-name descname">groups</code><a class="headerlink" href="#accounts.models.User.groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">Topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.User.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#accounts.models.User.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.User.is_admin">
+<code class="sig-name descname">is_admin</code><a class="headerlink" href="#accounts.models.User.is_admin" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.User.is_staff">
+<code class="sig-name descname">is_staff</code><a class="headerlink" href="#accounts.models.User.is_staff" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.User.logentry_set">
+<code class="sig-name descname">logentry_set</code><a class="headerlink" href="#accounts.models.User.logentry_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Parent.children</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.User.objects">
+<code class="sig-name descname">objects</code><em class="property"> = &lt;accounts.models.UserManager object&gt;</em><a class="headerlink" href="#accounts.models.User.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.User.user_permissions">
+<code class="sig-name descname">user_permissions</code><a class="headerlink" href="#accounts.models.User.user_permissions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">Topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.User.username">
+<code class="sig-name descname">username</code><a class="headerlink" href="#accounts.models.User.username" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.User.wordlist">
+<code class="sig-name descname">wordlist</code><a class="headerlink" href="#accounts.models.User.wordlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the reverse side of a one-to-one
+relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Restaurant</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">place</span> <span class="o">=</span> <span class="n">OneToOneField</span><span class="p">(</span><span class="n">Place</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;restaurant&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Place.restaurant</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseOneToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="accounts.models.UserManager">
+<em class="property">class </em><code class="sig-prename descclassname">accounts.models.</code><code class="sig-name descname">UserManager</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.UserManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.base_user.BaseUserManager</span></code></p>
+<p>A class to manage user accounts.
+It extends <code class="xref py py-class docutils literal notranslate"><span class="pre">django.contrib.auth.models.BaseUserManager</span></code> class.</p>
+<dl class="py method">
+<dt id="accounts.models.UserManager.create_superuser">
+<code class="sig-name descname">create_superuser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">email</span></em>, <em class="sig-param"><span class="n">username</span></em>, <em class="sig-param"><span class="n">password</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.UserManager.create_superuser" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method to create superuser.
+:param email: Email address
+:type email: str
+:param username: Username
+:type username: str
+:param password: Password
+:type password: str
+:return: Created user instance
+:rtype: <a class="reference internal" href="#accounts.models.User" title="accounts.models.User"><code class="xref py py-class docutils literal notranslate"><span class="pre">User</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="accounts.models.UserManager.create_user">
+<code class="sig-name descname">create_user</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">email</span></em>, <em class="sig-param"><span class="n">username</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.models.UserManager.create_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method to create user.
+:param email: Email address
+:type email: str
+:param username: Username
+:type username: str
+:param password: Password
+:type password: str
+:return: Created user instance
+:rtype: <a class="reference internal" href="#accounts.models.User" title="accounts.models.User"><code class="xref py py-class docutils literal notranslate"><span class="pre">User</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="accounts.models.UserManager.use_in_migrations">
+<code class="sig-name descname">use_in_migrations</code><em class="property"> = True</em><a class="headerlink" href="#accounts.models.UserManager.use_in_migrations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-accounts.tests">
+<span id="accounts-tests-module"></span><h2>accounts.tests module<a class="headerlink" href="#module-accounts.tests" title="Permalink to this headline">¶</a></h2>
+<p>Test for accounts</p>
+<dl class="py class">
+<dt id="accounts.tests.AccountsTestCase">
+<em class="property">class </em><code class="sig-prename descclassname">accounts.tests.</code><code class="sig-name descname">AccountsTestCase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">methodName</span><span class="o">=</span><span class="default_value">'runTest'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.tests.AccountsTestCase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<p>A class to test accounts.
+It extends <code class="xref py py-class docutils literal notranslate"><span class="pre">django.test.TestCase</span></code> class.</p>
+<dl class="py method">
+<dt id="accounts.tests.AccountsTestCase.setUp">
+<code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#accounts.tests.AccountsTestCase.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accounts Test Settings</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="accounts.tests.AccountsTestCase.test_auth_backend">
+<code class="sig-name descname">test_auth_backend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#accounts.tests.AccountsTestCase.test_auth_backend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test authentication backend</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="accounts.tests.AccountsTestCase.test_csrf">
+<code class="sig-name descname">test_csrf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#accounts.tests.AccountsTestCase.test_csrf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test CSRF Token API</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="accounts.tests.AccountsTestCase.test_models">
+<code class="sig-name descname">test_models</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#accounts.tests.AccountsTestCase.test_models" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test accounts models</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="accounts.tests.AccountsTestCase.test_signin">
+<code class="sig-name descname">test_signin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#accounts.tests.AccountsTestCase.test_signin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test Signin API</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="accounts.tests.AccountsTestCase.test_signout">
+<code class="sig-name descname">test_signout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#accounts.tests.AccountsTestCase.test_signout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test Signout API</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="accounts.tests.AccountsTestCase.test_signup">
+<code class="sig-name descname">test_signup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#accounts.tests.AccountsTestCase.test_signup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test Signup API</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-accounts.urls">
+<span id="accounts-urls-module"></span><h2>accounts.urls module<a class="headerlink" href="#module-accounts.urls" title="Permalink to this headline">¶</a></h2>
+<p>URL Configuration of accounts</p>
+</div>
+<div class="section" id="module-accounts.views">
+<span id="accounts-views-module"></span><h2>accounts.views module<a class="headerlink" href="#module-accounts.views" title="Permalink to this headline">¶</a></h2>
+<p>Views of accounts</p>
+<dl class="py function">
+<dt id="accounts.views.signin">
+<code class="sig-prename descclassname">accounts.views.</code><code class="sig-name descname">signin</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.signin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log in to the provided account.</p>
+<p>In <strong>POST</strong>: Log in to the account</p>
+<dl class="simple">
+<dt>POST parameters:</dt><dd><p>POST[‘email’]: Unique email
+POST[‘password’]: Password</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – a HTTP request</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a HTTP response</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="accounts.views.signout">
+<code class="sig-prename descclassname">accounts.views.</code><code class="sig-name descname">signout</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.signout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log out from the current account.</p>
+<p>In <strong>GET</strong>: Log out from the account</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – a HTTP request</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a HTTP response</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="accounts.views.signup">
+<code class="sig-prename descclassname">accounts.views.</code><code class="sig-name descname">signup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.signup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create account.</p>
+<p>In <strong>POST</strong>: Create a new account</p>
+<dl class="simple">
+<dt>POST parameters:</dt><dd><p>POST[‘username’]: Unique username
+POST[‘email’]: Email address
+POST[‘password’]: Password</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – a HTTP request</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a HTTP response</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="accounts.views.token">
+<code class="sig-prename descclassname">accounts.views.</code><code class="sig-name descname">token</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#accounts.views.token" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return CSRF token.</p>
+<p>In <strong>GET</strong>: Returns a CSRF token</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – a HTTP request</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a HTTP response with CSRF token</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-accounts">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-accounts" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Term'inator</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, swpp2020-team18.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/accounts.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
