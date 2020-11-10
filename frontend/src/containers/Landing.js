@@ -92,7 +92,7 @@ const useStyles = makeStyles(() => ({
 function Landing(props) {
   const classes = useStyles()
 
-  if (!props.user) {
+  if (props.user) {
     return <Redirect to='/signin' />
   }
 

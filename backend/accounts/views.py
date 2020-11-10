@@ -30,7 +30,7 @@ def token(request):
     else:
         return HttpResponseNotAllowed(['GET'])
 
-
+# @csrf_exempt
 def signup(request):
     """
     Create account.
