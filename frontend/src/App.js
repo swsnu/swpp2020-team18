@@ -6,14 +6,29 @@ import Landing from './containers/Landing'
 import PropTypes from 'prop-types'
 import SignIn from './components/accounts/SignIn'
 import SignUp from './components/accounts/SignUp'
-import AccountBox from './containers/accounts/AccountBox'
-import ArticleView from './containers/article/ArticleView'
+import './App.css'
 import { ThemeProvider } from '@material-ui/styles'
 import { createMuiTheme } from '@material-ui/core/styles'
-import * as accounts from './ducks/accounts'
+import Article from 'containers/article/Article'
+import Wordlist from 'containers/wordlist/Wordlist'
+import Statistics from 'containers/statistics/Statistics'
+import Test from 'containers/test/Test'
 import { connect } from 'react-redux'
+import * as accounts from './ducks/accounts'
+import ArticleView from './containers/article/ArticleView'
 
-const theme = createMuiTheme({})
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#414141',
+      contrastText: '#fff',
+    },
+    secondary: {
+      main: '#f5f5f5',
+      contrastText: '#fff',
+    },
+  },
+})
 
 function App(props) {
   const [loading, setLoading] = useState(true)
@@ -34,8 +49,43 @@ function App(props) {
               exact
               render={() => (
                 <>
-                  <AccountBox />
                   <Landing />
+                </>
+              )}
+            />
+            <Route
+              path='/terminator/article'
+              exact
+              render={() => (
+                <>
+                  <Article />
+                </>
+              )}
+            />
+            <Route
+              path='/terminator/wordlist'
+              exact
+              render={() => (
+                <>
+                  <Wordlist />
+                </>
+              )}
+            />
+            <Route
+              path='/terminator/test'
+              exact
+              render={() => (
+                <>
+                  <Test />
+                </>
+              )}
+            />
+            <Route
+              path='/terminator/statistics'
+              exact
+              render={() => (
+                <>
+                  <Statistics />
                 </>
               )}
             />
