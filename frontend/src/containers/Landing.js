@@ -104,7 +104,7 @@ function Landing(props) {
           className={`${classes.article} item`}
           underline='none'
           component={RouterLink}
-          to='/terminator/article'
+          to='/article'
         >
           <Card>
             <CardActionArea>
@@ -130,7 +130,7 @@ function Landing(props) {
           className={`${classes.wordlist} item`}
           underline='none'
           component={RouterLink}
-          to='/terminator/wordlist'
+          to='/wordlist'
         >
           <Card className={classes.side}>
             <div className={classes.details}>
@@ -150,7 +150,7 @@ function Landing(props) {
           className={`${classes.test} item`}
           underline='none'
           component={RouterLink}
-          to='/terminator/test'
+          to='/test'
         >
           <Card className={classes.side}>
             <div className={classes.details}>
@@ -170,7 +170,7 @@ function Landing(props) {
           className={`${classes.stats} item`}
           underline='none'
           component={RouterLink}
-          to='/terminator/statistics'
+          to='/statistics'
         >
           <Card className={classes.side}>
             <div className={classes.details}>
@@ -189,6 +189,7 @@ function Landing(props) {
       </div>
       <Box className={classes.copyright}>
         <Copyright />
+        <br></br>
       </Box>
     </Fragment>
   )

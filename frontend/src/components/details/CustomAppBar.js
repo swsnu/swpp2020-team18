@@ -39,7 +39,7 @@ function CustomAppBar(props) {
             src={logoImage}
             alt='terminator'
             className={classes.logo}
-            onClick={() => history.push('/terminator')}
+            onClick={() => history.push('/')}
           />
           <Typography variant='h6' className={classes.title}></Typography>
           <Button

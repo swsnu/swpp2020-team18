@@ -12,7 +12,7 @@ import { createMuiTheme } from '@material-ui/core/styles'
 import Article from 'containers/article/Article'
 import Wordlist from 'containers/wordlist/Wordlist'
 import Statistics from 'containers/statistics/Statistics'
-import Test from 'containers/test/Test'
+import ReviewTest from 'containers/test/ReviewTest'
 import { connect } from 'react-redux'
 import * as accounts from './ducks/accounts'
 import ArticleView from './containers/article/ArticleView'
@@ -46,7 +46,7 @@ function App(props) {
         <div className='App'>
           <Switch>
             <Route
-              path='/terminator'
+              path='/'
               exact
               render={() => (
                 <>
@@ -55,7 +55,7 @@ function App(props) {
               )}
             />
             <Route
-              path='/terminator/article'
+              path='/article'
               exact
               render={() => (
                 <>
@@ -64,7 +64,7 @@ function App(props) {
               )}
             />
             <Route
-              path='/terminator/wordlist'
+              path='/wordlist'
               exact
               render={() => (
                 <>
@@ -73,16 +73,16 @@ function App(props) {
               )}
             />
             <Route
-              path='/terminator/test'
+              path='/test'
               exact
               render={() => (
                 <>
-                  <Test />
+                  <ReviewTest />
                 </>
               )}
             />
             <Route
-              path='/terminator/statistics'
+              path='/statistics'
               exact
               render={() => (
                 <>
