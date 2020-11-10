@@ -189,6 +189,7 @@ function Landing(props) {
       </div>
       <Box className={classes.copyright}>
         <Copyright />
+        <br></br>
       </Box>
     </Fragment>
   )
