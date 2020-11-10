@@ -71,24 +71,6 @@ function createData(word, phrase, meaning, confidence, createdAt) {
 //   setSelected(newSelected);
 // };
 
-// const rows = [
-//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
-//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
-//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
-//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
-//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
-//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
-//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
-//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
-//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
-//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
-//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
-//   createData('apple', 'Are you looking for some useful apple idioms to enhance your day to day English conversation?', '사과', 1),
-//   createData('Russia', 'RU', 146793744, 17098246),
-//   createData('Nigeria', 'NG', 200962417, 923768),
-//   createData('Brazil', 'BR', 210147125, 8515767),
-// ]
-
 const StyledTableCell = withStyles(() => ({
   head: {
     backgroundColor: '#414141',
