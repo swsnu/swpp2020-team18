@@ -42,6 +42,16 @@ export default handleActions(
     ...pender({
       type: GETARTICLE,
       onSuccess: (state, action) => {
+        console.log(state)
+        console.log({
+          ...state,
+          article: {
+            ...state.article,
+            content: action.payload.data.content,
+            title: action.payload.data.title,
+            author: action.payload.data.author,
+          },
+        })
         return {
           ...state,
           article: {
@@ -57,6 +67,14 @@ export default handleActions(
     ...pender({
       type: GETARTICLETEST,
       onSuccess: (state, action) => {
+        console.log(state)
+        console.log({
+          ...state,
+          article: {
+            ...state.article,
+            phrases: action.payload.data.phrases,
+          },
+        })
         return {
           ...state,
           article: {

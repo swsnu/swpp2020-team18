@@ -58,17 +58,16 @@ def fetch_article_nytimes():
       phrases, keywords = extract_phrases_and_keywords(text, 7)
 
       article_model = Article(title=title, author=author, content=text)
-      # article_model.save()
+      article_model.save()
 
       for (phrase, keyword) in zip(phrases, keywords):
-        # TODO: Change korean meaning to real korean meaning
         try:
           korean_meaning = search_daum_endic(keyword)
           word_model = Word(content=keyword, korean_meaning=korean_meaning, difficulty=5)
-          # word_model.save()
+          word_model.save()
           phrase_model = Phrase(content=phrase, word=word_model)
-          # phrase_model.save()
-          # article_model.phrases.add(phrase_model.id)
+          phrase_model.save()
+          article_model.phrases.add(phrase_model.id)
         except IntegrityError:
           logger.debug('Duplicate data')
           pass
@@ -76,7 +75,7 @@ def fetch_article_nytimes():
     logger.debug('Fetching Completed!')
 
   except Exception as e:
-    print("Something went wrong: ", repr(e))
+    logger.debug("Something went wrong: ", repr(e))
 
 
 def extract_phrases_and_keywords(content, number):
@@ -94,20 +93,14 @@ def extract_phrases_and_keywords(content, number):
   output_phrases_list = []
   output_keywords_list = []
 
-  print("---------------------")
-  print("raw_keywords", raw_keywords)
-  print("keywords", keywords)
-
   for (raw_keyword, keyword) in zip(raw_keywords, keywords):
     for i in range(len(sentences)):
       sentence = sentences[i]
-      if raw_keyword in sentence:
+      if raw_keyword in sentence.lower():
         if not (sentence in output_phrases_list):
-          print(sentence)
-          print(raw_keyword)
           output_phrases_list.append(sentence)
           output_keywords_list.append(raw_keyword)
-          continue
+          break
 
   logger.debug('Extracted phrases: ', output_phrases_list)
   return (output_phrases_list, output_keywords_list)
@@ -162,11 +155,14 @@ def search_daum_endic(english_word):
     :param english_word: english word
     :type english_word: str
     
-    :returns: korean meaning of the word
+    :returns: korean meaning of the word, if not found return english word
     :rtype: str
   """
   dic_url = "http://dic.daum.net/search.do?q={0}"
   r = requests.get(dic_url.format(english_word))
   soup = BeautifulSoup(r.text, "html.parser")
   result_means = soup.find_all(attrs={'class':'list_search'})
-  return result_means[0].text.strip()
+  try:
+    return result_means[0].text.strip()
+  except:
+    return english_word

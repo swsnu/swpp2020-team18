@@ -87,9 +87,9 @@ function ArticleView(props) {
   const [activeStep, setActiveStep] = React.useState(0)
   useEffect(() => {
     setLoading(true)
-    props.getArticle(props.match.params.id)
-    props.getArticleTest(props.match.params.id)
-    setLoading(false)
+    props.getArticle(props.match.params.id).then(() => {
+      props.getArticleTest(props.match.params.id).then(() => setLoading(false))
+    })
   }, [])
   const classes = useStyles()
 
@@ -99,7 +99,6 @@ function ArticleView(props) {
         idx === i ? newAnswer : currentChoice
       )
     )
-    console.log(selectedAnswers)
   }
 
   const handleStep = (step) => () => {
@@ -154,7 +153,7 @@ function ArticleView(props) {
       const wordIdx = nthIndex(loweredContent, loweredPhraseContent, index + 1)
 
       // const idxPair = periodsIndex(loweredContent, wordIdx)
-      const modifiedPair = [wordIdx, wordIdx + phrase.content.length]
+      const modifiedPair = [wordIdx, wordIdx + phrase.content.length, phrase]
 
       indexPairList.push(modifiedPair)
     })
@@ -198,7 +197,7 @@ function ArticleView(props) {
           <Typography key={idx} className={classes.highlighted}>
             {wrapWordElement(
               content.substring(pair[0], pair[1]),
-              articleObject.phrases[emphasizedPhraseCount].keyword,
+              indexPairList[emphasizedPhraseCount][2].keyword,
               selected
             )}
           </Typography>
@@ -210,7 +209,7 @@ function ArticleView(props) {
           >
             {wrapWordElement(
               content.substring(pair[0], pair[1]),
-              articleObject.phrases[emphasizedPhraseCount].keyword,
+              indexPairList[emphasizedPhraseCount][2].keyword,
               selected
             )}
           </Typography>
@@ -249,19 +248,13 @@ function ArticleView(props) {
     !props.article.content ||
     !props.article.phrases
   ) {
-    console.log(props.article)
-    console.log('not yet')
     return null
   }
 
   const articleObject = props.article
-  console.log(loading)
-  console.log(props)
   const steps = articleObject.phrases.map((phrase) => phrase.word)
 
-  console.log(selectedAnswers)
   if (selectedAnswers.length == 0) {
-    console.log('WHWHWH')
     setSelectedAnswers(Array(steps.length).fill(null))
   }
 
