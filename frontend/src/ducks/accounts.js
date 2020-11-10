@@ -9,6 +9,7 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 const SIGNIN = 'accounts/SIGNIN'
 const SIGNUP = 'accounts/SIGNUP'
 const SIGNOUT = 'accounts/SIGNOUT'
+const CHECKLOGIN = 'accounts/CHECKLOGIN'
 
 // Action Creators
 export const signIn = createAction(
@@ -41,6 +42,16 @@ export const signOut = createAction(
       .catch((err) => err)
   }
 )
+export const checkLogin = createAction(
+  // payload = null
+  CHECKLOGIN,
+  () => {
+    return axios
+      .get('/api/accounts/signin')
+      .then((res) => res)
+      .catch((err) => err)
+  }
+)
 
 // Initial State
 const initialState = {
@@ -68,6 +79,14 @@ export default handleActions(
       type: SIGNOUT,
       onSuccess: (state) => {
         return { ...state, user: null }
+      },
+    }),
+    ...pender({
+      type: CHECKLOGIN,
+      onSuccess: (state, action) => {
+        console.log(action.payload.status)
+        console.log(action.payload.data)
+        return { ...state, user: action.payload.data }
       },
     }),
   },

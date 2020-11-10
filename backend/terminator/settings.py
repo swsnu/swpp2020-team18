@@ -25,19 +25,26 @@ SECRET_KEY = 'kts-=g!2d0k#h!^nvxyyilyr71n*=!*^%^e5mb0#)l*0bb1j@g'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '.term-inator.site',
+    'localhost'
+]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'wordlist.apps.WordlistConfig',
     'accounts.apps.AccountsConfig',
+    'article.apps.ArticleConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_results',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -120,6 +127,22 @@ USE_L10N = True
 
 USE_TZ = True
 
+
+# Celery Configuration Options
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+# CELERY_BEAT_SCHEDULE = {
+#     # 'send-summary-every-hour': {
+#     #     'task': 'summary',
+#     #     'schedule': 10,
+#     # },
+#     'send-notification-on-friday-afternoon': {
+#         'task': 'article.tasks.send_notification',
+#         'schedule': 10,
+#     }, 
+# }
+CELERY_RESULT_BACKEND = 'django-db'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/

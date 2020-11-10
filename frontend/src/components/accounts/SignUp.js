@@ -85,7 +85,7 @@ function SignUp(props) {
                 id='username'
                 label='Username'
                 name='username'
-                autoComplete='username'
+                autoComplete='nickname'
                 onChange={(event) => setUsername(event.target.value)}
               />
             </Grid>
@@ -97,7 +97,7 @@ function SignUp(props) {
                 id='email'
                 label='Email Address'
                 name='email'
-                autoComplete='email'
+                autoComplete='username'
                 onChange={(event) => setEmail(event.target.value)}
               />
             </Grid>
