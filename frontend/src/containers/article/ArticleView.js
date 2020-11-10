@@ -33,21 +33,18 @@ const articleObject = {
         'He is one of the most famous artists of the 20th century and a household name even among people who, like myself, consider themselves to be complete novices in the art world.',
       keyword: 'famous',
       choices: ['재밌는', '유명한', '뛰어난', '배고픈'],
-      index: 0,
     },
     {
       content:
         'This unfathomable output not only played a large role in Picasso’s international fame, but also enabled him to amass a huge net worth of approximately $500 million by the time of his death in 1973.',
       keyword: 'unfathomable',
       choices: ['가까운', '심오한', '빠른', '느린'],
-      index: 0,
     },
     {
       content:
         'Any discussion of the most well-known artists in history would have to include his name.',
       keyword: 'include',
       choices: ['포함하다', '뛰다', '던지다', '올라가다'],
-      index: 0,
     },
   ],
 }
@@ -176,7 +173,7 @@ function ArticleView(props) {
     const content = articleObject.content
     const loweredContent = content.toLowerCase()
     articleObject.phrases.forEach((phrase) => {
-      const index = phrase.index
+      const index = 0
       const loweredPhraseContent = phrase.content.toLowerCase()
 
       const wordIdx = nthIndex(loweredContent, loweredPhraseContent, index + 1)

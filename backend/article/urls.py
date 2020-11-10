@@ -5,7 +5,6 @@ from django.urls import path
 from article import views
 
 urlpatterns = [
-    # path('signup', views.signup, name='signup'),
-    # path('signin', views.signin, name='signin'),
-    # path('signout', views.signout, name='signout'),
+    path('<int:id>', views.article, name='article'),
+    path('<int:id>/quiz', views.articleQuiz, name='articleQuiz'),
 ]

@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/token', accounts_views.token, name='token'),
     path('api/accounts/', include('accounts.urls')),
+    path('api/articles/', include('article.urls')),
 ]
