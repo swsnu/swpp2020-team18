@@ -143,11 +143,7 @@ function Landing(props) {
                 </Typography>
               </CardContent>
             </div>
-            <CardMedia
-              className={classes.cover}
-              image={wordlistImage}
-              title='Live from space album cover'
-            />
+            <CardMedia className={classes.cover} image={wordlistImage} />
           </Card>
         </Link>
         <Link
@@ -167,11 +163,7 @@ function Landing(props) {
                 </Typography>
               </CardContent>
             </div>
-            <CardMedia
-              className={classes.cover}
-              image={testImage}
-              title='Live from space album cover'
-            />
+            <CardMedia className={classes.cover} image={testImage} />
           </Card>
         </Link>
         <Link
@@ -191,11 +183,7 @@ function Landing(props) {
                 </Typography>
               </CardContent>
             </div>
-            <CardMedia
-              className={classes.cover}
-              image={statisticsImage}
-              title='Live from space album cover'
-            />
+            <CardMedia className={classes.cover} image={statisticsImage} />
           </Card>
         </Link>
       </div>
