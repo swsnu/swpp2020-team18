@@ -8,8 +8,9 @@ import RadioGroup from '@material-ui/core/RadioGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import FormControl from '@material-ui/core/FormControl'
 import Button from '@material-ui/core/Button'
-import { useHistory } from 'react-router-dom'
-// import FormLabel from '@material-ui/core/FormLabel';
+import { useHistory, Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -130,7 +131,7 @@ function Copyright() {
   )
 }
 
-function ReviewTest() {
+function ReviewTest(props) {
   const classes = useStyles()
   const [questionNumber, setQuestionNumber] = React.useState(0)
   const [value, setValue] = React.useState('female')
@@ -141,6 +142,10 @@ function ReviewTest() {
   }
   const onClickNext = (newQuestionNumber) => {
     setQuestionNumber(newQuestionNumber)
+  }
+
+  if (!props.user) {
+    return <Redirect to='/signin' />
   }
 
   return (
@@ -204,4 +209,12 @@ function ReviewTest() {
   )
 }
 
-export default ReviewTest
+const mapStateToProps = (state) => ({
+  user: state.accounts.user,
+})
+
+ReviewTest.propTypes = {
+  user: PropTypes.object,
+}
+
+export default connect(mapStateToProps, null)(ReviewTest)

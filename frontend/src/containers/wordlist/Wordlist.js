@@ -5,7 +5,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import Link from '@material-ui/core/Link'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -33,9 +35,14 @@ function Copyright() {
   )
 }
 
-function Wordlist() {
+function Wordlist(props) {
   const classes = useStyles()
   const history = useHistory()
+
+  if (!props.user) {
+    return <Redirect to='/signin' />
+  }
+
   return (
     <Fragment>
       <CustomAppBar />
@@ -58,4 +65,12 @@ function Wordlist() {
   )
 }
 
-export default Wordlist
+const mapStateToProps = (state) => ({
+  user: state.accounts.user,
+})
+
+Wordlist.propTypes = {
+  user: PropTypes.object,
+}
+
+export default connect(mapStateToProps, null)(Wordlist)
