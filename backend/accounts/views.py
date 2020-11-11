@@ -30,6 +30,7 @@ def token(request):
     else:
         return HttpResponseNotAllowed(['GET'])
 
+@ensure_csrf_cookie
 def signup(request):
     """
     Create account.
@@ -71,6 +72,7 @@ def signup(request):
         return HttpResponseNotAllowed(['POST'])
 
 
+@ensure_csrf_cookie
 def signin(request):
     """
     Log in to the provided account.
@@ -122,6 +124,7 @@ def signin(request):
         return HttpResponseNotAllowed(['POST'])
 
 
+@ensure_csrf_cookie
 def signout(request):
     """
     Log out from the current account.

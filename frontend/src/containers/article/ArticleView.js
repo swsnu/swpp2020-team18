@@ -120,40 +120,20 @@ function ArticleView(props) {
     return i
   }
 
-  // const nextAlphabetIndex = (content, index) => {
-  //   while (
-  //     index != content.length &&
-  //     !(
-  //       (content[index] >= 'a' && content[index] <= 'z') ||
-  //       (content[index] >= 'A' && content[index] <= 'Z')
-  //     )
-  //   )
-  //     index++
-  //   return index
-  // }
-
-  // const periodsIndex = (content, index) => {
-  //   let startIdx = content.lastIndexOf('.', index)
-  //   let endIdx = content.indexOf('.', index)
-  //   startIdx = startIdx < 0 ? 0 : startIdx
-  //   endIdx = endIdx < 0 ? content.length : endIdx
-
-  //   return [startIdx, endIdx]
-  // }
-
   const processContent = (articleObject) => {
     var outputPairList = []
     var indexPairList = []
     const content = articleObject.content
     const loweredContent = content.toLowerCase()
-    articleObject.phrases.forEach((phrase) => {
+    console.log(articleObject.phrases)
+    articleObject.phrases.forEach((phrase, idx) => {
       const index = 0
       const loweredPhraseContent = phrase.content.toLowerCase()
 
       const wordIdx = nthIndex(loweredContent, loweredPhraseContent, index + 1)
 
       // const idxPair = periodsIndex(loweredContent, wordIdx)
-      const modifiedPair = [wordIdx, wordIdx + phrase.content.length, phrase]
+      const modifiedPair = [wordIdx, wordIdx + phrase.content.length, idx]
 
       indexPairList.push(modifiedPair)
     })
@@ -187,6 +167,8 @@ function ArticleView(props) {
       )
     }
 
+    const sort_map = indexPairList.map((pair) => pair[2])
+
     var output
     var emphasizedPhraseCount = -1
     output = outputPairList.map((pair, idx) => {
@@ -197,7 +179,7 @@ function ArticleView(props) {
           <Typography key={idx} className={classes.highlighted}>
             {wrapWordElement(
               content.substring(pair[0], pair[1]),
-              indexPairList[emphasizedPhraseCount][2].keyword,
+              articleObject.phrases[sort_map[emphasizedPhraseCount]].keyword,
               selected
             )}
           </Typography>
@@ -209,7 +191,7 @@ function ArticleView(props) {
           >
             {wrapWordElement(
               content.substring(pair[0], pair[1]),
-              indexPairList[emphasizedPhraseCount][2].keyword,
+              articleObject.phrases[sort_map[emphasizedPhraseCount]].keyword,
               selected
             )}
           </Typography>
@@ -225,7 +207,7 @@ function ArticleView(props) {
           </Typography>
         )
     })
-    return output
+    return [output, sort_map]
   }
 
   // const handleComplete = () => {
@@ -253,6 +235,8 @@ function ArticleView(props) {
 
   const articleObject = props.article
   const steps = articleObject.phrases.map((phrase) => phrase.word)
+  const processdContent = processContent(articleObject)[0]
+  const sort_map = processContent(articleObject)[1]
 
   if (selectedAnswers.length == 0) {
     setSelectedAnswers(Array(steps.length).fill(null))
@@ -306,7 +290,7 @@ function ArticleView(props) {
             </Grid>
           </Grid>
           <Grid item xs={8}>
-            <div>{!articleObject ? null : processContent(articleObject)}</div>
+            <div>{!articleObject ? null : processdContent}</div>
           </Grid>
           <Divider flexItem orientation='vertical' />
           <Grid item xs={3}>
@@ -314,9 +298,9 @@ function ArticleView(props) {
               <Grid item xs={12}>
                 {!articleObject || !articleObject.phrases ? null : (
                   <ArticleSideTest
-                    selectedPhrase={articleObject.phrases[activeStep]}
-                    onAnswerChoice={handleAnswerChoice(activeStep)}
-                    answer={selectedAnswers[activeStep]}
+                    selectedPhrase={articleObject.phrases[sort_map[activeStep]]}
+                    onAnswerChoice={handleAnswerChoice(sort_map[activeStep])}
+                    answer={selectedAnswers[sort_map[activeStep]]}
                   />
                 )}
               </Grid>
