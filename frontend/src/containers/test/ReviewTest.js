@@ -40,77 +40,81 @@ const useStyles = makeStyles(() => ({
 
 const fakeData = [
   {
-    phrase: 'To [marry] is to halve your rights and double your duties.',
-    answer1: '결혼하다',
-    answer2: '즐겁다',
-    answer3: '산딸기',
-    answer4: '달팽이',
-  },
-  {
-    phrase: 'He makes no [friend] who never made a foe.',
-    answer1: '이웃',
-    answer2: '가족',
-    answer3: '친구',
-    answer4: '아버지',
-  },
-  {
-    phrase: 'Common sense is the collection of [prejudices] acquired by age 18.',
-    answer1: '정의',
-    answer2: '구타',
-    answer3: '편견',
-    answer4: '의견',
+    phrase:
+      'It wasn’t until I began my research in graduate [school] that I learned sociopaths exist along a wide spectrum, like many people with psychiatric disorders.',
+    answer1: '학교',
+    answer2: '감옥',
+    answer3: '연수',
+    answer4: '차가움',
   },
   {
     phrase:
-      'The unleashed power of the atom has changed everything save our modes of thinking, and we thus drift toward unparalleled [catastrophes].',
-    answer1: '세계',
-    answer2: '구원',
-    answer3: '카타르시스',
-    answer4: '재난',
-  },
-  {
-    phrase: 'Nothing is more despicable than [respect] based on fear.',
-    answer1: '존경심',
-    answer2: '재검사',
-    answer3: '두려움',
-    answer4: '경멸',
+      'It wasn’t until college that a therapist told me what I had long suspected: My lack of [emotion] and empathy are hallmarks of sociopathy.',
+    answer1: '행동',
+    answer2: '추진력',
+    answer3: '감정',
+    answer4: '사회성',
   },
   {
     phrase:
-      'Television has [proved] that people will look at anything rather than each other.',
-    answer1: '제공하다',
-    answer2: '미디어',
-    answer3: '빼앗다',
-    answer4: '입증하다',
+      '[Climbers] typically take around four to six days to reach the top, using a variety of routes.',
+    answer1: '몽상가',
+    answer2: '오이',
+    answer3: '빗',
+    answer4: '등산가',
   },
   {
-    phrase: "[Business]? It's quite simple. It's other people's money.",
-    answer1: '사업',
-    answer2: '돈',
-    answer3: '직장',
-    answer4: '친구',
+    phrase:
+      'Grohl conceded defeat, and since then the two have continued playing [music] for each other.',
+    answer1: '놀이',
+    answer2: '음악',
+    answer3: '박자',
+    answer4: '예술',
   },
   {
-    phrase: 'I would as soon leave my son a [curse] as the almighty dollar.',
-    answer1: '돈',
-    answer2: '저주',
-    answer3: '아들',
-    answer4: '물려주다',
+    phrase:
+      'The Trump administration has a dirty little secret: It’s not just planning to increase [taxes] on most Americans.',
+    answer1: '요금',
+    answer2: '긍지',
+    answer3: '세금',
+    answer4: '복지',
   },
-  {
-    phrase: 'A [hungry] man is not a free man.',
-    answer1: '배고픈',
-    answer2: '부유한',
-    answer3: '가난한',
-    answer4: '남자',
-  },
-  {
-    phrase: 'Truth is generally the best [vindication] against slander.',
-    answer1: '진실',
-    answer2: '모략',
-    answer3: '해명',
-    answer4: '방어',
-  },
+  // 여기 문제
+  // {
+  //   phrase: 'Television has [proved] that people will look at anything rather than each other.',
+  //   answer1: '제공하다',
+  //   answer2: '미디어',
+  //   answer3: '빼앗다',
+  //   answer4: '입증하다',
+  // },
+  // {
+  //   phrase: "Given the estimate that the vaccine is over 90 percent effective, however, we can safely assume very few people who were [vaccinated] got Covid-19.",
+  //   answer1: '예방 접종',
+  //   answer2: '고소',
+  //   answer3: '청소',
+  //   answer4: '봉사',
+  // },
+  // {
+  //   phrase: 'I would as soon leave my son a [curse] as the almighty dollar.',
+  //   answer1: '돈',
+  //   answer2: '저주',
+  //   answer3: '아들',
+  //   answer4: '물려주다',
+  // },
+  // {
+  //   phrase: 'A [hungry] man is not a free man.',
+  //   answer1: '배고픈',
+  //   answer2: '부유한',
+  //   answer3: '가난한',
+  //   answer4: '남자',
+  // },
+  // {
+  //   phrase: 'Truth is generally the best [vindication] against slander.',
+  //   answer1: '진실',
+  //   answer2: '모략',
+  //   answer3: '해명',
+  //   answer4: '방어',
+  // },
 ]
 
 function Copyright() {
@@ -181,7 +185,7 @@ function ReviewTest() {
               className={classes.Button}
               color='inherit'
               onClick={() => {
-                if (questionNumber == 9) {
+                if (questionNumber == 4) {
                   history.push('/')
                 } else {
                   onClickNext(questionNumber + 1)
