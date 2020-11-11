@@ -153,7 +153,9 @@ function ArticleView(props) {
     outputPairList.push([start, end, false])
 
     let wrapWordElement = (content, word, selected) => {
-      const idx = content.indexOf(word)
+      let l_content = content.toLowerCase()
+      let l_word = word.toLowerCase()
+      const idx = l_content.indexOf(l_word)
       const style = selected ? classes.highlightedWord : classes.greylightedWord
 
       return (
