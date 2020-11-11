@@ -244,7 +244,14 @@ function ArticleView(props) {
     setSelectedAnswers(Array(steps.length).fill(null))
   }
 
-  const completed = selectedAnswers.map((answer) => (answer ? true : false))
+  let completed = []
+  completed = selectedAnswers.map(() => false)
+  console.log(selectedAnswers)
+  for (var j = 0; j < completed.length; j++) {
+    if (selectedAnswers[sort_map[j]]) completed[j] = true
+  }
+  console.log(sort_map)
+  console.log(completed)
 
   return (
     <Container component='main' maxWidth='md'>

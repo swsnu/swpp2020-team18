@@ -91,6 +91,8 @@ const useStyles = makeStyles(() => ({
 
 function Landing(props) {
   const classes = useStyles()
+  const random_number = 1 + Math.floor(Math.random() * 10)
+  const article_url = `/article/${random_number}`
 
   if (!props.user) {
     return <Redirect to='/signin' />
@@ -104,7 +106,7 @@ function Landing(props) {
           className={`${classes.article} item`}
           underline='none'
           component={RouterLink}
-          to='/article'
+          to={article_url}
         >
           <Card>
             <CardActionArea>
