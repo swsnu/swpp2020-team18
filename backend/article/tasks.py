@@ -77,7 +77,7 @@ def fetch_article_nytimes(): # pylint: disable=too-many-locals
 
         logger.debug("Fetching Completed!")
 
-    except requests.exceptions.RequestException as exceptions:
+    except (requests.exceptions.RequestException, KeyError, IndexError) as exceptions:
         logger.debug("Something went wrong: %s", repr(exceptions))
 
 

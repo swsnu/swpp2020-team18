@@ -162,13 +162,20 @@ class AccountsTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
 
         response = client.get("/api/accounts/signin")
+        self.assertEqual(response.status_code, 200)
+
+        response = client.put("/api/accounts/signin")
         self.assertEqual(response.status_code, 405)
+
 
         response = client.post(
             "/api/accounts/signin",
             json.dumps({"email": "testuser1@test.com", "password": "TEST_PASSWORD_1"}),
             content_type="application/json",
         )
+        self.assertEqual(response.status_code, 200)
+
+        response = client.get("/api/accounts/signin")
         self.assertEqual(response.status_code, 200)
 
     def test_signout(self):

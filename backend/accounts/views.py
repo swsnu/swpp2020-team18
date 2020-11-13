@@ -137,7 +137,7 @@ def signin(request):
         else:
             return HttpResponse(status=401)
     else:
-        return HttpResponseNotAllowed(["POST"])
+        return HttpResponseNotAllowed(["GET", "POST"])
 
 
 @ensure_csrf_cookie

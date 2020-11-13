@@ -1,5 +1,5 @@
 """
-Views of accounts
+Views of article
 """
 
 import random
