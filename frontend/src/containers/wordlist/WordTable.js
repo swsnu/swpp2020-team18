@@ -12,6 +12,7 @@ import { connect } from 'react-redux'
 import * as wordlist from '../../ducks/wordlist'
 import PropTypes from 'prop-types'
 import DeleteIcon from '@material-ui/icons/Delete'
+import { IconButton } from '@material-ui/core'
 
 const columns = [
   { id: 'word', label: 'Word', minWidth: 100, align: 'center' },
@@ -37,39 +38,14 @@ const columns = [
 ]
 
 function createData(word, phrase, meaning, confidence, createdAt) {
-  // const delete =
-  // <IconButton edge="end" aria-label="delete">
-  //   <DeleteIcon />
-  // </IconButton>
   return {
     word,
     phrase,
     meaning,
     confidence,
     createdAt,
-    deleteIcon: <DeleteIcon />,
   }
 }
-
-// const handleClick = (event, name) => {
-//   const selectedIndex = selected.indexOf(name);
-//   let newSelected = [];
-
-//   if (selectedIndex === -1) {
-//     newSelected = newSelected.concat(selected, name);
-//   } else if (selectedIndex === 0) {
-//     newSelected = newSelected.concat(selected.slice(1));
-//   } else if (selectedIndex === selected.length - 1) {
-//     newSelected = newSelected.concat(selected.slice(0, -1));
-//   } else if (selectedIndex > 0) {
-//     newSelected = newSelected.concat(
-//       selected.slice(0, selectedIndex),
-//       selected.slice(selectedIndex + 1),
-//     );
-//   }
-
-//   setSelected(newSelected);
-// };
 
 const StyledTableCell = withStyles(() => ({
   head: {
@@ -96,7 +72,6 @@ function StickyHeadTable(props) {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [rows, setRows] = useState([])
-  // const [selectedPhrase, setSelectedPhrase] = useState('')
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -107,19 +82,68 @@ function StickyHeadTable(props) {
     setPage(0)
   }
 
+  const onRemove = (phrase) => {
+    const result = window.confirm('Are you sure you want to remove this word?')
+    if (result) {
+      props
+        .onWordRemove(phrase)
+        .then(() => props.onWordlistOpen())
+        .then((res) => {
+          let tempRowData = []
+          res.data.map((rowData) => {
+            let dataWithRemoveButton = createData(
+              rowData['word'],
+              rowData['phrase'],
+              rowData['korean_meaning'],
+              rowData['confidence'],
+              rowData['created_at']
+            )
+            dataWithRemoveButton['deleteIcon'] = (
+              <IconButton
+                edge='end'
+                aria-label='delete'
+                onClick={() => onRemove(rowData['phrase'])}
+              >
+                <DeleteIcon />
+              </IconButton>
+            )
+            tempRowData.push(dataWithRemoveButton)
+          })
+          tempRowData.sort(function (a, b) {
+            if (a.createdAt < b.createdAt) {
+              return 1
+            }
+            if (a.createdAt > b.createdAt) {
+              return -1
+            }
+            return 0
+          })
+          setRows(tempRowData)
+        })
+    }
+  }
+
   useEffect(() => {
     props.onWordlistOpen().then((res) => {
       let tempRowData = []
       res.data.map((rowData) => {
-        tempRowData.push(
-          createData(
-            rowData['word'],
-            rowData['phrase'],
-            rowData['korean_meaning'],
-            rowData['confidence'],
-            rowData['created_at']
-          )
+        let dataWithRemoveButton = createData(
+          rowData['word'],
+          rowData['phrase'],
+          rowData['korean_meaning'],
+          rowData['confidence'],
+          rowData['created_at']
         )
+        dataWithRemoveButton['deleteIcon'] = (
+          <IconButton
+            edge='end'
+            aria-label='delete'
+            onClick={() => onRemove(rowData['phrase'])}
+          >
+            <DeleteIcon />
+          </IconButton>
+        )
+        tempRowData.push(dataWithRemoveButton)
       })
       tempRowData.sort(function (a, b) {
         if (a.createdAt < b.createdAt) {
@@ -189,11 +213,13 @@ function StickyHeadTable(props) {
 const mapDispatchToProps = (dispatch) => {
   return {
     onWordlistOpen: () => dispatch(wordlist.getWordlist()),
+    onWordRemove: (phrase) => dispatch(wordlist.removeWord(phrase)),
   }
 }
 
 StickyHeadTable.propTypes = {
   onWordlistOpen: PropTypes.func,
+  onWordRemove: PropTypes.func,
 }
 
 export default connect(null, mapDispatchToProps)(StickyHeadTable)
