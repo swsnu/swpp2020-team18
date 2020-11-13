@@ -6,12 +6,16 @@ from django.contrib.auth.backends import ModelBackend
 
 User = get_user_model()
 
+
 class AuthBackend(ModelBackend):
     """
     A class to provide custom authentication.
     It extends :class:`django.contrib.auth.backends.ModelBackend` class.
     """
-    def authenticate(self, request, email=None, password=None, **kwargs): # pylint: disable=W0221
+
+    def authenticate(
+        self, request, email=None, password=None, **kwargs
+    ):  # pylint: disable=W0221
         """
         A method to authenticate user.
         :param username: request

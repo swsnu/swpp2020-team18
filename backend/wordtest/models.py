@@ -3,8 +3,10 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
+
 User = get_user_model()
 from wordlist.models import Word, Phrase, Wordlist, WordlistPhrase
+
 
 class Question(models.Model):
     """
@@ -22,14 +24,9 @@ class Question(models.Model):
     :param completed: mean test is completed or not
     :type completed: class: django.db.models.BooleanField
     """
-    taker = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE
-    )
-    question = models.ForeignKey(
-        Phrase,
-        on_delete=models.CASCADE
-    )
+
+    taker = models.ForeignKey(User, on_delete=models.CASCADE)
+    question = models.ForeignKey(Phrase, on_delete=models.CASCADE)
     number = models.IntegerField(default=0)
     answer1 = models.CharField(max_length=100)
     answer2 = models.CharField(max_length=100)
@@ -37,9 +34,10 @@ class Question(models.Model):
     answer4 = models.CharField(max_length=100)
     correct_answers = models.IntegerField(default=0)
     completed = models.BooleanField(default=False)
-    
+
     def __str__(self):
         return self.question
+
 
 class TestResult(models.Model):
     """
@@ -56,9 +54,10 @@ class TestResult(models.Model):
     :param score: score of the test
     :type score: class:`django.db.models.DecimalField`
     """
+
     TEST_TYPE = [
-        ('AR','article'),
-        ('WL','wordlist'),
+        ("AR", "article"),
+        ("WL", "wordlist"),
     ]
 
     test_date = models.DateTimeField()
@@ -69,6 +68,7 @@ class TestResult(models.Model):
 
     def __str__(self):
         return "test score: %d" % score
+
 
 # one user should have one TestHistory model
 # create TestHistory when user created
@@ -85,7 +85,7 @@ class TestResult(models.Model):
 
 #     def __str__(self):
 #         return "%s's test result history" % self.user.username
-    
+
 # @receiver(post_save, sender=User)
 # def create_test_history(sender, instance, created, **kwargs):
 #     if created:
