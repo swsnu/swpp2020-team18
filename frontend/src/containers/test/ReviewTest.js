@@ -80,42 +80,6 @@ const fakeData = [
     answer3: '세금',
     answer4: '복지',
   },
-  // 여기 문제
-  // {
-  //   phrase: 'Television has [proved] that people will look at anything rather than each other.',
-  //   answer1: '제공하다',
-  //   answer2: '미디어',
-  //   answer3: '빼앗다',
-  //   answer4: '입증하다',
-  // },
-  // {
-  //   phrase: "Given the estimate that the vaccine is over 90 percent effective, however, we can safely assume very few people who were [vaccinated] got Covid-19.",
-  //   answer1: '예방 접종',
-  //   answer2: '고소',
-  //   answer3: '청소',
-  //   answer4: '봉사',
-  // },
-  // {
-  //   phrase: 'I would as soon leave my son a [curse] as the almighty dollar.',
-  //   answer1: '돈',
-  //   answer2: '저주',
-  //   answer3: '아들',
-  //   answer4: '물려주다',
-  // },
-  // {
-  //   phrase: 'A [hungry] man is not a free man.',
-  //   answer1: '배고픈',
-  //   answer2: '부유한',
-  //   answer3: '가난한',
-  //   answer4: '남자',
-  // },
-  // {
-  //   phrase: 'Truth is generally the best [vindication] against slander.',
-  //   answer1: '진실',
-  //   answer2: '모략',
-  //   answer3: '해명',
-  //   answer4: '방어',
-  // },
 ]
 
 function Copyright() {
