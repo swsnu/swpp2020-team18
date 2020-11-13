@@ -2,6 +2,11 @@ matrix:
   include:
     - language: node_js
       node_js: '12'
+      addons:
+        sonarcloud:
+          organization: "swsnu"
+          token:
+            secure: "mVPskLwU82J8+cl1Qzwfau9LqdaDtYuCTupPGIr40no7luBd4Jcd/3fx3JqaFt1qmW/LsuKsEjPhX0HZ9beXSyIEyaG47uuSRCEIH3l2WAEXhhBc6Itkf2eR0tRZPt/XXPO1EyJ++jetgYfyRzBPh4uVpNQ3Ze3UhYNeliWMkzOfIzb2JyPgon9f6KKxG9WTZ3xLBXVY3Rd1o1eDSwlFRZUcsawNFC+gILoYDlPKVA+43vwsHzx7eRTazgJ7qjLkFPyV4NHExGE5KCZ853jT+zT43bKIiin3l3nCOPrAMSRF02jR711HS1gGcB5VDJ/+K/9GQd1AQxP4Cxsi/7+mMPPpBj47wh71dsd4/t1iwrnFxHliu2sIOtZkQqjrSLSEBHV/oZ4Ua1y5z4nwJBxwgfHxG44VXFq6IsKKSCFJWxaCp8Yw+ruimbeFUpU7+JEOYbO+jMg45ywTY/xmXFPoFBhkwl5Jl+OMOCYOH3yitSpbkfoDKOjeetpgG25LANFa9kfNeRmI7NbkEUm7xEHGtYPXkURvMc/4WGnWLlSklEiaj3ZioAUwX04EYVOqGktNhTZGXlu0m/PVjZFVI8gKC+PGbWvjfevofRxDOcyoIovWpuKpyfeeHtllk2IXMeKKynM9go5DsH7+xD6IOJuwlGdmFwv3hgULAeI12ZM1JpM="
       cache:
         - yarn: true
       before_install:
@@ -11,6 +16,7 @@ matrix:
       script:
         - ./node_modules/.bin/eslint src/
         - yarn test --coverage --watchAll=false
+        - cd .. && sonar-scanner
 
     - language: python
       python: '3.7.5'
