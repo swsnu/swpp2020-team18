@@ -5,6 +5,7 @@ import axios from 'axios'
 
 // actions
 const GET_WORDLIST = 'GET_WORDLIST'
+const REMOVE_WORD = 'REMOVE_WORD'
 
 const initialState = {
   wordlist: [],
@@ -21,6 +22,12 @@ export default handleActions(
         // state.set('wordlist', [{'word': 'word'}])
       },
     }),
+    ...pender({
+      type: REMOVE_WORD,
+      onSuccess: (state, action) => {
+        console.log(action.payload.data)
+      },
+    }),
   },
   initialState
 )
@@ -30,6 +37,24 @@ export const getWordlist = createAction(GET_WORDLIST, () =>
   axios({
     method: 'get',
     url: '/api/wordlist/',
+  })
+    .then((response) => {
+      console.log(response)
+      return response
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+)
+
+export const removeWord = createAction(REMOVE_WORD, (phrase) =>
+  axios({
+    method: 'patch',
+    url: '/api/wordlist/',
+    data: {
+      phrase: phrase,
+      action: 'remove',
+    },
   })
     .then((response) => {
       console.log(response)
