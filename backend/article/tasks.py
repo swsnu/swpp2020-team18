@@ -2,25 +2,23 @@
 Asynchronous tasks for fetching articles using celery
 """
 
-# from celery import task
+import logging
 from celery import shared_task
-from celery.utils.log import get_task_logger
-from article.models import Article
-from terminator import sensitive
 import requests
 from bs4 import BeautifulSoup
-import logging
 from gensim.summarization import keywords
-from nltk.stem import WordNetLemmatizer
-from wordlist.models import Phrase, Word
 import nltk
+from nltk.stem import WordNetLemmatizer
 from django.db import IntegrityError
+from article.models import Article
+from terminator import sensitive
+from wordlist.models import Phrase, Word
 
 logger = logging.getLogger(__name__)
 
 
 @shared_task
-def fetch_article_nytimes():
+def fetch_article_nytimes(): # pylint: disable=too-many-locals
     """
     Fetch today's most popular news and
     # Save it as **Article** model.
@@ -35,7 +33,7 @@ def fetch_article_nytimes():
         response = requests.get(url)
         data = response.json()
 
-        num = data["num_results"]
+        # num = data["num_results"]
         results = data["results"]
 
         logger.debug("Fetching articles from NYTimes...")
@@ -47,24 +45,24 @@ def fetch_article_nytimes():
             if author.startswith("By "):
                 author = author[3:]
             soup = BeautifulSoup(response.text, "html.parser")
-            category = result["section"]
-            subcategory = result["subsection"]
+            # category = result["section"]
+            # subcategory = result["subsection"]
 
-            logger.debug("Fetching from: %s" % original_url)
-            logger.debug("Title: %s" % title)
-            logger.debug("Author: %s" % author)
+            logger.debug("Fetching from: %s", original_url)
+            logger.debug("Title: %s", title)
+            logger.debug("Author: %s", author)
 
             article = soup.select("article")[0]
             section = article.select("section")[-1]
             text = section.text
-            logger.debug("Content: %s" % text)
+            logger.debug("Content: %s", text)
 
-            phrases, keywords = extract_phrases_and_keywords(text, 7)
+            phrases, keywords_list = extract_phrases_and_keywords(text, 7)
 
             article_model = Article(title=title, author=author, content=text)
             article_model.save()
 
-            for (phrase, keyword) in zip(phrases, keywords):
+            for (phrase, keyword) in zip(phrases, keywords_list):
                 try:
                     korean_meaning = search_daum_endic(keyword)
                     word_model = Word(
@@ -76,12 +74,11 @@ def fetch_article_nytimes():
                     article_model.phrases.add(phrase_model.id)
                 except IntegrityError:
                     logger.debug("Duplicate data")
-                    pass
 
         logger.debug("Fetching Completed!")
 
-    except Exception as e:
-        logger.debug("Something went wrong: ", repr(e))
+    except requests.exceptions.RequestException as exceptions:
+        logger.debug("Something went wrong: %s", repr(exceptions))
 
 
 def extract_phrases_and_keywords(content, number):
@@ -94,21 +91,20 @@ def extract_phrases_and_keywords(content, number):
     :returns: (a list of phrases, a list of keywords)
     :rtype: tuple
     """
-    keywords, raw_keywords = extract_keywords(content, number, get_both=True)
+    lemmatized_keywords, raw_keywords = extract_keywords(content, number, get_both=True) # pylint: disable=unbalanced-tuple-unpacking
     sentences = nltk.tokenize.sent_tokenize(content)
     output_phrases_list = []
     output_keywords_list = []
 
-    for (raw_keyword, keyword) in zip(raw_keywords, keywords):
-        for i in range(len(sentences)):
-            sentence = sentences[i]
+    for (raw_keyword, keyword) in zip(raw_keywords, lemmatized_keywords): # pylint: disable=unused-variable
+        for sentence in sentences:
             if raw_keyword in sentence.lower():
-                if not (sentence in output_phrases_list):
+                if not sentence in output_phrases_list:
                     output_phrases_list.append(sentence)
                     output_keywords_list.append(raw_keyword)
                     break
 
-    logger.debug("Extracted phrases: ", output_phrases_list)
+    logger.debug("Extracted phrases: %s", output_phrases_list)
     return (output_phrases_list, output_keywords_list)
 
 
@@ -146,7 +142,7 @@ def extract_keywords(content, number, lemmatize=True, get_both=False):
         map(lambda kw: lemmatizer.lemmatize(kw, "v"), temp_keywords)
     )
 
-    logger.debug("Extracted keywords: ", processed_keywords)
+    logger.debug("Extracted keywords: %s", processed_keywords)
     if get_both:
         return [processed_keywords, temp_keywords]
 
@@ -164,10 +160,10 @@ def search_daum_endic(english_word):
     :rtype: str
     """
     dic_url = "http://dic.daum.net/search.do?q={0}"
-    r = requests.get(dic_url.format(english_word))
-    soup = BeautifulSoup(r.text, "html.parser")
+    response = requests.get(dic_url.format(english_word))
+    soup = BeautifulSoup(response.text, "html.parser")
     result_means = soup.find_all(attrs={"class": "list_search"})
     try:
         return result_means[0].text.strip()
-    except:
+    except IndexError:
         return english_word

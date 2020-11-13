@@ -1,5 +1,8 @@
-import os
+"""
+Configuration of Celery
+"""
 
+import os
 from celery import Celery
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "terminator.settings")
@@ -10,4 +13,7 @@ app.autodiscover_tasks()
 
 @app.task(bind=True)
 def debug_task(self):
+    """
+    Print request for debug purpose
+    """
     print(f"Request: {self.request!r}")
