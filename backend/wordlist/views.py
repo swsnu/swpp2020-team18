@@ -1,15 +1,14 @@
-from django.shortcuts import render
+"""
+Views of wordlist
+"""
+import json
 from django.http import (
     HttpResponse,
-    HttpResponseBadRequest,
     HttpResponseNotAllowed,
     JsonResponse,
 )
-from wordlist.models import Phrase, Wordlist, WordlistPhrase, Word
-import json
 from django.contrib.auth import get_user_model
-from django.contrib.auth import authenticate
-
+from wordlist.models import Phrase, Wordlist, WordlistPhrase, Word
 User = get_user_model()
 
 # Create your views here.
@@ -37,9 +36,8 @@ def wordlist(request):
     :returns: a HTTP response
     :rtype: HttpResponse
     """
-
-    if request.method == "GET":
-        if request.user.is_authenticated:
+    if request.user.is_authenticated:
+        if request.method == "GET":
             word_all_list = [
                 {
                     "word": Word.objects.get(id=phrase["word_id"]).content,
@@ -63,32 +61,23 @@ def wordlist(request):
             return JsonResponse(
                 word_all_list, safe=False, json_dumps_params={"ensure_ascii": False}
             )
-        else:
-            return HttpResponse(status=401)
-    elif request.method == "PATCH":
-        if request.user.is_authenticated:
+        elif request.method == "PATCH":
             req_data = json.loads(request.body.decode())
             phrase_data = req_data["phrase"]
             phrase_action = req_data["action"]
+            try:
+                found_phrase = Phrase.objects.get(content=phrase_data)
+            except:
+                return HttpResponse(status=404)
+            user_wordlist = request.user.wordlist
             if phrase_action == "add":
-                try:
-                    adding_phrase = Phrase.objects.get(content=phrase_data)
-                except:
-                    return HttpResponse(status=404)
-                wordlist = request.user.wordlist
-                wordlist.added_phrase.add(adding_phrase)
-                return HttpResponse(status=200)
+                user_wordlist.added_phrase.add(found_phrase)
             elif phrase_action == "remove":
-                try:
-                    removing_phrase = Phrase.objects.get(content=phrase_data)
-                except:
-                    return HttpResponse(status=404)
-                wordlist = request.user.wordlist
-                wordlist.added_phrase.remove(removing_phrase)
-                return HttpResponse(status=200)
+                user_wordlist.added_phrase.remove(found_phrase)
             else:
                 return HttpResponse(status=404)
+            return HttpResponse(status=200)
         else:
-            return HttpResponse(status=401)
+            return HttpResponseNotAllowed(["GET", "PATCH"])
     else:
-        return HttpResponseNotAllowed(["GET", "PATCH"])
+        return HttpResponse(status=401)
