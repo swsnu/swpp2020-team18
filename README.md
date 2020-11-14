@@ -95,3 +95,5 @@ yarn
 ``` bash
 yarn start
 ```
+
+Remove this comment after sonarcloud works
