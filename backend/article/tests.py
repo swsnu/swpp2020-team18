@@ -1,15 +1,15 @@
 """
 Test for article
 """
-import json
+# import json
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
-from django.contrib.auth import authenticate
 import responses
 from terminator import sensitive
-from .models import Article
 from article import tasks
 from wordlist.models import Phrase, Word
+from .models import Article
+
 
 User = get_user_model()
 
@@ -55,7 +55,7 @@ class ArticleTestCase(TestCase):
         self.assertEqual(str(article_model), title)
 
     @responses.activate
-    def test_fetch_article_nytimes(self):
+    def test_fetch_article_nytimes(self): # pylint: disable=no-self-use
         """
         Test fetch_article_nytimes task
         """
@@ -110,6 +110,9 @@ class ArticleTestCase(TestCase):
         tasks.fetch_article_nytimes()
 
     def test_article_one(self):
+        """
+        Test article_one
+        """
         client = Client()
         client.login(email="testuser1@test.com", password="TEST_PASSWORD_1")
 
@@ -119,6 +122,9 @@ class ArticleTestCase(TestCase):
         self.assertEqual(response.status_code, 405)
 
     def test_article_quiz(self):
+        """
+        Test article_quiz
+        """
         client = Client()
         client.login(email="testuser1@test.com", password="TEST_PASSWORD_1")
 

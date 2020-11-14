@@ -91,16 +91,16 @@ def extract_phrases_and_keywords(content, number):
     :returns: (a list of phrases, a list of keywords)
     :rtype: tuple
     """
-    lemmatized_keywords, raw_keywords = extract_keywords(
+    lemmatized_keywords, raw_keywords = extract_keywords( # pylint: disable=unbalanced-tuple-unpacking
         content, number, get_both=True
     )  # pylint: disable=unbalanced-tuple-unpacking
     sentences = nltk.tokenize.sent_tokenize(content)
     output_phrases_list = []
     output_keywords_list = []
 
-    for (raw_keyword, keyword) in zip(
+    for (raw_keyword, keyword) in zip( # pylint: disable=unused-variable
         raw_keywords, lemmatized_keywords
-    ):  # pylint: disable=unused-variable
+    ):
         for sentence in sentences:
             if raw_keyword in sentence.lower():
                 if not sentence in output_phrases_list:

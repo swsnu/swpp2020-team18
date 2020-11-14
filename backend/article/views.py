@@ -5,12 +5,12 @@ Views of article
 import random
 
 # import json
-from json import JSONDecodeError
+# from json import JSONDecodeError
 from django.contrib.auth.decorators import login_required
 from django.http import (
     HttpResponse,
     HttpResponseNotAllowed,
-    HttpResponseBadRequest,
+    # HttpResponseBadRequest,
     JsonResponse,
 )
 from .models import Article
