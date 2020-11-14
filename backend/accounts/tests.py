@@ -167,7 +167,6 @@ class AccountsTestCase(TestCase):
         response = client.put("/api/accounts/signin")
         self.assertEqual(response.status_code, 405)
 
-
         response = client.post(
             "/api/accounts/signin",
             json.dumps({"email": "testuser1@test.com", "password": "TEST_PASSWORD_1"}),

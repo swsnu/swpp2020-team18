@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 @shared_task
-def fetch_article_nytimes(): # pylint: disable=too-many-locals
+def fetch_article_nytimes():  # pylint: disable=too-many-locals
     """
     Fetch today's most popular news and
     # Save it as **Article** model.
@@ -91,12 +91,16 @@ def extract_phrases_and_keywords(content, number):
     :returns: (a list of phrases, a list of keywords)
     :rtype: tuple
     """
-    lemmatized_keywords, raw_keywords = extract_keywords(content, number, get_both=True) # pylint: disable=unbalanced-tuple-unpacking
+    lemmatized_keywords, raw_keywords = extract_keywords(
+        content, number, get_both=True
+    )  # pylint: disable=unbalanced-tuple-unpacking
     sentences = nltk.tokenize.sent_tokenize(content)
     output_phrases_list = []
     output_keywords_list = []
 
-    for (raw_keyword, keyword) in zip(raw_keywords, lemmatized_keywords): # pylint: disable=unused-variable
+    for (raw_keyword, keyword) in zip(
+        raw_keywords, lemmatized_keywords
+    ):  # pylint: disable=unused-variable
         for sentence in sentences:
             if raw_keyword in sentence.lower():
                 if not sentence in output_phrases_list:

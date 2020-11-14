@@ -3,6 +3,7 @@ Views of article
 """
 
 import random
+
 # import json
 from json import JSONDecodeError
 from django.contrib.auth.decorators import login_required
@@ -46,33 +47,29 @@ def article_one(request, article_id):
 
     """
     if request.method == "GET":
-        try:
-            article = Article.objects.get(pk=article_id)
-            title = article.title
-            author = article.author
-            content = article.content
-            phrases = list(
-                map(
-                    lambda phrase: {
-                        "content": phrase.content,
-                        "keyword": phrase.word.content,
-                    },
-                    article.phrases.all(),
-                )
-            )
-            return JsonResponse(
-                {
-                    "title": title,
-                    "author": author,
-                    "content": content,
-                    "phrases": phrases,
+        article = Article.objects.get(pk=article_id)
+        title = article.title
+        author = article.author
+        content = article.content
+        phrases = list(
+            map(
+                lambda phrase: {
+                    "content": phrase.content,
+                    "keyword": phrase.word.content,
                 },
-                safe=False,
-                status=200,
+                article.phrases.all(),
             )
-
-        except (KeyError, JSONDecodeError):
-            return HttpResponseBadRequest()
+        )
+        return JsonResponse(
+            {
+                "title": title,
+                "author": author,
+                "content": content,
+                "phrases": phrases,
+            },
+            safe=False,
+            status=200,
+        )
     else:
         return HttpResponseNotAllowed(["GET"])
 
@@ -96,28 +93,25 @@ def article_quiz(request, article_id):
     """
 
     if request.method == "GET":
-        try:
-            article = Article.objects.get(pk=article_id)
+        article = Article.objects.get(pk=article_id)
 
-            def mixup(korean_meaning):
-                choice = random.sample(fake_words, 3) + [korean_meaning]
-                random.shuffle(choice)
-                return choice
+        def mixup(korean_meaning):
+            choice = random.sample(fake_words, 3) + [korean_meaning]
+            random.shuffle(choice)
+            return choice
 
-            phrases = list(
-                map(
-                    lambda phrase: {
-                        "content": phrase.content,
-                        "keyword": phrase.word.content,
-                        "choices": mixup(phrase.word.korean_meaning),
-                    },
-                    article.phrases.all(),
-                )
+        phrases = list(
+            map(
+                lambda phrase: {
+                    "content": phrase.content,
+                    "keyword": phrase.word.content,
+                    "choices": mixup(phrase.word.korean_meaning),
+                },
+                article.phrases.all(),
             )
-            return JsonResponse({"phrases": phrases}, safe=False, status=200)
+        )
+        return JsonResponse({"phrases": phrases}, safe=False, status=200)
 
-        except (KeyError, JSONDecodeError):
-            return HttpResponseBadRequest()
     elif request.method == "POST":
         # TODO: Scoring # pylint: disable=fixme
         return HttpResponse()
@@ -126,29 +120,26 @@ def article_quiz(request, article_id):
 
 
 # TODO: Make more sophiscated way # pylint: disable=fixme
-@login_required
-def article_recommend(request):
-    """
-    Get article recommendation
+# @login_required
+# def article_recommend(request):
+#     """
+#     Get article recommendation
 
-    In **GET**: Get article recommendation
+#     In **GET**: Get article recommendation
 
-    :param request: a HTTP request
-    :type request: HttpRequest
+#     :param request: a HTTP request
+#     :type request: HttpRequest
 
-    :returns: a JSON response
-    :rtype: JsonResponse
+#     :returns: a JSON response
+#     :rtype: JsonResponse
 
-    """
+#     """
 
-    if request.method == "GET":
-        try:
-            count = Article.objects.all.count()
-            article_id = random.randint(1, count + 1)
+#     if request.method == "GET":
+#         count = Article.objects.all.count()
+#         article_id = random.randint(1, count + 1)
 
-            return JsonResponse({"recommendation": [article_id]}, safe=False, status=200)
+#         return JsonResponse({"recommendation": [article_id]}, safe=False, status=200)
 
-        except (KeyError, JSONDecodeError):
-            return HttpResponseBadRequest()
-    else:
-        return HttpResponseNotAllowed(["GET"])
+#     else:
+#         return HttpResponseNotAllowed(["GET"])
