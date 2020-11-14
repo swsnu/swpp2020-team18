@@ -6,7 +6,7 @@ matrix:
         sonarcloud:
           organization: "swsnu"
           token:
-            secure: "AdzaxC08CJt3IL0QYy+in0JkvLTTEgoCuGqsunJ0BAs+19fTLlUrPnqkTtFQZtEGJpqshR1PL3zHSInNcHiDcu/x4/StCcFwlxBlEXVBg4gIR0iWX5OEVobNFTT5GoNquqKFZn9W6gb26Z5vJfF78Ydk+atV/9ArFTdai8ZA4obr2L5iulBbvVjLcK7rrKi+yKTWNyIEauLhjuiJ02EXPeBw/nUCzAZzJLWgePGCBmP1Biop43H71St+7SdzFulyOcyR51oRrnJ++UovLjdDmb3/luiFYUWnbABSZnHORlB6Jov+Y/YmWfyQUeMiysjRwlfGdX70rFhXYKQXqRbnrcyrnbsYadCqA0LL7HugX5y6In1euvCCupD7iZz2Yap8kdS3RaD9Tiz5bGZ+8z22K52oTP2+4p+Rv1XmIIY4S9/jKljoyRqfCBiSMDcjxgQFfR7W0J8/MEbqnpGjNW5EoCm/MnJnAFnkutvoY88zQ4IcL9B5UiTCdQ2YooQNVZNm0mapU3hQRgJUKWyslpjMuBirCQ+hxH5uRVZaY0pheXEMk2ndObMs8ZFhGCx9GlrD7jZesXzVN2hk2oX6fiPLp6mwYC9jseuW6D4PdU4NNyhFXgSiDFmEGs3tHEKVlDUua0/OfYGVx7oUI/3RYOzz3+z4t4lrN8tW2E9BEcwOe6I="
+            secure: "QebcPbKl5ddMatMZWqV7cMFhHUzO1ubWuA5yMGlK6+W58p8YuC44lasYk4YlnXRSSfmNTV0ExzjXPiSj3w7ytbpFu5Syapy2BTCp4LYZGoMQJWvzj5lKPpNNGb0peuRRFooRa0Cw4Bl6FU0iMEVJwkNGc6Kx9MqLxUJ2zsGqLOXQlFV0n5YJcf/afE5c8leyFnlO20nz3RlojUJ0tVpN0GYAq1pRAmucLOmdvk2qGoPx4zrzkoNkdrH2XwMa3GwUMDEXStvgTbHPiI5oJMHlgNbxxD6g2nAucc04Ifc12FPumqjOZ9hEwYlD4ZoOQX6VQEW8Uclk1zsNfQOAMA2Pheeqw4VwORueYtTE6hcdPWBRPekKq/yANSeRkuGrQbBRzFY6D/820YqnEqV4+5cDqcrZ528qWaA9kJfT5CBf1nNogBQfvN+BCFmMvX7SHf9OHdGmj59KBSRniOimpWLWiKIzYLvORZIjVdHZllHszbXlrn5w6nuKg9JjqBVnQiZixrEMLNLg8iy3TOCkEpLYwrng1JCEyuba74cz1R48LpP+RzBNvRbYlPPtpp5JNwy5+1+8+pwBmwURLbAyyAJzzZ6NVWjlkhsxjlVJ0YqRFCRaGucgyLpEJJ6wZghXX1JyJ4PpC/T0vfTBdqdAH1exrlWZRjGcycYMR2a1LsO6oQ8="
       cache:
         - yarn: true
       before_install:
@@ -16,9 +16,16 @@ matrix:
       script:
         - ./node_modules/.bin/eslint src/
         - yarn test --coverage --watchAll=false
+        - cd ..
+        - sonar-scanner
 
     - language: python
       python: '3.7.5'
+      addons:
+        sonarcloud:
+          organization: "swsnu"
+          token:
+            secure: "QebcPbKl5ddMatMZWqV7cMFhHUzO1ubWuA5yMGlK6+W58p8YuC44lasYk4YlnXRSSfmNTV0ExzjXPiSj3w7ytbpFu5Syapy2BTCp4LYZGoMQJWvzj5lKPpNNGb0peuRRFooRa0Cw4Bl6FU0iMEVJwkNGc6Kx9MqLxUJ2zsGqLOXQlFV0n5YJcf/afE5c8leyFnlO20nz3RlojUJ0tVpN0GYAq1pRAmucLOmdvk2qGoPx4zrzkoNkdrH2XwMa3GwUMDEXStvgTbHPiI5oJMHlgNbxxD6g2nAucc04Ifc12FPumqjOZ9hEwYlD4ZoOQX6VQEW8Uclk1zsNfQOAMA2Pheeqw4VwORueYtTE6hcdPWBRPekKq/yANSeRkuGrQbBRzFY6D/820YqnEqV4+5cDqcrZ528qWaA9kJfT5CBf1nNogBQfvN+BCFmMvX7SHf9OHdGmj59KBSRniOimpWLWiKIzYLvORZIjVdHZllHszbXlrn5w6nuKg9JjqBVnQiZixrEMLNLg8iy3TOCkEpLYwrng1JCEyuba74cz1R48LpP+RzBNvRbYlPPtpp5JNwy5+1+8+pwBmwURLbAyyAJzzZ6NVWjlkhsxjlVJ0YqRFCRaGucgyLpEJJ6wZghXX1JyJ4PpC/T0vfTBdqdAH1exrlWZRjGcycYMR2a1LsO6oQ8="
       cache:
         - pip: true
       before_install:
