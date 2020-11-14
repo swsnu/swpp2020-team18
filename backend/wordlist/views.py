@@ -67,7 +67,7 @@ def wordlist(request):
             phrase_action = req_data["action"]
             try:
                 found_phrase = Phrase.objects.get(content=phrase_data)
-            except:
+            except LookupError:
                 return HttpResponse(status=404)
             user_wordlist = request.user.wordlist
             if phrase_action == "add":

@@ -67,7 +67,9 @@ class Wordlist(models.Model):
 def create_user_wordlist(sender, instance, created, **kwargs):
     """
     A function to create wordlist when a user is created.
+    Function with unused argument.
     """
+    _ = (sender, kwargs,)
     if created:
         Wordlist.objects.create(user=instance)
 
@@ -76,7 +78,9 @@ def create_user_wordlist(sender, instance, created, **kwargs):
 def save_user_wordlist(sender, instance, **kwargs):
     """
     A function to save the wordlist create when a user is saved.
+    Function with unused argument.
     """
+    _ = (sender, kwargs,)
     instance.wordlist.save()
 
 
