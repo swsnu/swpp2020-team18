@@ -1,8 +1,10 @@
+"""
+Models of wordlist
+"""
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
-from django.contrib.auth import authenticate
 
 User = get_user_model()
 
@@ -17,13 +19,13 @@ class Word(models.Model):
     :param difficulty: word's difficulty
     :type difficulty: class:`django.db.models.IntegerField`
     """
-
+    objects = models.Manager()
     content = models.CharField(max_length=100)
     korean_meaning = models.CharField(max_length=100)
     difficulty = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return self.content
+        return str(self.content)
 
 
 class Phrase(models.Model):
@@ -36,7 +38,7 @@ class Phrase(models.Model):
     :param confidence: user's confidence about phrase
     :type confidence: class:`django.db.models.IntegerField`
     """
-
+    objects = models.Manager()
     content = models.TextField(blank=False, unique=True)
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
 
@@ -52,7 +54,7 @@ class Wordlist(models.Model):
     :param added_phrase: added phrases in wordlist
     :type added_phrase: class:`django.db.models.ManyToManyField`
     """
-
+    objects = models.Manager()
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     added_phrase = models.ManyToManyField(Phrase, through="WordlistPhrase", blank=True)
 
@@ -63,12 +65,22 @@ class Wordlist(models.Model):
 # User 생성시에 자동으로 wordlist가 1개 생성되도록 설정
 @receiver(post_save, sender=User)
 def create_user_wordlist(sender, instance, created, **kwargs):
+    """
+    A function to create wordlist when a user is created.
+    Function with unused argument.
+    """
+    _ = (sender, kwargs,)
     if created:
         Wordlist.objects.create(user=instance)
 
 
 @receiver(post_save, sender=User)
 def save_user_wordlist(sender, instance, **kwargs):
+    """
+    A function to save the wordlist create when a user is saved.
+    Function with unused argument.
+    """
+    _ = (sender, kwargs,)
     instance.wordlist.save()
 
 
@@ -82,7 +94,7 @@ class WordlistPhrase(models.Model):
     :param created_at: time the phrase is added to wordlist
     :type created_at: class:`django.db.models.DateTimeField`
     """
-
+    objects = models.Manager()
     wordlist = models.ForeignKey(Wordlist, on_delete=models.CASCADE)
     phrase = models.ForeignKey(Phrase, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

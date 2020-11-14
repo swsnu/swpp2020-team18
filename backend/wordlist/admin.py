@@ -1,3 +1,6 @@
+"""
+Register wordlist models to admin site
+"""
 from django.contrib import admin
 
 # Register your models here.

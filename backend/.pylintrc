@@ -75,7 +75,6 @@ disable=print-statement,
         locally-disabled,
         file-ignored,
         suppressed-message,
-        useless-suppression,
         deprecated-pragma,
         use-symbolic-message-instead,
         apply-builtin,
@@ -145,7 +144,7 @@ disable=print-statement,
 # either give multiple identifier separated by comma (,) or put this option
 # multiple time (only on the command line, not in the configuration file where
 # it should appear only once). See also the "--disable" option for examples.
-enable=c-extension-no-member
+enable=c-extension-no-member, useless-suppression
 
 
 [REPORTS]
