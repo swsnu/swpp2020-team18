@@ -2,7 +2,6 @@ import React from 'react'
 import { useEffect } from 'react'
 // import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
-import Link from '@material-ui/core/Link'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
@@ -19,19 +18,7 @@ import Divider from '@material-ui/core/Divider'
 import { makeStyles } from '@material-ui/core/styles'
 import ArticleSideTest from '../../components/article/ArticleSideTest'
 import { withRouter } from 'react-router-dom'
-
-function Copyright() {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {'Copyright © '}
-      <Link color='inherit' href='/'>
-        Term&#39;inator
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  )
-}
+import Copyright from '../../components/details/Copyright'
 
 const useStyles = makeStyles((theme) => ({
   paper: {

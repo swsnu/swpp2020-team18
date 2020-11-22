@@ -17,19 +17,7 @@ import CardMedia from '@material-ui/core/CardMedia'
 import Link from '@material-ui/core/Link'
 import Box from '@material-ui/core/Box'
 import CustomAppBar from '../components/details/CustomAppBar'
-
-function Copyright() {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {'Copyright © '}
-      <Link color='inherit' href='/'>
-        Term&#39;inator
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  )
-}
+import Copyright from '../components/details/Copyright'
 
 const useStyles = makeStyles(() => ({
   root: {

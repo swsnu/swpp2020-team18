@@ -1,8 +1,6 @@
 import React, { Fragment } from 'react'
 import CustomAppBar from 'components/details/CustomAppBar'
 import { makeStyles } from '@material-ui/core/styles'
-import Link from '@material-ui/core/Link'
-import Typography from '@material-ui/core/Typography'
 import Radio from '@material-ui/core/Radio'
 import RadioGroup from '@material-ui/core/RadioGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
@@ -11,6 +9,7 @@ import Button from '@material-ui/core/Button'
 import { useHistory, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import Copyright from '../../components/details/Copyright'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -113,19 +112,6 @@ const fakeData = [
     answer4: '방어',
   },
 ]
-
-function Copyright() {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {'Copyright © '}
-      <Link color='inherit' href='/'>
-        Term&#39;inator
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  )
-}
 
 function LevelTest(props) {
   const classes = useStyles()

@@ -15,19 +15,7 @@ import { Redirect } from 'react-router-dom'
 import * as accounts from '../../ducks/accounts'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-
-function Copyright() {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {'Copyright © '}
-      <Link color='inherit' href='/'>
-        Term&#39;inator
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  )
-}
+import Copyright from '../details/Copyright'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
