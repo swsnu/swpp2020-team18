@@ -35,7 +35,7 @@ function App(props) {
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     setLoading(true)
-    document.title = "Term'inator"
+    // document.title = "Term'inator"
     props.getAuthentication().then(() => setLoading(false))
   }, [])
 
