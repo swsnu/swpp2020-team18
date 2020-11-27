@@ -9,7 +9,6 @@ import SignUp from './components/accounts/SignUp'
 import './App.css'
 import { ThemeProvider } from '@material-ui/styles'
 import { createMuiTheme } from '@material-ui/core/styles'
-import Article from 'containers/article/Article'
 import Wordlist from 'containers/wordlist/Wordlist'
 import Statistics from 'containers/statistics/Statistics'
 import ReviewTest from 'containers/test/ReviewTest'
@@ -52,15 +51,6 @@ function App(props) {
               render={() => (
                 <>
                   <Landing />
-                </>
-              )}
-            />
-            <Route
-              path='/article'
-              exact
-              render={() => (
-                <>
-                  <Article />
                 </>
               )}
             />
