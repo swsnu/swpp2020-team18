@@ -19,8 +19,13 @@ import { makeStyles } from '@material-ui/core/styles'
 import ArticleSideTest from '../../components/article/ArticleSideTest'
 import { withRouter } from 'react-router-dom'
 import Copyright from '../../components/details/Copyright'
+import CustomAppBar from '../../components/details/CustomAppBar'
 
 const useStyles = makeStyles((theme) => ({
+  title: {
+    margin: 0,
+    padding: '5vh',
+  },
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -241,106 +246,116 @@ function ArticleView(props) {
   console.log(completed)
 
   return (
-    <Container component='main' maxWidth='md'>
-      <CssBaseline />
-      <Grid container justify='center' alignItems='center'>
-        <Typography variant='h3' component='h2' gutterBottom>
-          Practice with Article!
-        </Typography>
-      </Grid>
-      <div>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Stepper
-              alternativeLabel
-              nonLinear
-              className={classes.stepper}
-              activeStep={activeStep}
-            >
-              {!steps
-                ? null
-                : steps.map((label, index) => (
-                    <Step key={label}>
-                      <StepButton
-                        onClick={handleStep(index)}
-                        completed={completed[index]}
-                      >
-                        {label}
-                      </StepButton>
-                    </Step>
-                  ))}
-            </Stepper>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container justify='center' alignItems='center'>
-              <Typography variant='h4' component='h3' gutterBottom>
-                {!articleObject ? null : articleObject.title}
-              </Typography>
+    <>
+      <CustomAppBar />
+      <Container component='main' maxWidth='md'>
+        <CssBaseline />
+        <Grid container justify='center' alignItems='center'>
+          <Typography
+            className={classes.title}
+            variant='h3'
+            component='h2'
+            gutterBottom
+          >
+            Practice with Article!
+          </Typography>
+        </Grid>
+        <div>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Stepper
+                alternativeLabel
+                nonLinear
+                className={classes.stepper}
+                activeStep={activeStep}
+              >
+                {!steps
+                  ? null
+                  : steps.map((label, index) => (
+                      <Step key={label}>
+                        <StepButton
+                          onClick={handleStep(index)}
+                          completed={completed[index]}
+                        >
+                          {label}
+                        </StepButton>
+                      </Step>
+                    ))}
+              </Stepper>
             </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container justify='center' alignItems='center'>
-              <Typography variant='h6' component='h6' gutterBottom>
-                {!articleObject ? null : articleObject.author}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item xs={8}>
-            <div>{!articleObject ? null : processdContent}</div>
-          </Grid>
-          <Divider flexItem orientation='vertical' />
-          <Grid item xs={3}>
-            <Grid container spacing={8}>
-              <Grid item xs={12}>
-                {!articleObject || !articleObject.phrases ? null : (
-                  <ArticleSideTest
-                    selectedPhrase={articleObject.phrases[sort_map[activeStep]]}
-                    onAnswerChoice={handleAnswerChoice(sort_map[activeStep])}
-                    answer={selectedAnswers[sort_map[activeStep]]}
-                  />
-                )}
+            <Grid item xs={12}>
+              <Grid container justify='center' alignItems='center'>
+                <Typography variant='h4' component='h3' gutterBottom>
+                  {!articleObject ? null : articleObject.title}
+                </Typography>
               </Grid>
-              <Grid item xs={12}>
-                <Grid container>
-                  <Grid item xs={6}>
-                    <Button
-                      variant='outlined'
-                      disabled={activeStep === 0}
-                      onClick={() => handleStep(activeStep - 1)()}
-                    >
-                      Prev
-                    </Button>
-                  </Grid>
-                  <Grid item xs={6}>
-                    {activeStep === steps.length - 1 ? (
-                      <Button
-                        variant='contained'
-                        color='primary'
-                        disabled={completed.some((e) => e === false)}
-                        onClick={() => handleSubmit()}
-                      >
-                        Submit
-                      </Button>
-                    ) : (
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container justify='center' alignItems='center'>
+                <Typography variant='h6' component='h6' gutterBottom>
+                  {!articleObject ? null : articleObject.author}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item xs={8}>
+              <div>{!articleObject ? null : processdContent}</div>
+            </Grid>
+            <Divider flexItem orientation='vertical' />
+            <Grid item xs={3}>
+              <Grid container spacing={8}>
+                <Grid item xs={12}>
+                  {!articleObject || !articleObject.phrases ? null : (
+                    <ArticleSideTest
+                      selectedPhrase={
+                        articleObject.phrases[sort_map[activeStep]]
+                      }
+                      onAnswerChoice={handleAnswerChoice(sort_map[activeStep])}
+                      answer={selectedAnswers[sort_map[activeStep]]}
+                    />
+                  )}
+                </Grid>
+                <Grid item xs={12}>
+                  <Grid container>
+                    <Grid item xs={6}>
                       <Button
                         variant='outlined'
-                        color='primary'
-                        onClick={() => handleStep(activeStep + 1)()}
+                        disabled={activeStep === 0}
+                        onClick={() => handleStep(activeStep - 1)()}
                       >
-                        Next
+                        Prev
                       </Button>
-                    )}
+                    </Grid>
+                    <Grid item xs={6}>
+                      {activeStep === steps.length - 1 ? (
+                        <Button
+                          variant='contained'
+                          color='primary'
+                          disabled={completed.some((e) => e === false)}
+                          onClick={() => handleSubmit()}
+                        >
+                          Submit
+                        </Button>
+                      ) : (
+                        <Button
+                          variant='outlined'
+                          color='primary'
+                          onClick={() => handleStep(activeStep + 1)()}
+                        >
+                          Next
+                        </Button>
+                      )}
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
-    </Container>
+        </div>
+        <Box mt={5}>
+          <Copyright />
+        </Box>
+      </Container>
+    </>
   )
 }
 

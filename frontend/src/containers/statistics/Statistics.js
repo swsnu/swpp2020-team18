@@ -3,6 +3,8 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
+import Box from '@material-ui/core/Box'
+import { makeStyles } from '@material-ui/core/styles'
 import {
   AreaChart,
   Area,
@@ -12,6 +14,8 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts'
+import Copyright from '../../components/details/Copyright'
+import CustomAppBar from '../../components/details/CustomAppBar'
 
 // var d = new Date();
 // var n = d.getDay();
@@ -54,13 +58,28 @@ const data = [
   },
 ]
 
+const useStyles = makeStyles(() => ({
+  title: {
+    margin: 0,
+    padding: '5vh',
+  },
+}))
+
 function Statistics() {
+  const classes = useStyles()
+
   return (
     <div>
+      <CustomAppBar />
       <Container component='main' maxWidth='md'>
         <CssBaseline />
         <Grid container justify='center' alignItems='center'>
-          <Typography variant='h3' component='h2' gutterBottom>
+          <Typography
+            className={classes.title}
+            variant='h3'
+            component='h2'
+            gutterBottom
+          >
             Learning Statistics
           </Typography>
         </Grid>
@@ -99,6 +118,9 @@ function Statistics() {
             </Grid>
           </Grid>
         </div>
+        <Box mt={8}>
+          <Copyright />
+        </Box>
       </Container>
     </div>
   )
