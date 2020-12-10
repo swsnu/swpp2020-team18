@@ -6,6 +6,9 @@ import penderMiddleware from 'redux-pender'
 // import accountsReducer from '../ducks/accounts'
 // import * as actionCreators from '../ducks/accounts';
 
+export const history = createBrowserHistory()
+export const middlewares = [thunk, routerMiddleware(history), penderMiddleware()]
+
 const getMockReducer = jest.fn(
   (initialState) => (state = initialState, action) => {
     switch (action.type) {
@@ -16,10 +19,15 @@ const getMockReducer = jest.fn(
   }
 )
 
-export const getMockStore = (initialState) => {
-  const mockReducer = getMockReducer(initialState)
+export const getMockStore = (
+  initialStateUser,
+  initialStateWordlist = {},
+  initialStateArticle = {},
+  ) => {
   const rootReducer = combineReducers({
-    accounts: mockReducer,
+    accounts: getMockReducer(initialStateUser),
+    wordlist: getMockReducer(initialStateWordlist),
+    article: getMockReducer(initialStateArticle),
     router: connectRouter(history),
   })
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
@@ -29,7 +37,3 @@ export const getMockStore = (initialState) => {
   )
   return mockStore
 }
-
-export const history = createBrowserHistory()
-
-export const middlewares = [thunk, routerMiddleware(history), penderMiddleware()]

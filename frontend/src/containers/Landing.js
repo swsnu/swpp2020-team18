@@ -6,7 +6,8 @@ import statisticsImage from '../images/statistics.svg'
 import './Landing.css'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import { connect } from 'react-redux'
+// import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { Link as RouterLink } from 'react-router-dom'
 import PropTypes from 'prop-types'
@@ -89,12 +90,13 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-function Landing(props) {
+export const Landing = (props) => {
   const classes = useStyles()
   const random_number = 1 + Math.floor(Math.random() * 10)
   const article_url = `/article/${random_number}`
+  const user = useSelector((state) => state.accounts.user);
 
-  if (!props.user) {
+  if (!user) {
     return <Redirect to='/signin' />
   }
 
@@ -197,12 +199,10 @@ function Landing(props) {
   )
 }
 
-const mapStateToProps = (state) => ({
-  user: state.accounts.user,
-})
+// const mapStateToProps = (state) => ({
+//   user: state.accounts.user,
+// })
 
 Landing.propTypes = {
   user: PropTypes.object,
 }
-
-export default connect(mapStateToProps, null)(Landing)
