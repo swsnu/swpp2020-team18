@@ -75,9 +75,6 @@ def fetch_article_nytimes():  # pylint: disable=too-many-locals
             article_model = Article(title=title, author=author, content=text)
             article_model.save()
 
-            # TODO
-            # 여기를 고쳐서 phrase에 보기를 넣을 것
-
             korean_meanings_list = []
             for (phrase, keyword) in zip(phrases, keywords_list):
                 try:
