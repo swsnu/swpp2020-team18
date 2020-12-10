@@ -117,6 +117,7 @@ def fetch_article_nytimes():  # pylint: disable=too-many-locals
                         phrase_model.option_three = using_fake_words[2]
                     phrase_model.save()
 
+
                     article_model.phrases.add(phrase_model.id)
                 except IntegrityError:
                     logger.debug("Duplicate data")
