@@ -15,21 +15,6 @@ from django.http import (
 )
 from .models import Article
 
-
-fake_words = [
-    "참다",
-    "크기",
-    "독립",
-    "대기",
-    "화분",
-    "망원경",
-    "서랍",
-    "엉터리",
-    "전문직",
-    "제출",
-]
-
-
 @login_required
 def article_one(request, article_id):
     """
@@ -95,8 +80,8 @@ def article_quiz(request, article_id):
     if request.method == "GET":
         article = Article.objects.get(pk=article_id)
 
-        def mixup(korean_meaning):
-            choice = random.sample(fake_words, 3) + [korean_meaning]
+        def mixup(phrase):
+            choice = [phrase.word.korean_meaning] + [phrase.option_one] + [phrase.option_two] + [phrase.option_three]
             random.shuffle(choice)
             return choice
 
@@ -105,7 +90,7 @@ def article_quiz(request, article_id):
                 lambda phrase: {
                     "content": phrase.content,
                     "keyword": phrase.word.content,
-                    "choices": mixup(phrase.word.korean_meaning),
+                    "choices": mixup(phrase),
                 },
                 article.phrases.all(),
             )

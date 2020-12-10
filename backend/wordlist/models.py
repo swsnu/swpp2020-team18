@@ -41,6 +41,9 @@ class Phrase(models.Model):
     objects = models.Manager()
     content = models.TextField(blank=False, unique=True)
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
+    option_one = models.CharField(max_length=100, null=True)
+    option_two = models.CharField(max_length=100, null=True)
+    option_three = models.CharField(max_length=100, null=True)
 
     def __str__(self):
         return f"문장: {str(self.content)}, 단어: {str(self.word.content)}"
