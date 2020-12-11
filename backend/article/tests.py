@@ -9,6 +9,8 @@ from terminator import sensitive
 from article import tasks
 from wordlist.models import Phrase, Word
 from .models import Article
+import nltk
+from nltk.stem import WordNetLemmatizer
 
 
 User = get_user_model()

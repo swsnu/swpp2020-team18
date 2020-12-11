@@ -13,9 +13,22 @@ from django.db import IntegrityError
 from article.models import Article
 from terminator import sensitive
 from wordlist.models import Phrase, Word
+import random
 
 logger = logging.getLogger(__name__)
 
+fake_words = [
+    "참다",
+    "크기",
+    "독립",
+    "대기",
+    "화분",
+    "망원경",
+    "서랍",
+    "엉터리",
+    "전문직",
+    "제출",
+]
 
 @shared_task
 def fetch_article_nytimes():  # pylint: disable=too-many-locals
@@ -62,15 +75,49 @@ def fetch_article_nytimes():  # pylint: disable=too-many-locals
             article_model = Article(title=title, author=author, content=text)
             article_model.save()
 
+            korean_meanings_list = []
             for (phrase, keyword) in zip(phrases, keywords_list):
                 try:
+                    korean_meaning = search_daum_endic(keyword)
+                    korean_meanings_list.append(korean_meaning)
+                except:
+                    logger.debug("Not able to find meaning")
+
+            for (phrase, keyword) in zip(phrases, keywords_list):
+                try:
+                    copied_korean_meanings_list = korean_meanings_list.copy()
                     korean_meaning = search_daum_endic(keyword)
                     word_model = Word(
                         content=keyword, korean_meaning=korean_meaning, difficulty=5
                     )
                     word_model.save()
-                    phrase_model = Phrase(content=phrase, word=word_model)
+                    copied_korean_meanings_list.remove(korean_meaning)
+                    random.shuffle(copied_korean_meanings_list)
+                    if len(copied_korean_meanings_list) >= 3:
+                        phrase_model = Phrase(content=phrase, word=word_model)
+                        phrase_model.option_one = copied_korean_meanings_list.pop()
+                        phrase_model.option_two = copied_korean_meanings_list.pop()
+                        phrase_model.option_three = copied_korean_meanings_list.pop()
+                    elif len(copied_korean_meanings_list) == 2:
+                        phrase_model = Phrase(content=phrase, word=word_model)
+                        phrase_model.option_one = copied_korean_meanings_list.pop()
+                        phrase_model.option_two = copied_korean_meanings_list.pop()
+                        phrase_model.option_three = random.sample(fake_words, 1)[0]
+                    elif len(copied_korean_meanings_list) == 1:
+                        phrase_model = Phrase(content=phrase, word=word_model)
+                        phrase_model.option_one = copied_korean_meanings_list.pop()
+                        using_fake_words = random.sample(fake_words, 2)
+                        phrase_model.option_two = using_fake_words[0]
+                        phrase_model.option_three = using_fake_words[1]
+                    else:
+                        phrase_model = Phrase(content=phrase, word=word_model)
+                        using_fake_words = random.sample(fake_words, 3)
+                        phrase_model.option_one = using_fake_words[0]
+                        phrase_model.option_two = using_fake_words[1]
+                        phrase_model.option_three = using_fake_words[2]
                     phrase_model.save()
+
+
                     article_model.phrases.add(phrase_model.id)
                 except IntegrityError:
                     logger.debug("Duplicate data")
