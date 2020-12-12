@@ -16,6 +16,7 @@ import LevelTest from 'containers/test/LevelTest'
 import { connect } from 'react-redux'
 import * as accounts from './ducks/accounts'
 import ArticleView from './containers/article/ArticleView'
+import ArticleResult from './containers/article/ArticleResult'
 
 const theme = createMuiTheme({
   palette: {
@@ -93,6 +94,7 @@ function App(props) {
             <Route path='/signin' exact render={() => <SignIn />} />
             <Route path='/signup' exact render={() => <SignUp />} />
             <Route path='/article/:id' exact component={ArticleView} />
+            <Route path='/article/:id/result' exact component={ArticleResult} />
             <Redirect exact from='/' to='terminator' />
             <Route render={() => <h1>Not Found</h1>} />
           </Switch>
