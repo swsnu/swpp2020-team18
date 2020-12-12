@@ -84,7 +84,7 @@ function ArticleView(props) {
   }
   const handleSubmit = () => {
     console.log('Submit!')
-    props.history.push('/')
+    props.history.push('/article/' + props.match.params.id + '/result')
   }
 
   const nthIndex = (content, word, index) => {
