@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { useEffect, Fragment } from 'react'
 import CustomAppBar from 'components/details/CustomAppBar'
 import { makeStyles } from '@material-ui/core/styles'
 import Radio from '@material-ui/core/Radio'
@@ -10,6 +10,7 @@ import { useHistory, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Copyright from '../../components/details/Copyright'
+import * as wordlist from '../../ducks/wordlist'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -86,6 +87,7 @@ function ReviewTest(props) {
   const [questionNumber, setQuestionNumber] = React.useState(0)
   const [value, setValue] = React.useState('female')
   const history = useHistory()
+  const [empty, setEmpty] = React.useState(true)
 
   const handleChange = (event) => {
     setValue(event.target.value)
@@ -98,63 +100,86 @@ function ReviewTest(props) {
     return <Redirect to='/signin' />
   }
 
+  useEffect(() => {
+    props.onGetWordlist().then((res) => {
+      if (res.data.length != 0) {
+        setEmpty(false)
+      }
+    })
+  }, [])
+
   return (
     <Fragment>
       <CustomAppBar />
-      <div className={classes.root}>
-        <h1 className={classes.title}>Review Test</h1>
-        <div className={classes.test}>
-          <FormControl component='fieldset'>
-            <h3 className={classes.phrase}>
-              {fakeData[questionNumber]['phrase']}
-            </h3>
-            <RadioGroup
-              aria-label='gender'
-              name='gender1'
-              value={value}
-              onChange={handleChange}
-              className={classes.select}
-            >
-              <FormControlLabel
-                value='female'
-                control={<Radio />}
-                label={fakeData[questionNumber]['answer1']}
-              />
-              <FormControlLabel
-                value='male'
-                control={<Radio />}
-                label={fakeData[questionNumber]['answer2']}
-              />
-              <FormControlLabel
-                value='other'
-                control={<Radio />}
-                label={fakeData[questionNumber]['answer3']}
-              />
-              <FormControlLabel
-                value='disabled'
-                control={<Radio />}
-                label={fakeData[questionNumber]['answer4']}
-              />
-            </RadioGroup>
-            <Button
-              className={classes.Button}
-              color='inherit'
-              onClick={() => {
-                if (questionNumber == 4) {
-                  history.push('/')
-                } else {
-                  onClickNext(questionNumber + 1)
-                }
-              }}
-            >
-              Next
-            </Button>
-          </FormControl>
+      {!empty ? (
+        <div className={classes.root}>
+          <h1 className={classes.title}>Review Test</h1>
+          <div className={classes.test}>
+            <FormControl component='fieldset'>
+              <h3 className={classes.phrase}>
+                {fakeData[questionNumber]['phrase']}
+              </h3>
+              <RadioGroup
+                aria-label='gender'
+                name='gender1'
+                value={value}
+                onChange={handleChange}
+                className={classes.select}
+              >
+                <FormControlLabel
+                  value='female'
+                  control={<Radio />}
+                  label={fakeData[questionNumber]['answer1']}
+                />
+                <FormControlLabel
+                  value='male'
+                  control={<Radio />}
+                  label={fakeData[questionNumber]['answer2']}
+                />
+                <FormControlLabel
+                  value='other'
+                  control={<Radio />}
+                  label={fakeData[questionNumber]['answer3']}
+                />
+                <FormControlLabel
+                  value='disabled'
+                  control={<Radio />}
+                  label={fakeData[questionNumber]['answer4']}
+                />
+              </RadioGroup>
+              <Button
+                className={classes.Button}
+                color='inherit'
+                onClick={() => {
+                  if (questionNumber == 4) {
+                    history.push('/')
+                  } else {
+                    onClickNext(questionNumber + 1)
+                  }
+                }}
+              >
+                Next
+              </Button>
+            </FormControl>
+          </div>
+          <br></br>
+          <Copyright />
+          <br></br>
         </div>
-        <br></br>
-        <Copyright />
-        <br></br>
-      </div>
+      ) : (
+        <div className={classes.root}>
+          <h1 className={classes.title}>Review Test</h1>
+          <div className={classes.test}>There are no words to review</div>
+          <Button
+            variant='contained'
+            color='primary'
+            className={classes.button}
+            onClick={() => history.push('/')}
+          >
+            Back
+          </Button>
+        </div>
+      )}
     </Fragment>
   )
 }
@@ -163,8 +188,15 @@ const mapStateToProps = (state) => ({
   user: state.accounts.user,
 })
 
-ReviewTest.propTypes = {
-  user: PropTypes.object,
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onGetWordlist: () => dispatch(wordlist.getWordlist()),
+  }
 }
 
-export default connect(mapStateToProps, null)(ReviewTest)
+ReviewTest.propTypes = {
+  user: PropTypes.object,
+  onGetWordlist: PropTypes.func,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ReviewTest)
