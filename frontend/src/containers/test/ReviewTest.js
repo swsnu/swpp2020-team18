@@ -87,7 +87,7 @@ function ReviewTest(props) {
   const [questionNumber, setQuestionNumber] = React.useState(0)
   const [value, setValue] = React.useState('female')
   const history = useHistory()
-  const [empty, setEmpty] = React.useState(false)
+  const [empty, setEmpty] = React.useState(true)
 
   const handleChange = (event) => {
     setValue(event.target.value)
@@ -102,8 +102,8 @@ function ReviewTest(props) {
 
   useEffect(() => {
     props.onGetWordlist().then((res) => {
-      if (!res.data) {
-        setEmpty(true)
+      if (res.data.length != 0) {
+        setEmpty(false)
       }
     })
   }, [])
@@ -111,7 +111,7 @@ function ReviewTest(props) {
   return (
     <Fragment>
       <CustomAppBar />
-      {empty ? (
+      {!empty ? (
         <div className={classes.root}>
           <h1 className={classes.title}>Review Test</h1>
           <div className={classes.test}>
