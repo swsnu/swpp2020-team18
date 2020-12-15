@@ -39,55 +39,13 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const fakeData = [
-  {
-    phrase:
-      'It wasn’t until I began my research in graduate [school] that I learned sociopaths exist along a wide spectrum, like many people with psychiatric disorders.',
-    answer1: '학교',
-    answer2: '감옥',
-    answer3: '연수',
-    answer4: '차가움',
-  },
-  {
-    phrase:
-      'It wasn’t until college that a therapist told me what I had long suspected: My lack of [emotion] and empathy are hallmarks of sociopathy.',
-    answer1: '행동',
-    answer2: '추진력',
-    answer3: '감정',
-    answer4: '사회성',
-  },
-  {
-    phrase:
-      '[Climbers] typically take around four to six days to reach the top, using a variety of routes.',
-    answer1: '몽상가',
-    answer2: '오이',
-    answer3: '빗',
-    answer4: '등산가',
-  },
-  {
-    phrase:
-      'Grohl conceded defeat, and since then the two have continued playing [music] for each other.',
-    answer1: '놀이',
-    answer2: '음악',
-    answer3: '박자',
-    answer4: '예술',
-  },
-  {
-    phrase:
-      'The Trump administration has a dirty little secret: It’s not just planning to increase [taxes] on most Americans.',
-    answer1: '요금',
-    answer2: '긍지',
-    answer3: '세금',
-    answer4: '복지',
-  },
-]
-
 function ReviewTest(props) {
   const classes = useStyles()
   const [questionNumber, setQuestionNumber] = React.useState(0)
   const [value, setValue] = React.useState('female')
   const history = useHistory()
   const [empty, setEmpty] = React.useState(true)
+  const [testData, setTestData] = React.useState([{ phrase: 'Loading' }])
 
   const handleChange = (event) => {
     setValue(event.target.value)
@@ -104,6 +62,18 @@ function ReviewTest(props) {
     props.onGetWordtest().then((res) => {
       if (res.data.length != 0) {
         setEmpty(false)
+        let tempMergedData = []
+        res.data.map((question) => {
+          let tempData = {
+            phrase: question['phrase'],
+            option1: question['options'][0],
+            option2: question['options'][1],
+            option3: question['options'][2],
+            option4: question['options'][3],
+          }
+          tempMergedData.push(tempData)
+        })
+        setTestData(tempMergedData)
       }
     })
   }, [])
@@ -117,7 +87,7 @@ function ReviewTest(props) {
           <div className={classes.test}>
             <FormControl component='fieldset'>
               <h3 className={classes.phrase}>
-                {fakeData[questionNumber]['phrase']}
+                {testData[questionNumber]['phrase']}
               </h3>
               <RadioGroup
                 aria-label='gender'
@@ -129,29 +99,29 @@ function ReviewTest(props) {
                 <FormControlLabel
                   value='female'
                   control={<Radio />}
-                  label={fakeData[questionNumber]['answer1']}
+                  label={testData[questionNumber]['option1']}
                 />
                 <FormControlLabel
                   value='male'
                   control={<Radio />}
-                  label={fakeData[questionNumber]['answer2']}
+                  label={testData[questionNumber]['option2']}
                 />
                 <FormControlLabel
                   value='other'
                   control={<Radio />}
-                  label={fakeData[questionNumber]['answer3']}
+                  label={testData[questionNumber]['option3']}
                 />
                 <FormControlLabel
                   value='disabled'
                   control={<Radio />}
-                  label={fakeData[questionNumber]['answer4']}
+                  label={testData[questionNumber]['option4']}
                 />
               </RadioGroup>
               <Button
                 className={classes.Button}
                 color='inherit'
                 onClick={() => {
-                  if (questionNumber == 4) {
+                  if (questionNumber == testData.length - 1) {
                     history.push('/')
                   } else {
                     onClickNext(questionNumber + 1)
