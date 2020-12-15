@@ -37,18 +37,24 @@ const useStyles = makeStyles(() => ({
     marginBottom: '20vh',
     textAlign: 'center',
   },
+  keyword: {
+    backgroundColor: 'yellow',
+  },
 }))
 
 function ReviewTest(props) {
   const classes = useStyles()
   const [questionNumber, setQuestionNumber] = React.useState(0)
-  const [value, setValue] = React.useState('female')
+  const [value, setValue] = React.useState('')
   const history = useHistory()
   const [empty, setEmpty] = React.useState(true)
   const [testData, setTestData] = React.useState([{ phrase: 'Loading' }])
+  const [words, setWords] = React.useState([])
+  const [answers, setAnswers] = React.useState([])
 
   const handleChange = (event) => {
     setValue(event.target.value)
+    console.log(value)
   }
   const onClickNext = (newQuestionNumber) => {
     setQuestionNumber(newQuestionNumber)
@@ -63,17 +69,24 @@ function ReviewTest(props) {
       if (res.data.length != 0) {
         setEmpty(false)
         let tempMergedData = []
+        let tempMergedWords = []
         res.data.map((question) => {
           let tempData = {
-            phrase: question['phrase'],
+            phrase: question['phrase'].replace(
+              question['word'],
+              '[' + question['word'] + ']'
+            ),
+            word: question['word'],
             option1: question['options'][0],
             option2: question['options'][1],
             option3: question['options'][2],
             option4: question['options'][3],
           }
           tempMergedData.push(tempData)
+          tempMergedWords.push(question['word'])
         })
         setTestData(tempMergedData)
+        setWords(tempMergedWords)
       }
     })
   }, [])
@@ -97,34 +110,44 @@ function ReviewTest(props) {
                 className={classes.select}
               >
                 <FormControlLabel
-                  value='female'
+                  value={testData[questionNumber]['option1']}
                   control={<Radio />}
                   label={testData[questionNumber]['option1']}
                 />
                 <FormControlLabel
-                  value='male'
+                  value={testData[questionNumber]['option2']}
                   control={<Radio />}
                   label={testData[questionNumber]['option2']}
                 />
                 <FormControlLabel
-                  value='other'
+                  value={testData[questionNumber]['option3']}
                   control={<Radio />}
                   label={testData[questionNumber]['option3']}
                 />
                 <FormControlLabel
-                  value='disabled'
+                  value={testData[questionNumber]['option4']}
                   control={<Radio />}
                   label={testData[questionNumber]['option4']}
                 />
               </RadioGroup>
               <Button
+                disabled={value === ''}
                 className={classes.Button}
                 color='inherit'
                 onClick={() => {
                   if (questionNumber == testData.length - 1) {
-                    history.push('/')
+                    let tempAnswer = answers
+                    tempAnswer.push(value)
+                    setAnswers(tempAnswer)
+                    props.onSubmitTest(words, answers, 'review').then((res) => {
+                      alert(res.data + ' out of ' + words.length + ' correct!')
+                      history.push('/')
+                    })
                   } else {
                     onClickNext(questionNumber + 1)
+                    let tempAnswer = answers
+                    tempAnswer.push(value)
+                    setAnswers(tempAnswer)
                   }
                 }}
               >
@@ -161,12 +184,15 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetWordtest: () => dispatch(wordtest.getWordtest()),
+    onSubmitTest: (words, answers, type) =>
+      dispatch(wordtest.onSubmitTest(words, answers, type)),
   }
 }
 
 ReviewTest.propTypes = {
   user: PropTypes.object,
   onGetWordtest: PropTypes.func,
+  onSubmitTest: PropTypes.func,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReviewTest)
