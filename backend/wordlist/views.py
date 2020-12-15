@@ -9,6 +9,7 @@ from django.http import (
 )
 from django.contrib.auth import get_user_model
 from wordlist.models import Phrase, Wordlist, WordlistPhrase, Word
+from wordtest.models import History, HistoryWord
 User = get_user_model()
 
 # Create your views here.
@@ -45,9 +46,9 @@ def wordlist(request):
                     "korean_meaning": Word.objects.get(
                         id=phrase["word_id"]
                     ).korean_meaning,
-                    "confidence": WordlistPhrase.objects.get(
-                        phrase=Phrase.objects.get(content=phrase["content"]),
-                        wordlist=Wordlist.objects.get(user=request.user),
+                    "confidence": HistoryWord.objects.get(
+                        word=Word.objects.get(id=phrase["word_id"]),
+                        history=request.user.history,
                     ).confidence,
                     "created_at": WordlistPhrase.objects.get(
                         phrase=Phrase.objects.get(content=phrase["content"]),

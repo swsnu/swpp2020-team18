@@ -9,11 +9,71 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
 
 User = get_user_model()
-from wordtest.models import Question
+from wordtest.models import History, HistoryWord, Question
 from wordlist.models import Word, Phrase, Wordlist, WordlistPhrase
 import json
 import random
 
+def history(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            req_data = json.loads(request.body.decode())
+            word_data = req_data["word"]
+            try:
+                found_word = Word.objects.get(content=word_data)
+            except Word.DoesNotExist:
+                return HttpResponse(status=404)
+            user_history = request.user.history
+            user_history.learned_word.add(found_word)
+            return HttpResponse(status=201)
+        elif request.method == "PATCH":
+            req_data = json.loads(request.body.decode())
+            words = req_data["words"]
+            word_answers = req_data["answers"]
+            test_type = req_data['type']
+            user_history = request.user.history
+            total = len(words)
+            right_answer_count = 0
+            for word_data, answer_data in zip(words, word_answers):
+                try:
+                    found_word = Word.objects.get(content=word_data)
+                except Word.DoesNotExist:
+                    return HttpResponse(status=404)
+                if len(user_history.learned_word.filter(content=word_data)) == 0:
+                    return HttpResponse(status=404)
+                try:
+                    history_word = HistoryWord.objects.get(word=found_word, history=user_history)
+                except HistoryWord.DoesNotExist:
+                    return HttpResponse(status=404)
+
+                if history_word.confidence != 1:
+                    test_type == "review"
+
+                if test_type == "new":
+                    if found_word.korean_meaning == answer_data:
+                        history_word.confidence = 5
+                        right_answer_count += 1
+                    else:
+                        history_word.confidence = 1
+                elif test_type == "review":
+                    if found_word.korean_meaning == answer_data:
+                        right_answer_count += 1
+                        if history_word.confidence < 10:
+                            history_word.confidence += 1
+                    else:
+                        history_word.confidence += 0
+                else:
+                    return HttpResponse(status=404)
+                history_word.save()
+                return HttpResponse(str(right_answer_count), content_type="text/plain", status=200)
+        else:
+            return HttpResponseNotAllowed(["POST", "PATCH"])
+    else:
+        return HttpResponse(status=401)
+
+# TODO
+# 찬석님 코드 활용 방법 강구할 것
+# below are codes from chanseck
 
 def get_random_choice():
     """
