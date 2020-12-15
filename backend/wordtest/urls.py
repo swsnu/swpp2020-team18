@@ -5,5 +5,6 @@ from . import views
 urlpatterns = [
     # TODO
     # need to divide first login user and others?
-    path("", views.wordtest, name="wordtest"),
+    path("", views.history, name="history"),
+    path("review/", views.review_test, name="review_test"),
 ]

@@ -10,6 +10,7 @@ import penderMiddleware from 'redux-pender'
 import accountsReducer from './ducks/accounts'
 import wordlistReducer from './ducks/wordlist'
 import articleReducer from './ducks/article'
+import wordtestReducer from './ducks/wordtest'
 
 const history = createBrowserHistory()
 
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   accounts: accountsReducer,
   wordlist: wordlistReducer,
   article: articleReducer,
+  wordtest: wordtestReducer,
   router: connectRouter(history),
 })
 
