@@ -69,7 +69,7 @@ export default handleActions(
         if (action.payload.status != 200) {
           return {
             ...state,
-            error_message: 'Validation failed. Please try again.',
+            error_message: 'Authentication failed. Please try again.',
           }
         }
         return { ...state, user: action.payload.data, error_message: null }
@@ -81,7 +81,14 @@ export default handleActions(
     ...pender({
       type: SIGNUP,
       onSuccess: (state, action) => {
-        return { ...state, user: action.payload.data }
+        if (action.payload.status != 201) {
+          console.log(action.payload)
+          return {
+            ...state,
+            error_message: 'Signup failed. Please try again.',
+          }
+        }
+        return { ...state, user: action.payload.data, error_message: null }
       },
     }),
     ...pender({
