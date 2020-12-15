@@ -20,6 +20,7 @@ import ArticleSideTest from '../../components/article/ArticleSideTest'
 import { withRouter } from 'react-router-dom'
 import Copyright from '../../components/details/Copyright'
 import CustomAppBar from '../../components/details/CustomAppBar'
+import StickyBox from 'react-sticky-box'
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -287,53 +288,56 @@ function ArticleView(props) {
               <div>{!articleObject ? null : processdContent}</div>
             </Grid>
             <Divider flexItem orientation='vertical' />
+
             <Grid item xs={3}>
-              <Grid container spacing={8}>
-                <Grid item xs={12}>
-                  {!articleObject || !articleObject.phrases ? null : (
-                    <ArticleSideTest
-                      selectedPhrase={
-                        articleObject.phrases[sort_map[activeStep]]
-                      }
-                      onAnswerChoice={handleAnswerChoice(sort_map[activeStep])}
-                      answer={selectedAnswers[sort_map[activeStep]]}
-                    />
-                  )}
-                </Grid>
-                <Grid item xs={12}>
-                  <Grid container>
-                    <Grid item xs={6}>
-                      <Button
-                        variant='outlined'
-                        disabled={activeStep === 0}
-                        onClick={() => handleStep(activeStep - 1)()}
-                      >
-                        Prev
-                      </Button>
-                    </Grid>
-                    <Grid item xs={6}>
-                      {activeStep === steps.length - 1 ? (
-                        <Button
-                          variant='contained'
-                          color='primary'
-                          disabled={completed.some((e) => e === false)}
-                          onClick={() => handleSubmit()}
-                        >
-                          Submit
-                        </Button>
-                      ) : (
+              <StickyBox offsetTop={10} offsetBottom={10}>
+                <Grid container spacing={8}>
+                  <Grid item xs={12}>
+                    {!articleObject || !articleObject.phrases ? null : (
+                      <ArticleSideTest
+                        selectedPhrase={
+                          articleObject.phrases[sort_map[activeStep]]
+                        }
+                        onAnswerChoice={handleAnswerChoice(sort_map[activeStep])}
+                        answer={selectedAnswers[sort_map[activeStep]]}
+                      />
+                    )}
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Grid container>
+                      <Grid item xs={6}>
                         <Button
                           variant='outlined'
-                          color='primary'
-                          onClick={() => handleStep(activeStep + 1)()}
+                          disabled={activeStep === 0}
+                          onClick={() => handleStep(activeStep - 1)()}
                         >
-                          Next
+                          Prev
                         </Button>
-                      )}
+                      </Grid>
+                      <Grid item xs={6}>
+                        {activeStep === steps.length - 1 ? (
+                          <Button
+                            variant='contained'
+                            color='primary'
+                            disabled={completed.some((e) => e === false)}
+                            onClick={() => handleSubmit()}
+                          >
+                            Submit
+                          </Button>
+                        ) : (
+                          <Button
+                            variant='outlined'
+                            color='primary'
+                            onClick={() => handleStep(activeStep + 1)()}
+                          >
+                            Next
+                          </Button>
+                        )}
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
+              </StickyBox>
             </Grid>
           </Grid>
         </div>
