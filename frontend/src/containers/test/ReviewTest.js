@@ -10,7 +10,7 @@ import { useHistory, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Copyright from '../../components/details/Copyright'
-import * as wordlist from '../../ducks/wordlist'
+import * as wordtest from '../../ducks/wordtest'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -101,7 +101,7 @@ function ReviewTest(props) {
   }
 
   useEffect(() => {
-    props.onGetWordlist().then((res) => {
+    props.onGetWordtest().then((res) => {
       if (res.data.length != 0) {
         setEmpty(false)
       }
@@ -190,13 +190,13 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onGetWordlist: () => dispatch(wordlist.getWordlist()),
+    onGetWordtest: () => dispatch(wordtest.getWordtest()),
   }
 }
 
 ReviewTest.propTypes = {
   user: PropTypes.object,
-  onGetWordlist: PropTypes.func,
+  onGetWordtest: PropTypes.func,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReviewTest)

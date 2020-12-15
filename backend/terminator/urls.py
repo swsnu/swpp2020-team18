@@ -20,6 +20,7 @@ from accounts import views as accounts_views
 urlpatterns = [
     path("api/test", include("wordtest.urls")),
     path("api/wordlist/", include("wordlist.urls")),
+    path("api/wordtest/", include("wordtest.urls")),
     path("admin/", admin.site.urls),
     path("api/token", accounts_views.token, name="token"),
     path("api/accounts/", include("accounts.urls")),
