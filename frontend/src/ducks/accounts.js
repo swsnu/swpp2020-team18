@@ -66,13 +66,29 @@ export default handleActions(
       onSuccess: (state, action) => {
         console.log(action.payload.status)
         console.log(action.payload.data)
-        return { ...state, user: action.payload.data }
+        if (action.payload.status != 200) {
+          return {
+            ...state,
+            error_message: 'Authentication failed. Please try again.',
+          }
+        }
+        return { ...state, user: action.payload.data, error_message: null }
+      },
+      onError: (state, action) => {
+        console.log('Error occured!' + state + ', ' + action)
       },
     }),
     ...pender({
       type: SIGNUP,
       onSuccess: (state, action) => {
-        return { ...state, user: action.payload.data }
+        if (action.payload.status != 201) {
+          console.log(action.payload)
+          return {
+            ...state,
+            error_message: 'Signup failed. Please try again.',
+          }
+        }
+        return { ...state, user: action.payload.data, error_message: null }
       },
     }),
     ...pender({
