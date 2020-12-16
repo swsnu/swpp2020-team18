@@ -17,6 +17,8 @@ import { connect } from 'react-redux'
 import * as accounts from './ducks/accounts'
 import ArticleView from './containers/article/ArticleView'
 import ArticleResult from './containers/article/ArticleResult'
+import LevelTestResult from './containers/test/LevelTestResult'
+import ReviewTestResult from './containers/test/ReviewTestResult'
 
 const theme = createMuiTheme({
   palette: {
@@ -74,6 +76,11 @@ function App(props) {
               )}
             />
             <Route
+              path='/reviewtest/result'
+              exact
+              component={ReviewTestResult}
+            />
+            <Route
               path='/leveltest'
               exact
               render={() => (
@@ -82,6 +89,7 @@ function App(props) {
                 </>
               )}
             />
+            <Route path='/leveltest/result' exact component={LevelTestResult} />
             <Route
               path='/statistics'
               exact
