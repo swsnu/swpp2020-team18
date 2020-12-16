@@ -4,8 +4,8 @@ Views of article
 
 import random
 
-# import json
-# from json import JSONDecodeError
+import json
+from json import JSONDecodeError
 from django.contrib.auth.decorators import login_required
 from django.http import (
     HttpResponse,
@@ -108,19 +108,33 @@ def article_quiz(request, article_id):
         phrases = list(
             map(
                 lambda phrase: {
+                    "content": phrase.content,
+                    "keyword": phrase.word.content,
                     "correct_answer": phrase.word.korean_meaning
                 },
                 article.phrases.all(),
             )
         )
-        
+
         correct_answer_count = 0
+        total_count = 0
+        scored_phrases = []
 
         for (phrase, answer) in zip(phrases, answers):
+            isCorrect = False
             if(phrase["correct_answer"]==answer):
+                isCorrect = True
                 correct_answer_count += 1
+            total_count += 1
+            scored_phrases.append({
+                "content": phrase["content"],
+                "keyword": phrase["keyword"],
+                "answer": answer,
+                "correct_answer": phrase["correct_answer"],
+                "is_correct": isCorrect,
+            })
 
-        return HttpResponse(str(correct_answer_count))
+        return JsonResponse({"scored_phrases": scored_phrases, "correct_answer_count": correct_answer_count, "total_count": total_count}, safe=False, status=200)
     else:
         return HttpResponseNotAllowed(["GET", "POST"])
 

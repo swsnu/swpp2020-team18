@@ -85,6 +85,8 @@ function ArticleView(props) {
   }
   const handleSubmit = () => {
     console.log('Submit!')
+    console.log(props.submitArticleTest)
+    props.submitArticleTest(props.match.params.id, selectedAnswers)
     props.history.push('/article/' + props.match.params.id + '/result')
   }
 
@@ -352,6 +354,7 @@ function ArticleView(props) {
 const mapStateToProps = (state) => ({
   user: state.accounts.user,
   article: state.article.article,
+  result: state.article.result,
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -359,6 +362,8 @@ const mapDispatchToProps = (dispatch) => ({
     return dispatch(article.getArticle(id))
   },
   getArticleTest: (id) => dispatch(article.getArticleTest(id)),
+  submitArticleTest: (id, answers) =>
+    dispatch(article.submitArticleTest({ id: id, answers: answers })),
 })
 
 ArticleView.propTypes = {
@@ -366,12 +371,14 @@ ArticleView.propTypes = {
   article: PropTypes.object,
   getArticle: PropTypes.func,
   getArticleTest: PropTypes.func,
+  submitArticleTest: PropTypes.func,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.number,
     }),
   }),
   history: PropTypes.any,
+  result: PropTypes.object,
 }
 
 export default connect(
