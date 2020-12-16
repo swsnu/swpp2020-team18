@@ -14,6 +14,7 @@ import * as wordtest from '../../ducks/wordtest'
 
 const useStyles = makeStyles(() => ({
   root: {
+    height: '110vh',
     backgroundColor: '#f5f5f5',
   },
   title: {
@@ -37,82 +38,10 @@ const useStyles = makeStyles(() => ({
     marginBottom: '20vh',
     textAlign: 'center',
   },
+  keyword: {
+    backgroundColor: '#fff2a8',
+  },
 }))
-
-// const fakeData = [
-//   {
-//     phrase: 'To [marry] is to halve your rights and double your duties.',
-//     answer1: '결혼하다',
-//     answer2: '즐겁다',
-//     answer3: '산딸기',
-//     answer4: '달팽이',
-//   },
-//   {
-//     phrase: 'He makes no [friend] who never made a foe.',
-//     answer1: '이웃',
-//     answer2: '가족',
-//     answer3: '친구',
-//     answer4: '아버지',
-//   },
-//   {
-//     phrase: 'Common sense is the collection of [prejudices] acquired by age 18.',
-//     answer1: '정의',
-//     answer2: '구타',
-//     answer3: '편견',
-//     answer4: '의견',
-//   },
-//   {
-//     phrase:
-//       'The unleashed power of the atom has changed everything save our modes of thinking, and we thus drift toward unparalleled [catastrophes].',
-//     answer1: '세계',
-//     answer2: '구원',
-//     answer3: '카타르시스',
-//     answer4: '재난',
-//   },
-//   {
-//     phrase: 'Nothing is more despicable than [respect] based on fear.',
-//     answer1: '존경심',
-//     answer2: '재검사',
-//     answer3: '두려움',
-//     answer4: '경멸',
-//   },
-//   {
-//     phrase:
-//       'Television has [proved] that people will look at anything rather than each other.',
-//     answer1: '제공하다',
-//     answer2: '미디어',
-//     answer3: '빼앗다',
-//     answer4: '입증하다',
-//   },
-//   {
-//     phrase: "[Business]? It's quite simple. It's other people's money.",
-//     answer1: '사업',
-//     answer2: '돈',
-//     answer3: '직장',
-//     answer4: '친구',
-//   },
-//   {
-//     phrase: 'I would as soon leave my son a [curse] as the almighty dollar.',
-//     answer1: '돈',
-//     answer2: '저주',
-//     answer3: '아들',
-//     answer4: '물려주다',
-//   },
-//   {
-//     phrase: 'A [hungry] man is not a free man.',
-//     answer1: '배고픈',
-//     answer2: '부유한',
-//     answer3: '가난한',
-//     answer4: '남자',
-//   },
-//   {
-//     phrase: 'Truth is generally the best [vindication] against slander.',
-//     answer1: '진실',
-//     answer2: '모략',
-//     answer3: '해명',
-//     answer4: '방어',
-//   },
-// ]
 
 function LevelTest(props) {
   const classes = useStyles()
@@ -140,11 +69,27 @@ function LevelTest(props) {
         let tempMergedData = []
         let tempMergedWords = []
         res.data.map((question) => {
+          let rawPhrase = question['phrase']
+          let indexOfWord = rawPhrase
+            .toLowerCase()
+            .indexOf(question['word'].toLowerCase())
+          let highlightedPhrase = (
+            <span>
+              <span>{rawPhrase.substring(0, indexOfWord)}</span>
+              <span className={classes.keyword}>
+                {rawPhrase.substring(
+                  indexOfWord,
+                  indexOfWord + question['word'].length
+                )}
+              </span>
+              <span>
+                {rawPhrase.substring(indexOfWord + question['word'].length)}
+              </span>
+            </span>
+          )
+
           let tempData = {
-            phrase: question['phrase'].replace(
-              question['word'],
-              '[' + question['word'] + ']'
-            ),
+            phrase: highlightedPhrase,
             word: question['word'],
             option1: question['options'][0],
             option2: question['options'][1],

@@ -14,6 +14,7 @@ import * as wordtest from '../../ducks/wordtest'
 
 const useStyles = makeStyles(() => ({
   root: {
+    height: '110vh',
     backgroundColor: '#f5f5f5',
   },
   title: {
@@ -38,7 +39,7 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
   },
   keyword: {
-    backgroundColor: 'yellow',
+    backgroundColor: '#fff2a8',
   },
 }))
 
@@ -71,11 +72,27 @@ function ReviewTest(props) {
         let tempMergedData = []
         let tempMergedWords = []
         res.data.map((question) => {
+          let rawPhrase = question['phrase']
+          let indexOfWord = rawPhrase
+            .toLowerCase()
+            .indexOf(question['word'].toLowerCase())
+          let highlightedPhrase = (
+            <span>
+              <span>{rawPhrase.substring(0, indexOfWord)}</span>
+              <span className={classes.keyword}>
+                {rawPhrase.substring(
+                  indexOfWord,
+                  indexOfWord + question['word'].length
+                )}
+              </span>
+              <span>
+                {rawPhrase.substring(indexOfWord + question['word'].length)}
+              </span>
+            </span>
+          )
+
           let tempData = {
-            phrase: question['phrase'].replace(
-              question['word'],
-              '[' + question['word'] + ']'
-            ),
+            phrase: highlightedPhrase,
             word: question['word'],
             option1: question['options'][0],
             option2: question['options'][1],
