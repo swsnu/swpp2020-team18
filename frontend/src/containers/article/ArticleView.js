@@ -94,6 +94,8 @@ function ArticleView(props) {
   const handleSubmit = () => {
     console.log('Submit!')
     console.log(props.submitArticleTest)
+    console.log(props.match.params.id)
+    console.log(selectedAnswers)
     props.submitArticleTest(props.match.params.id, selectedAnswers).then(() => {
       props.getScores()
     })

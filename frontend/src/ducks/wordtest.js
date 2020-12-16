@@ -11,7 +11,8 @@ const MAKE_HISTORY = 'MAKE_HISTORY'
 
 const initialState = {
   wordtest: [],
-  rightCount: 0,
+  correctAnswerCount: 0,
+  testResult: null,
 }
 
 // hadnle actions
@@ -37,7 +38,7 @@ export default handleActions(
       type: SUBMIT_TEST,
       onSuccess: (state, action) => {
         console.log(action.payload.data)
-        return { ...state, rightCount: action.payload.data }
+        return { ...state, testResult: action.payload.data }
       },
     }),
     ...pender({

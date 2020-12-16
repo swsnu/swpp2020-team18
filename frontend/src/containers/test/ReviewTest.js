@@ -158,7 +158,12 @@ function ReviewTest(props) {
                     tempAnswer.push(value)
                     setAnswers(tempAnswer)
                     props.onSubmitTest(words, answers, 'review').then((res) => {
-                      alert(res.data + ' out of ' + words.length + ' correct!')
+                      alert(
+                        res.data.correct_answer_count +
+                          ' out of ' +
+                          words.length +
+                          ' correct!'
+                      )
                       history.push('/')
                     })
                   } else {

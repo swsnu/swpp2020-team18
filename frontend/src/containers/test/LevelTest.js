@@ -156,7 +156,12 @@ function LevelTest(props) {
                   console.log(words)
                   console.log(answers)
                   props.onSubmitTest(words, answers, 'new').then((res) => {
-                    alert(res.data + ' out of ' + words.length + ' correct!')
+                    alert(
+                      res.data.correct_answer_count +
+                        ' out of ' +
+                        words.length +
+                        ' correct!'
+                    )
                     history.push('/')
                   })
                 } else {

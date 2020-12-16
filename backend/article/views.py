@@ -15,6 +15,8 @@ from django.http import (
 )
 from .models import Article
 from accounts.views import *
+from wordlist.models import Word, Phrase, Wordlist, WordlistPhrase
+from wordtest.models import History, HistoryWord
 
 @login_required
 def article_one(request, article_id):
@@ -104,7 +106,7 @@ def article_quiz(request, article_id):
             answers = req_data["answers"]
         except (KeyError, JSONDecodeError):
             return HttpResponseBadRequest()
-        
+        user_history = request.user.history
         article = Article.objects.get(pk=article_id)
         phrases = list(
             map(
@@ -125,6 +127,20 @@ def article_quiz(request, article_id):
             isCorrect = False
             if(phrase["correct_answer"]==answer):
                 isCorrect = True
+                found_word = Word.objects.get(content=phrase["keyword"])
+                if len(user_history.learned_word.filter(content=found_word.content)) == 0:
+                    return HttpResponse(status=404)
+                try:
+                    history_word = HistoryWord.objects.get(word=found_word, history=user_history)
+                except HistoryWord.DoesNotExist:
+                    return HttpResponse(status=404)
+                if history_word.confidence == 1:
+                    history_word.confidence = 5
+                elif history_word.confidence < 10:
+                    history_word.confidence += 1
+                else:
+                    history_word.confidence = 10
+                history_word.save()
                 correct_answer_count += 1
             total_count += 1
             scored_phrases.append({
@@ -135,7 +151,7 @@ def article_quiz(request, article_id):
                 "is_correct": isCorrect,
             })
             
-            addScore(request.user, 10*correct_answer_count)
+        addScore(request.user, 10*correct_answer_count)
 
         return JsonResponse({"scored_phrases": scored_phrases, "correct_answer_count": correct_answer_count, "total_count": total_count}, safe=False, status=200)
     else:
