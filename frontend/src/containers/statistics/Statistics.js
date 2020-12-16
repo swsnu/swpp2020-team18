@@ -21,6 +21,7 @@ import { Redirect } from 'react-router-dom'
 import * as accounts from '../../ducks/accounts'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
+import Leaderboard from './Leaderboard'
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -51,12 +52,14 @@ const mapToDayname = (num) => {
 function Statistics(props) {
   const classes = useStyles()
   useEffect(() => {
-    props.getScores()
+    props.updateUserInfo().then(() => props.getScores())
   }, [])
 
   if (!props.user) {
     return <Redirect to='/' />
   }
+
+  console.log('Render Statistics!')
 
   return (
     <div>
@@ -91,10 +94,12 @@ function Statistics(props) {
                   <AreaChart
                     width={500}
                     height={400}
-                    data={Object.entries(props.scores).map((score) => ({
-                      name: mapToDayname(score[1]['day']),
-                      score: score[1]['score'],
-                    }))}
+                    data={[
+                      ...Object.entries(props.scores).map((score) => ({
+                        name: mapToDayname(score[1]['day']),
+                        score: score[1]['score'],
+                      })),
+                    ]}
                     margin={{
                       top: 10,
                       right: 30,
@@ -118,6 +123,7 @@ function Statistics(props) {
             </Grid>
           </div>
         )}
+        <Leaderboard />
         <Box mt={8}>
           <Copyright />
         </Box>
@@ -135,12 +141,14 @@ const mapDispatchToProps = (dispatch) => ({
   getScores: () => {
     return dispatch(accounts.getScores())
   },
+  updateUserInfo: () => dispatch(accounts.checkLogin()),
 })
 
 Statistics.propTypes = {
   user: PropTypes.object,
   scores: PropTypes.any,
   getScores: PropTypes.func,
+  updateUserInfo: PropTypes.func,
 }
 
 export default connect(

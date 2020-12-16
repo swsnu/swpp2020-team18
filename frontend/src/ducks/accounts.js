@@ -11,6 +11,7 @@ const SIGNUP = 'accounts/SIGNUP'
 const SIGNOUT = 'accounts/SIGNOUT'
 const CHECKLOGIN = 'accounts/CHECKLOGIN'
 const GETSCORES = 'accounts/GETSCORES'
+const GETRANKING = 'accounts/GETRANKING'
 
 // Action Creators
 export const signIn = createAction(
@@ -59,6 +60,16 @@ export const getScores = createAction(
   () => {
     return axios
       .get('/api/accounts/scores')
+      .then((res) => res)
+      .catch((err) => err)
+  }
+)
+export const getRanking = createAction(
+  // payload = null
+  GETRANKING,
+  () => {
+    return axios
+      .get('/api/accounts/ranking')
       .then((res) => res)
       .catch((err) => err)
   }
@@ -121,6 +132,13 @@ export default handleActions(
       onSuccess: (state, action) => {
         console.log(action.payload.data)
         return { ...state, scores: action.payload.data }
+      },
+    }),
+    ...pender({
+      type: GETRANKING,
+      onSuccess: (state, action) => {
+        console.log(action.payload.data)
+        return { ...state, ranking: action.payload.data }
       },
     }),
   },
