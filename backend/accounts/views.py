@@ -13,6 +13,7 @@ from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
+from django.contrib.auth.decorators import login_required
 from .models import DailyRecord
 import datetime
 
@@ -172,7 +173,7 @@ def addScore(user, score):
     """
     Add score to selected user
     """
-    existing_records = user.drs.filter(date=datetime.datetime.now())
+    existing_records = user.drs.filter(date=datetime.datetime.now(), user=user)
     if (len(existing_records) == 0):
         record = DailyRecord(user=user, score=score)
         user.score += score
@@ -193,13 +194,29 @@ def getScores(user, days=1):
     Get recent [days] scores from selected user
     """
     records = DailyRecord.objects.filter(date__gte=datetime.datetime.now()-datetime.timedelta(days=days-1),
-                                         date__lte=datetime.datetime.now())
+                                         date__lte=datetime.datetime.now(), user=user)
     
-    output = list(map(lambda(record: {
+    output = list(map(lambda record: {
         "date": record.date,
+        "day": record.date.weekday(),
         "score": record.score,
-    }), records))
+    }, records))
     
     return output
 
 
+@login_required
+def user_scores(request):
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            user = request.user
+            scores = getScores(user, 7)
+            return JsonResponse(
+                scores,
+                safe=False,
+                status=200,
+            )
+        else:
+            return HttpResponse(status=200)
+    else:
+        return HttpResponseNotAllowed(["GET"])
