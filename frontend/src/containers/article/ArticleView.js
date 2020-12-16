@@ -22,6 +22,7 @@ import { withRouter } from 'react-router-dom'
 import Copyright from '../../components/details/Copyright'
 import CustomAppBar from '../../components/details/CustomAppBar'
 import StickyBox from 'react-sticky-box'
+import * as wordtest from '../../ducks/wordtest'
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -67,7 +68,13 @@ function ArticleView(props) {
   const [activeStep, setActiveStep] = React.useState(0)
   useEffect(() => {
     setLoading(true)
-    props.getArticle(props.match.params.id).then(() => {
+    props.getArticle(props.match.params.id).then((res) => {
+      console.log(res.data.phrases)
+      let keywordList = []
+      for (var i = 0; i < res.data.phrases.length; i++) {
+        keywordList.push(res.data.phrases[i].keyword)
+      }
+      props.makeHistory(keywordList)
       props.getArticleTest(props.match.params.id).then(() => setLoading(false))
     })
   }, [])
@@ -371,6 +378,7 @@ const mapDispatchToProps = (dispatch) => ({
   getScores: () => {
     return dispatch(accounts.getScores())
   },
+  makeHistory: (words) => dispatch(wordtest.makeHistory(words)),
 })
 
 ArticleView.propTypes = {
@@ -387,6 +395,7 @@ ArticleView.propTypes = {
   }),
   history: PropTypes.any,
   result: PropTypes.object,
+  makeHistory: PropTypes.func,
 }
 
 export default connect(
