@@ -25,7 +25,8 @@ const useStyles = makeStyles(() => ({
     margin: '5vh',
   },
   test: {
-    marin: 0,
+    width: '70%',
+    margin: '0 auto',
   },
   phrase: {
     textAlign: 'left',
@@ -113,7 +114,7 @@ function LevelTest(props) {
         <div className={classes.test}>
           <FormControl component='fieldset'>
             <h3 className={classes.phrase}>
-              {testData[questionNumber]['phrase']}
+              {questionNumber + 1}. {testData[questionNumber]['phrase']}
             </h3>
             <RadioGroup
               aria-label='gender'
