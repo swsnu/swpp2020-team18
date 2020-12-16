@@ -11,6 +11,7 @@ import Copyright from '../../components/details/Copyright'
 const useStyles = makeStyles(() => ({
   root: {
     backgroundColor: '#f5f5f5',
+    height: '100vh',
   },
   title: {
     margin: 0,
