@@ -19,6 +19,19 @@ import datetime
 
 User = get_user_model()
 
+def getWeeklyScore(user):
+    score = 0
+    for dr in user.drs:
+        score += dr.score
+    return score
+
+def getRanking(user, weekly=False):
+    if (weekly):
+        weekly_score = getWeeklyScore(user)
+        return len( filter(lambda user: getWeeklyScore(user) > weekly_score, User.objects.all()) )
+    user_rank = User.objects.filter(score__gt=user.score).count()+1
+    return user_rank
+
 
 @ensure_csrf_cookie
 def token(request):
@@ -78,6 +91,8 @@ def signup(request):
                 "username": user.username,
                 "email": user.email,
                 "score": user.score,
+                "rank": getRanking(user)
+
             },
             safe=False,
             status=201,
