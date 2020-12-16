@@ -19,6 +19,7 @@ def history(request):
         if request.method == "POST":
             req_data = json.loads(request.body.decode())
             words = req_data["words"]
+            print(req_data)
             user_history = request.user.history
             for word_data in words:
                 try:
@@ -54,7 +55,10 @@ def history(request):
                     if found_word.korean_meaning == answer_data:
                         history_word.confidence = 5
                         right_answer_count += 1
+                        print("right")
                     else:
+                        print(found_word.korean_meaning)
+                        print(answer_data)
                         history_word.confidence = 1
                 elif test_type == "review":
                     if found_word.korean_meaning == answer_data:
@@ -66,7 +70,7 @@ def history(request):
                 else:
                     return HttpResponse(status=404)
                 history_word.save()
-                return HttpResponse(str(right_answer_count), content_type="text/plain", status=200)
+            return HttpResponse(str(right_answer_count), content_type="text/plain", status=200)
         else:
             return HttpResponseNotAllowed(["POST", "PATCH"])
     else:
@@ -95,6 +99,29 @@ def review_test(request):
             else:
                 test_data_list = sorted_word_all_list[:20]
 
+            return JsonResponse(
+                test_data_list, safe=False, json_dumps_params={"ensure_ascii": False}
+            )
+        else:
+            return HttpResponseNotAllowed(["GET"])
+    else:
+        return HttpResponse(status=401)
+
+def level_test(request):
+    if request.user.is_authenticated:
+        if request.method == "GET":
+            test_source = random.sample(list(Phrase.objects.all()), 10)
+            user_history = request.user.history
+            for phrase in test_source:
+                user_history.learned_word.add(phrase.word)
+            test_data_list = [
+                {
+                    "word": phrase.word.content,
+                    "phrase": phrase.content,
+                    "options": random.sample([phrase.word.korean_meaning]+[phrase.option_one]+[phrase.option_two]+[phrase.option_three], 4),
+                }
+                for phrase in test_source
+            ]
             return JsonResponse(
                 test_data_list, safe=False, json_dumps_params={"ensure_ascii": False}
             )
