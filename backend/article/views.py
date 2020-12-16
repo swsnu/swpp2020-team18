@@ -14,6 +14,7 @@ from django.http import (
     JsonResponse,
 )
 from .models import Article
+from accounts.views import *
 
 @login_required
 def article_one(request, article_id):
@@ -133,6 +134,8 @@ def article_quiz(request, article_id):
                 "correct_answer": phrase["correct_answer"],
                 "is_correct": isCorrect,
             })
+            
+            addScore(request.user, 10*correct_answer_count)
 
         return JsonResponse({"scored_phrases": scored_phrases, "correct_answer_count": correct_answer_count, "total_count": total_count}, safe=False, status=200)
     else:

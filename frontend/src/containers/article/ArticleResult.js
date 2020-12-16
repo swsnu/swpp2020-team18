@@ -35,47 +35,10 @@ import InfoIcon from '@material-ui/icons/Info'
 import AddIcon from '@material-ui/icons/Add'
 
 import * as wordlist from '../../ducks/wordlist'
+import * as accounts from '../../ducks/accounts'
 
 // var d = new Date();
 // var n = d.getDay();
-
-const data = [
-  {
-    name: 'MON',
-    score: 4000,
-    num_read_articles: 2,
-  },
-  {
-    name: 'TUE',
-    score: 3000,
-    num_read_articles: 1,
-  },
-  {
-    name: 'WED',
-    score: 2000,
-    num_read_articles: 0,
-  },
-  {
-    name: 'THU',
-    score: 2780,
-    num_read_articles: 4,
-  },
-  {
-    name: 'FRI',
-    score: 1890,
-    num_read_articles: 5,
-  },
-  {
-    name: 'SAT',
-    score: 2390,
-    num_read_articles: 1,
-  },
-  {
-    name: 'SUN',
-    score: 3490,
-    num_read_articles: 2,
-  },
-]
 
 const CORRECT_COLOR = '#E7F1E8'
 const WRONG_COLOR = '#FFD5D4'
@@ -133,12 +96,41 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
+const mapToDayname = (num) => {
+  switch (num) {
+    case 0:
+      return 'MON'
+    case 1:
+      return 'TUE'
+    case 2:
+      return 'WED'
+    case 3:
+      return 'THU'
+    case 4:
+      return 'FRI'
+    case 5:
+      return 'SAT'
+    case 6:
+      return 'SUN'
+  }
+}
+
 function ArticleResult(props) {
   const classes = useStyles()
 
   if (!props.user) {
     return <Redirect to='/signin' />
   }
+
+  // const arr = Object.entries(props.scores);
+
+  // const data = arr.map((score) => ({
+  //   name: mapToDayname(score[1]['day']),
+  //   score: score[2]['score'],
+  // })
+  // )
+
+  // console.log(arr)
 
   return (
     <div>
@@ -194,7 +186,18 @@ function ArticleResult(props) {
                       fill='#8884d8'
                       dataKey='value'
                     >
-                      {data.map((entry, index) => (
+                      {[
+                        {
+                          name: 'Correct',
+                          value: props.result.correct_answer_count,
+                        },
+                        {
+                          name: 'Wrong',
+                          value:
+                            props.result.total_count -
+                            props.result.correct_answer_count,
+                        },
+                      ].map((entry, index) => (
                         <Cell
                           key={`cell-${index}`}
                           fill={COLORS[index % COLORS.length]}
@@ -271,7 +274,7 @@ function ArticleResult(props) {
           )
         }
 
-        {props.result && (
+        {props.scores && (
           <div>
             <Grid container justify='center' alignItems='center'>
               <Typography
@@ -289,7 +292,10 @@ function ArticleResult(props) {
                   <AreaChart
                     width={500}
                     height={400}
-                    data={data}
+                    data={Object.entries(props.scores).map((score) => ({
+                      name: mapToDayname(score[1]['day']),
+                      score: score[1]['score'],
+                    }))}
                     margin={{
                       top: 10,
                       right: 30,
@@ -323,17 +329,23 @@ function ArticleResult(props) {
 const mapStateToProps = (state) => ({
   user: state.accounts.user,
   result: state.article.result,
+  scores: state.accounts.scores,
 })
 
 const mapDispatchToProps = (dispatch) => ({
   addWord: (phrase) => {
     return dispatch(wordlist.addWord(phrase))
   },
+  getScores: () => {
+    return dispatch(accounts.getScores())
+  },
 })
 
 ArticleResult.propTypes = {
   user: PropTypes.object,
+  scores: PropTypes.any,
   addWord: PropTypes.func,
+  getScores: PropTypes.func,
   result: PropTypes.object,
 }
 

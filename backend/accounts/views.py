@@ -193,14 +193,23 @@ def getScores(user, days=1):
     """
     Get recent [days] scores from selected user
     """
+    output = {}
+    for date in (datetime.datetime.now()-datetime.timedelta(days=days-1) + datetime.timedelta(n) for n in range(days)):
+        output[(date.strftime("%Y-%m-%d"))] = {
+            "day": date.weekday(),
+            "score": 0
+        }
     records = DailyRecord.objects.filter(date__gte=datetime.datetime.now()-datetime.timedelta(days=days-1),
                                          date__lte=datetime.datetime.now(), user=user)
-    
-    output = list(map(lambda record: {
-        "date": record.date,
-        "day": record.date.weekday(),
-        "score": record.score,
-    }, records))
+    for record in records:
+        output[str(record.date)]["score"] = record.score
+
+    # output = list(map(lambda record: {
+    #     "date": record.date,
+    #     "day": record.date.weekday(),
+    #     "score": record.score,
+    # }, records))
+
     
     return output
 

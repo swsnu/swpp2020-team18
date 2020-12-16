@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
 import { Redirect } from 'react-router-dom'
 import * as article from '../../ducks/article'
+import * as accounts from '../../ducks/accounts'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Stepper from '@material-ui/core/Stepper'
@@ -86,7 +87,9 @@ function ArticleView(props) {
   const handleSubmit = () => {
     console.log('Submit!')
     console.log(props.submitArticleTest)
-    props.submitArticleTest(props.match.params.id, selectedAnswers)
+    props.submitArticleTest(props.match.params.id, selectedAnswers).then(() => {
+      props.getScores()
+    })
     props.history.push('/article/' + props.match.params.id + '/result')
   }
 
@@ -355,6 +358,7 @@ const mapStateToProps = (state) => ({
   user: state.accounts.user,
   article: state.article.article,
   result: state.article.result,
+  scores: state.accounts.scores,
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -364,6 +368,9 @@ const mapDispatchToProps = (dispatch) => ({
   getArticleTest: (id) => dispatch(article.getArticleTest(id)),
   submitArticleTest: (id, answers) =>
     dispatch(article.submitArticleTest({ id: id, answers: answers })),
+  getScores: () => {
+    return dispatch(accounts.getScores())
+  },
 })
 
 ArticleView.propTypes = {
@@ -372,6 +379,7 @@ ArticleView.propTypes = {
   getArticle: PropTypes.func,
   getArticleTest: PropTypes.func,
   submitArticleTest: PropTypes.func,
+  getScores: PropTypes.func,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.number,
