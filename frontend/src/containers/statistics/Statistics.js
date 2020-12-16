@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
@@ -16,47 +16,11 @@ import {
 } from 'recharts'
 import Copyright from '../../components/details/Copyright'
 import CustomAppBar from '../../components/details/CustomAppBar'
-
-// var d = new Date();
-// var n = d.getDay();
-
-const data = [
-  {
-    name: 'MON',
-    score: 4000,
-    num_read_articles: 2,
-  },
-  {
-    name: 'TUE',
-    score: 3000,
-    num_read_articles: 1,
-  },
-  {
-    name: 'WED',
-    score: 2000,
-    num_read_articles: 0,
-  },
-  {
-    name: 'THU',
-    score: 2780,
-    num_read_articles: 4,
-  },
-  {
-    name: 'FRI',
-    score: 1890,
-    num_read_articles: 5,
-  },
-  {
-    name: 'SAT',
-    score: 2390,
-    num_read_articles: 1,
-  },
-  {
-    name: 'SUN',
-    score: 3490,
-    num_read_articles: 2,
-  },
-]
+import PropTypes from 'prop-types'
+import { Redirect } from 'react-router-dom'
+import * as accounts from '../../ducks/accounts'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -65,8 +29,34 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-function Statistics() {
+const mapToDayname = (num) => {
+  switch (num) {
+    case 0:
+      return 'MON'
+    case 1:
+      return 'TUE'
+    case 2:
+      return 'WED'
+    case 3:
+      return 'THU'
+    case 4:
+      return 'FRI'
+    case 5:
+      return 'SAT'
+    case 6:
+      return 'SUN'
+  }
+}
+
+function Statistics(props) {
   const classes = useStyles()
+  useEffect(() => {
+    props.getScores()
+  }, [])
+
+  if (!props.user) {
+    return <Redirect to='/' />
+  }
 
   return (
     <div>
@@ -83,41 +73,51 @@ function Statistics() {
             Learning Statistics
           </Typography>
         </Grid>
-        <div>
-          <Grid container justify='center' alignItems='center'>
-            <Typography variant='h5' component='h4' gutterBottom>
-              Your Score
-            </Typography>
-          </Grid>
-          <Grid container spacing={2}>
-            <Grid item xs={12} alignItems='center' justify='center'>
-              <ResponsiveContainer width='100%' height={400}>
-                <AreaChart
-                  width={500}
-                  height={400}
-                  data={data}
-                  margin={{
-                    top: 10,
-                    right: 30,
-                    left: 0,
-                    bottom: 0,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray='3 3' />
-                  <XAxis dataKey='name' />
-                  <YAxis />
-                  <Tooltip />
-                  <Area
-                    type='monotone'
-                    dataKey='score'
-                    stroke='#f1711b'
-                    fill='#f1711b'
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+        {props.scores && (
+          <div>
+            <Grid container justify='center' alignItems='center'>
+              <Typography
+                variant='h5'
+                component='h4'
+                gutterBottom
+                className={classes.subtitle}
+              >
+                Your Weekly Progress
+              </Typography>
             </Grid>
-          </Grid>
-        </div>
+            <Grid container spacing={2}>
+              <Grid item xs={12} alignItems='center' justify='center'>
+                <ResponsiveContainer width='100%' height={400}>
+                  <AreaChart
+                    width={500}
+                    height={400}
+                    data={Object.entries(props.scores).map((score) => ({
+                      name: mapToDayname(score[1]['day']),
+                      score: score[1]['score'],
+                    }))}
+                    margin={{
+                      top: 10,
+                      right: 30,
+                      left: 0,
+                      bottom: 0,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray='3 3' />
+                    <XAxis dataKey='name' />
+                    <YAxis />
+                    <Tooltip />
+                    <Area
+                      type='monotone'
+                      dataKey='score'
+                      stroke='#f1711b'
+                      fill='#f1711b'
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </Grid>
+            </Grid>
+          </div>
+        )}
         <Box mt={8}>
           <Copyright />
         </Box>
@@ -126,4 +126,24 @@ function Statistics() {
   )
 }
 
-export default Statistics
+const mapStateToProps = (state) => ({
+  user: state.accounts.user,
+  scores: state.accounts.scores,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  getScores: () => {
+    return dispatch(accounts.getScores())
+  },
+})
+
+Statistics.propTypes = {
+  user: PropTypes.object,
+  scores: PropTypes.any,
+  getScores: PropTypes.func,
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(Statistics))
