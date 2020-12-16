@@ -118,6 +118,8 @@ const mapToDayname = (num) => {
 function ArticleResult(props) {
   const classes = useStyles()
 
+  const [addedSet, setAddedSet] = React.useState([])
+
   if (!props.user) {
     return <Redirect to='/signin' />
   }
@@ -150,7 +152,7 @@ function ArticleResult(props) {
 
         {
           // Pie Chart
-          props.result && (
+          props.result && props.scores && (
             <>
               <Grid container justify='center' alignItems='center'>
                 <Typography
@@ -250,18 +252,24 @@ function ArticleResult(props) {
                             </TableCell>
 
                             <TableCell align='right'>
-                              <Tooltip
-                                title='Add phrase to wordlist'
-                                aria-label='Add phrase to wordlist'
-                              >
-                                <IconButton
-                                  onClick={() => {
-                                    props.addWord(phrase.content)
-                                  }}
+                              {addedSet.includes(idx) ? (
+                                'Added'
+                              ) : (
+                                <Tooltip
+                                  title='Add phrase to wordlist'
+                                  aria-label='Add phrase to wordlist'
                                 >
-                                  <AddIcon />
-                                </IconButton>
-                              </Tooltip>
+                                  <IconButton
+                                    onClick={() => {
+                                      props.addWord(phrase.content)
+                                      setAddedSet([...addedSet, idx])
+                                      console.log(addedSet)
+                                    }}
+                                  >
+                                    <AddIcon />
+                                  </IconButton>
+                                </Tooltip>
+                              )}
                             </TableCell>
                           </TableRow>
                         ))}
@@ -274,7 +282,7 @@ function ArticleResult(props) {
           )
         }
 
-        {props.scores && (
+        {props.result && props.scores && (
           <div>
             <Grid container justify='center' alignItems='center'>
               <Typography
@@ -284,6 +292,11 @@ function ArticleResult(props) {
                 className={classes.subtitle}
               >
                 Your Weekly Progress
+              </Typography>
+            </Grid>
+            <Grid container justify='center' alignItems='center'>
+              <Typography variant='h6' component='h6' gutterBottom>
+                You earned {props.result.correct_answer_count * 10} scores!
               </Typography>
             </Grid>
             <Grid container spacing={2}>

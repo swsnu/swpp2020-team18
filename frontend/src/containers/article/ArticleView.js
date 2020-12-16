@@ -95,9 +95,10 @@ function ArticleView(props) {
     console.log('Submit!')
     console.log(props.submitArticleTest)
     props.submitArticleTest(props.match.params.id, selectedAnswers).then(() => {
-      props.getScores()
+      props.getScores().then(() => {
+        props.history.push('/article/' + props.match.params.id + '/result')
+      })
     })
-    props.history.push('/article/' + props.match.params.id + '/result')
   }
 
   const nthIndex = (content, word, index) => {
