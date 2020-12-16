@@ -29,7 +29,7 @@ def getWeeklyScore(user):
 def getRanking(user, weekly=False):
     if (weekly):
         weekly_score = getWeeklyScore(user)
-        return len( list(filter(lambda user: getWeeklyScore(user) > weekly_score, User.objects.all())) )
+        return len( list(filter(lambda user: getWeeklyScore(user) > weekly_score, User.objects.all())) )+1
     user_rank = User.objects.filter(score__gt=user.score).count()+1
     return user_rank
 
