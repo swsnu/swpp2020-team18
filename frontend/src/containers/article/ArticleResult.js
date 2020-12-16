@@ -33,6 +33,7 @@ import Paper from '@material-ui/core/Paper'
 import Tooltip from '@material-ui/core/Tooltip'
 import InfoIcon from '@material-ui/icons/Info'
 import AddIcon from '@material-ui/icons/Add'
+import Leaderboard from '../statistics/Leaderboard'
 
 import * as wordlist from '../../ducks/wordlist'
 import * as accounts from '../../ducks/accounts'
@@ -133,6 +134,8 @@ function ArticleResult(props) {
   // )
 
   // console.log(arr)
+
+  console.log('Render ArticleResult!')
 
   return (
     <div>
@@ -261,6 +264,7 @@ function ArticleResult(props) {
                                 >
                                   <IconButton
                                     onClick={() => {
+                                      console.log('Add button clicked!')
                                       props.addWord(phrase.content)
                                       setAddedSet([...addedSet, idx])
                                       console.log(addedSet)
@@ -332,6 +336,7 @@ function ArticleResult(props) {
             </Grid>
           </div>
         )}
+        <Leaderboard />
         <Box mt={8}>
           <Copyright />
         </Box>

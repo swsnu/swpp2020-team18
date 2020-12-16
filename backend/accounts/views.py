@@ -21,14 +21,15 @@ User = get_user_model()
 
 def getWeeklyScore(user):
     score = 0
-    for dr in user.drs:
+    for dr in user.drs.filter(date__gte=datetime.datetime.now()-datetime.timedelta(days=6),
+                            date__lte=datetime.datetime.now()):
         score += dr.score
     return score
 
 def getRanking(user, weekly=False):
     if (weekly):
         weekly_score = getWeeklyScore(user)
-        return len( filter(lambda user: getWeeklyScore(user) > weekly_score, User.objects.all()) )
+        return len( list(filter(lambda user: getWeeklyScore(user) > weekly_score, User.objects.all())) )
     user_rank = User.objects.filter(score__gt=user.score).count()+1
     return user_rank
 
@@ -91,8 +92,7 @@ def signup(request):
                 "username": user.username,
                 "email": user.email,
                 "score": user.score,
-                "rank": getRanking(user)
-
+                "weekly_score": getWeeklyScore(user),
             },
             safe=False,
             status=201,
@@ -128,6 +128,8 @@ def signin(request):
                     "id": user.id,
                     "username": user.username,
                     "email": user.email,
+                    "score": user.score,
+                    "weekly_score": getWeeklyScore(user),
                 },
                 safe=False,
                 status=200,
@@ -150,6 +152,7 @@ def signin(request):
                     "username": user.username,
                     "email": user.email,
                     "score": user.score,
+                    "weekly_score": getWeeklyScore(user),
                 },
                 safe=False,
                 status=200,
@@ -225,7 +228,6 @@ def getScores(user, days=1):
     #     "score": record.score,
     # }, records))
 
-    
     return output
 
 
@@ -239,6 +241,24 @@ def user_scores(request):
                 scores,
                 safe=False,
                 status=200,
+            )
+        else:
+            return HttpResponse(status=200)
+    else:
+        return HttpResponseNotAllowed(["GET"])
+
+
+@login_required
+def user_ranking(request):
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            user = request.user
+            return JsonResponse(
+                {
+                    "rank": getRanking(user),
+                    "weeklyRank": getRanking(user, True),
+                    "total_user_num": User.objects.all().count(),
+                }
             )
         else:
             return HttpResponse(status=200)

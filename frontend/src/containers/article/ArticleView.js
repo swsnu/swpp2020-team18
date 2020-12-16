@@ -96,7 +96,9 @@ function ArticleView(props) {
     console.log(props.submitArticleTest)
     props.submitArticleTest(props.match.params.id, selectedAnswers).then(() => {
       props.getScores().then(() => {
-        props.history.push('/article/' + props.match.params.id + '/result')
+        props.updateUserInfo().then(() => {
+          props.history.push('/article/' + props.match.params.id + '/result')
+        })
       })
     })
   }
@@ -380,6 +382,7 @@ const mapDispatchToProps = (dispatch) => ({
     return dispatch(accounts.getScores())
   },
   makeHistory: (words) => dispatch(wordtest.makeHistory(words)),
+  updateUserInfo: () => dispatch(accounts.checkLogin()),
 })
 
 ArticleView.propTypes = {
@@ -397,6 +400,7 @@ ArticleView.propTypes = {
   history: PropTypes.any,
   result: PropTypes.object,
   makeHistory: PropTypes.func,
+  updateUserInfo: PropTypes.func,
 }
 
 export default connect(
