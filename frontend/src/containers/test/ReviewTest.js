@@ -14,6 +14,7 @@ import * as wordtest from '../../ducks/wordtest'
 
 const useStyles = makeStyles(() => ({
   root: {
+    height: '110vh',
     backgroundColor: '#f5f5f5',
   },
   title: {
@@ -24,7 +25,8 @@ const useStyles = makeStyles(() => ({
     margin: '5vh',
   },
   test: {
-    marin: 0,
+    width: '70%',
+    margin: '0 auto',
   },
   phrase: {
     textAlign: 'left',
@@ -38,7 +40,7 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
   },
   keyword: {
-    backgroundColor: 'yellow',
+    backgroundColor: '#fff2a8',
   },
 }))
 
@@ -71,11 +73,27 @@ function ReviewTest(props) {
         let tempMergedData = []
         let tempMergedWords = []
         res.data.map((question) => {
+          let rawPhrase = question['phrase']
+          let indexOfWord = rawPhrase
+            .toLowerCase()
+            .indexOf(question['word'].toLowerCase())
+          let highlightedPhrase = (
+            <span>
+              <span>{rawPhrase.substring(0, indexOfWord)}</span>
+              <span className={classes.keyword}>
+                {rawPhrase.substring(
+                  indexOfWord,
+                  indexOfWord + question['word'].length
+                )}
+              </span>
+              <span>
+                {rawPhrase.substring(indexOfWord + question['word'].length)}
+              </span>
+            </span>
+          )
+
           let tempData = {
-            phrase: question['phrase'].replace(
-              question['word'],
-              '[' + question['word'] + ']'
-            ),
+            phrase: highlightedPhrase,
             word: question['word'],
             option1: question['options'][0],
             option2: question['options'][1],
@@ -100,7 +118,7 @@ function ReviewTest(props) {
           <div className={classes.test}>
             <FormControl component='fieldset'>
               <h3 className={classes.phrase}>
-                {testData[questionNumber]['phrase']}
+                {questionNumber + 1}. {testData[questionNumber]['phrase']}
               </h3>
               <RadioGroup
                 aria-label='gender'
@@ -140,7 +158,12 @@ function ReviewTest(props) {
                     tempAnswer.push(value)
                     setAnswers(tempAnswer)
                     props.onSubmitTest(words, answers, 'review').then((res) => {
-                      alert(res.data + ' out of ' + words.length + ' correct!')
+                      alert(
+                        res.data.correct_answer_count +
+                          ' out of ' +
+                          words.length +
+                          ' correct!'
+                      )
                       history.push('/')
                     })
                   } else {

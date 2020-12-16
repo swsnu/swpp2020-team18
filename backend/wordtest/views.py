@@ -9,10 +9,11 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
 
 User = get_user_model()
-from wordtest.models import History, HistoryWord, Question
+from wordtest.models import History, HistoryWord
 from wordlist.models import Word, Phrase, Wordlist, WordlistPhrase
 import json
 import random
+from accounts.views import *
 
 def history(request):
     if request.user.is_authenticated:
@@ -35,8 +36,12 @@ def history(request):
             test_type = req_data['type']
             user_history = request.user.history
             total = len(words)
-            right_answer_count = 0
+            correct_answer_count = 0
+            total_count = 0
+            scored_words = []
+
             for word_data, answer_data in zip(words, word_answers):
+                is_correct = False
                 try:
                     found_word = Word.objects.get(content=word_data)
                 except Word.DoesNotExist:
@@ -54,23 +59,32 @@ def history(request):
                 if test_type == "new":
                     if found_word.korean_meaning == answer_data:
                         history_word.confidence = 5
-                        right_answer_count += 1
-                        print("right")
+                        correct_answer_count += 1
+                        is_correct = True
                     else:
                         print(found_word.korean_meaning)
                         print(answer_data)
                         history_word.confidence = 1
                 elif test_type == "review":
                     if found_word.korean_meaning == answer_data:
-                        right_answer_count += 1
+                        correct_answer_count += 1
                         if history_word.confidence < 10:
                             history_word.confidence += 1
+                        is_correct = True
                     else:
                         history_word.confidence += 0
                 else:
                     return HttpResponse(status=404)
                 history_word.save()
-            return HttpResponse(str(right_answer_count), content_type="text/plain", status=200)
+                total_count += 1
+                scored_words.append({
+                    "content": word_data,
+                    "answer": answer_data,
+                    "correct_answer": found_word.korean_meaning,
+                    "is_correct": is_correct,
+                })
+            addScore(request.user, 10*correct_answer_count)
+            return JsonResponse({"scored_words": scored_words, "correct_answer_count": correct_answer_count, "total_count": total_count}, safe=False, status=200)
         else:
             return HttpResponseNotAllowed(["POST", "PATCH"])
     else:
