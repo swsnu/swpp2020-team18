@@ -240,47 +240,48 @@ function ArticleResult(props) {
           )
         }
 
-        <div>
-          <Grid container justify='center' alignItems='center'>
-            <Typography
-              variant='h5'
-              component='h4'
-              gutterBottom
-              className={classes.subtitle}
-            >
-              Your Weekly Progress
-            </Typography>
-          </Grid>
-          <Grid container spacing={2}>
-            <Grid item xs={12} alignItems='center' justify='center'>
-              <ResponsiveContainer width='100%' height={400}>
-                <AreaChart
-                  width={500}
-                  height={400}
-                  data={data}
-                  margin={{
-                    top: 10,
-                    right: 30,
-                    left: 0,
-                    bottom: 0,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray='3 3' />
-                  <XAxis dataKey='name' />
-                  <YAxis />
-                  <Tooltip_recharts />
-                  <Area
-                    type='monotone'
-                    dataKey='score'
-                    stroke='#f1711b'
-                    fill='#f1711b'
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+        {props.result && (
+          <div>
+            <Grid container justify='center' alignItems='center'>
+              <Typography
+                variant='h5'
+                component='h4'
+                gutterBottom
+                className={classes.subtitle}
+              >
+                Your Weekly Progress
+              </Typography>
             </Grid>
-          </Grid>
-        </div>
-
+            <Grid container spacing={2}>
+              <Grid item xs={12} alignItems='center' justify='center'>
+                <ResponsiveContainer width='100%' height={400}>
+                  <AreaChart
+                    width={500}
+                    height={400}
+                    data={data}
+                    margin={{
+                      top: 10,
+                      right: 30,
+                      left: 0,
+                      bottom: 0,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray='3 3' />
+                    <XAxis dataKey='name' />
+                    <YAxis />
+                    <Tooltip_recharts />
+                    <Area
+                      type='monotone'
+                      dataKey='score'
+                      stroke='#f1711b'
+                      fill='#f1711b'
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </Grid>
+            </Grid>
+          </div>
+        )}
         <Box mt={8}>
           <Copyright />
         </Box>
