@@ -13,6 +13,8 @@ from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
+from .models import DailyRecord
+import datetime
 
 User = get_user_model()
 
@@ -74,6 +76,7 @@ def signup(request):
                 "id": user.id,
                 "username": user.username,
                 "email": user.email,
+                "score": user.score,
             },
             safe=False,
             status=201,
@@ -130,6 +133,7 @@ def signin(request):
                     "id": user.id,
                     "username": user.username,
                     "email": user.email,
+                    "score": user.score,
                 },
                 safe=False,
                 status=200,
@@ -162,3 +166,40 @@ def signout(request):
             return HttpResponse(status=401)
     else:
         return HttpResponseNotAllowed(["GET"])
+
+
+def addScore(user, score):
+    """
+    Add score to selected user
+    """
+    existing_records = user.drs.filter(date=datetime.datetime.now())
+    if (len(existing_records) == 0):
+        record = DailyRecord(user=user, score=score)
+        user.score += score
+        user.save()
+        record.save()
+        return
+    else:
+        record = existing_records[0]
+        record.score += score
+        user.score += score
+        user.save()
+        record.save()
+        return
+
+
+def getScores(user, days=1):
+    """
+    Get recent [days] scores from selected user
+    """
+    records = DailyRecord.objects.filter(date__gte=datetime.datetime.now()-datetime.timedelta(days=days-1),
+                                         date__lte=datetime.datetime.now())
+    
+    output = list(map(lambda(record: {
+        "date": record.date,
+        "score": record.score,
+    }), records))
+    
+    return output
+
+

@@ -1,10 +1,12 @@
 import React from 'react'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
 import Box from '@material-ui/core/Box'
 import { makeStyles } from '@material-ui/core/styles'
+import { Redirect } from 'react-router-dom'
 import {
   AreaChart,
   Area,
@@ -30,6 +32,9 @@ import { withRouter } from 'react-router-dom'
 import Paper from '@material-ui/core/Paper'
 import Tooltip from '@material-ui/core/Tooltip'
 import InfoIcon from '@material-ui/icons/Info'
+import AddIcon from '@material-ui/icons/Add'
+
+import * as wordlist from '../../ducks/wordlist'
 
 // var d = new Date();
 // var n = d.getDay();
@@ -120,10 +125,20 @@ const useStyles = makeStyles(() => ({
   correctAnswer: {
     backgroundColor: CORRECT_COLOR,
   },
+  button: {
+    display: 'inline-block',
+    padding: 0,
+    minHeight: 0,
+    minWidth: 0,
+  },
 }))
 
 function ArticleResult(props) {
   const classes = useStyles()
+
+  if (!props.user) {
+    return <Redirect to='/signin' />
+  }
 
   return (
     <div>
@@ -202,6 +217,7 @@ function ArticleResult(props) {
                           <TableCell align='right'>Selected Answer</TableCell>
                           <TableCell align='right'>Correct Answer</TableCell>
                           <TableCell align='right'>Phrase</TableCell>
+                          <TableCell align='right'>Action</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -227,6 +243,21 @@ function ArticleResult(props) {
                                 aria-label={phrase.content}
                               >
                                 <InfoIcon />
+                              </Tooltip>
+                            </TableCell>
+
+                            <TableCell align='right'>
+                              <Tooltip
+                                title='Add phrase to wordlist'
+                                aria-label='Add phrase to wordlist'
+                              >
+                                <IconButton
+                                  onClick={() => {
+                                    props.addWord(phrase.content)
+                                  }}
+                                >
+                                  <AddIcon />
+                                </IconButton>
                               </Tooltip>
                             </TableCell>
                           </TableRow>
@@ -290,12 +321,19 @@ function ArticleResult(props) {
   )
 }
 const mapStateToProps = (state) => ({
+  user: state.accounts.user,
   result: state.article.result,
 })
 
-const mapDispatchToProps = () => ({})
+const mapDispatchToProps = (dispatch) => ({
+  addWord: (phrase) => {
+    return dispatch(wordlist.addWord(phrase))
+  },
+})
 
 ArticleResult.propTypes = {
+  user: PropTypes.object,
+  addWord: PropTypes.func,
   result: PropTypes.object,
 }
 

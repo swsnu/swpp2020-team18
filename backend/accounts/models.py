@@ -83,5 +83,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
+    score = models.IntegerField(default=0)
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
+
+
+class DailyRecord(models.Model):
+    """
+    A class to represent user's daily score.
+    """
+    user = models.ForeignKey(User, null=False, on_delete=models.CASCADE, related_name='drs')
+    date = models.DateField(auto_now_add=True)
+    score = models.IntegerField(default=0)
