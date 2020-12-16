@@ -98,8 +98,29 @@ def article_quiz(request, article_id):
         return JsonResponse({"phrases": phrases}, safe=False, status=200)
 
     elif request.method == "POST":
-        # TODO: Scoring # pylint: disable=fixme
-        return HttpResponse()
+        try:
+            req_data = json.loads(request.body.decode())
+            answers = req_data["answers"]
+        except (KeyError, JSONDecodeError):
+            return HttpResponseBadRequest()
+        
+        article = Article.objects.get(pk=article_id)
+        phrases = list(
+            map(
+                lambda phrase: {
+                    "correct_answer": phrase.word.korean_meaning
+                },
+                article.phrases.all(),
+            )
+        )
+        
+        correct_answer_count = 0
+
+        for (phrase, answer) in zip(phrases, answers):
+            if(phrase["correct_answer"]==answer):
+                correct_answer_count += 1
+
+        return HttpResponse(str(correct_answer_count))
     else:
         return HttpResponseNotAllowed(["GET", "POST"])
 
