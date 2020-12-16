@@ -7,6 +7,7 @@ from django.contrib.auth.models import (
     BaseUserManager,
     PermissionsMixin,
 )
+import datetime
 
 
 class UserManager(BaseUserManager):
@@ -93,5 +94,5 @@ class DailyRecord(models.Model):
     A class to represent user's daily score.
     """
     user = models.ForeignKey(User, null=False, on_delete=models.CASCADE, related_name='drs')
-    date = models.DateField(auto_now_add=True)
+    date = models.DateField(default=datetime.datetime.now)
     score = models.IntegerField(default=0)
