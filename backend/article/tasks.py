@@ -87,10 +87,16 @@ def fetch_article_nytimes():  # pylint: disable=too-many-locals
                 try:
                     copied_korean_meanings_list = korean_meanings_list.copy()
                     korean_meaning = search_daum_endic(keyword)
-                    word_model = Word(
+                    if len(Word.objects.filter(content=keyword)) == 0:
+                        word_model = Word(
                         content=keyword, korean_meaning=korean_meaning, difficulty=5
-                    )
-                    word_model.save()
+                        )
+                        word_model.save()
+                    elif len(Word.objects.filter(content=keyword)) == 1:
+                        word_model = Word.objects.get(content=keyword)
+                    else:
+                        word_model = Word.objects.filter(content=keyword).first()
+
                     copied_korean_meanings_list.remove(korean_meaning)
                     random.shuffle(copied_korean_meanings_list)
                     if len(copied_korean_meanings_list) >= 3:
