@@ -18,13 +18,14 @@ def history(request):
     if request.user.is_authenticated:
         if request.method == "POST":
             req_data = json.loads(request.body.decode())
-            word_data = req_data["word"]
-            try:
-                found_word = Word.objects.get(content=word_data)
-            except Word.DoesNotExist:
-                return HttpResponse(status=404)
+            words = req_data["words"]
             user_history = request.user.history
-            user_history.learned_word.add(found_word)
+            for word_data in words:
+                try:
+                    found_word = Word.objects.get(content=word_data)
+                except Word.DoesNotExist:
+                    return HttpResponse(status=404)
+                user_history.learned_word.add(found_word)
             return HttpResponse(status=201)
         elif request.method == "PATCH":
             req_data = json.loads(request.body.decode())
