@@ -144,6 +144,7 @@ function LevelTest(props) {
                 label={testData[questionNumber]['option4']}
               />
             </RadioGroup>
+            {questionNumber + 1} / {testData.length}
             <Button
               disabled={value === ''}
               className={classes.Button}
@@ -156,13 +157,8 @@ function LevelTest(props) {
                   console.log(words)
                   console.log(answers)
                   props.onSubmitTest(words, answers, 'new').then((res) => {
-                    alert(
-                      res.data.correct_answer_count +
-                        ' out of ' +
-                        words.length +
-                        ' correct!'
-                    )
-                    history.push('/')
+                    console.log(res.data)
+                    history.push('/leveltest/result')
                   })
                 } else {
                   onClickNext(questionNumber + 1)
@@ -172,7 +168,11 @@ function LevelTest(props) {
                 }
               }}
             >
-              Next
+              {questionNumber == testData.length - 1 ? (
+                <span>Submit</span>
+              ) : (
+                <span>Next</span>
+              )}
             </Button>
           </FormControl>
         </div>
