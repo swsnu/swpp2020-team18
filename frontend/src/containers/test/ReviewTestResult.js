@@ -67,6 +67,9 @@ const useStyles = makeStyles(() => ({
   tableHeadText: {
     color: 'white',
   },
+  points: {
+    color: '#228B22',
+  },
 }))
 
 function ReviewTestResult(props) {
@@ -108,6 +111,14 @@ function ReviewTestResult(props) {
                 <Typography variant='h6' component='h6' gutterBottom>
                   You made {props.result.correct_answer_count} out of{' '}
                   {props.result.total_count}!
+                </Typography>
+                <Typography
+                  variant='h6'
+                  component='h6'
+                  gutterBottom
+                  className={classes.points}
+                >
+                  + {10 * props.result.correct_answer_count} points!
                 </Typography>
               </div>
               <br></br>
