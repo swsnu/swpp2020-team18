@@ -6,6 +6,7 @@ from wordlist.models import Word
 from django.contrib.auth import get_user_model
 User = get_user_model()
 import warnings
+import random
 
 warnings.filterwarnings("ignore", message="Mean of empty slice")
 
@@ -152,4 +153,40 @@ def calculateReadabilityMatrix():
 
     return readabilty_matrix
 
+
+def get_readability_vector(user):
+    global readabilty_matrix
+    global users
+
+    # Light version
+    # idx = users.index(user)
+    # if (idx < 0):
+    #     calculateReadabilityMatrix()
+    #     idx = users.index(user)
+    
+    # Heavy version
+    calculateReadabilityMatrix()
+    idx = users.index(user)
+    
+    return readabilty_matrix[idx]
+
+
+def get_recommendation_list(user):
+    rv = get_readability_vector(user)
+    rv_list = rv.tolist()
+    idx_sorted = sorted(range(len(rv_list)), key=lambda k: rv_list[k])
+    num_article = len(rv_list)
+    article_easy_idx = (int)(num_article * 0.75)
+    article_hard_idx = (int)(num_article * 0.35)
+    article_easy_idx_list = idx_sorted[article_easy_idx:]
+    article_medium_idx_list = idx_sorted[article_hard_idx:article_easy_idx]
+    article_hard_idx_list = idx_sorted[:article_hard_idx]
+    random.shuffle(article_easy_idx_list)
+    random.shuffle(article_medium_idx_list)
+    random.shuffle(article_hard_idx_list)
+    article_idx_list = article_medium_idx_list + article_easy_idx_list + article_hard_idx_list
+
+    article_idx_list = map(lambda idx: idx+1, article_idx_list)
+
+    return article_idx_list
 
