@@ -95,6 +95,9 @@ const useStyles = makeStyles(() => ({
     minHeight: 0,
     minWidth: 0,
   },
+  points: {
+    color: '#228B22',
+  },
 }))
 
 const mapToDayname = (num) => {
@@ -285,7 +288,7 @@ function ArticleResult(props) {
             </>
           )
         }
-
+        <br></br>
         {props.result && props.scores && (
           <div>
             <Grid container justify='center' alignItems='center'>
@@ -299,8 +302,13 @@ function ArticleResult(props) {
               </Typography>
             </Grid>
             <Grid container justify='center' alignItems='center'>
-              <Typography variant='h6' component='h6' gutterBottom>
-                You earned {props.result.correct_answer_count * 10} scores!
+              <Typography
+                variant='h6'
+                component='h6'
+                gutterBottom
+                className={classes.points}
+              >
+                + {props.result.correct_answer_count * 10} points!
               </Typography>
             </Grid>
             <Grid container spacing={2}>

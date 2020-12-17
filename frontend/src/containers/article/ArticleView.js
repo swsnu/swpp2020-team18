@@ -36,9 +36,9 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
   highlighted: {
-    color: 'red',
+    color: 'black',
     display: 'inline',
-    backgroundColor: '#FFFF00',
+    backgroundColor: '#fff2a8',
     cursor: 'pointer',
   },
   greylighted: {
@@ -50,9 +50,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'inline',
   },
   highlightedWord: {
-    color: 'red',
+    color: 'black',
     display: 'inline',
-    backgroundColor: '#FFBC42',
+    backgroundColor: '#ff9800',
     cursor: 'pointer',
   },
   greylightedWord: {
