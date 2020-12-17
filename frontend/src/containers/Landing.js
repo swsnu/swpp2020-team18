@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import articleImage from '../images/article.png'
 import wordlistImage from '../images/wordlist.svg'
 import testImage from '../images/exam.svg'
@@ -17,6 +17,7 @@ import CardMedia from '@material-ui/core/CardMedia'
 import Link from '@material-ui/core/Link'
 import CustomAppBar from '../components/details/CustomAppBar'
 import Copyright from '../components/details/Copyright'
+import * as accounts from '../ducks/accounts'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -76,8 +77,11 @@ const useStyles = makeStyles(() => ({
 
 function Landing(props) {
   const classes = useStyles()
-  const random_number = 1 + Math.floor(Math.random() * 10)
-  const article_url = `/article/${random_number}`
+  useEffect(() => {
+    props.updateUserInfo()
+  }, [])
+
+  const article_url = `/article/${props.user.recommendation_list[0]}`
 
   if (!props.user) {
     return <Redirect to='/signin' />
@@ -198,12 +202,17 @@ function Landing(props) {
   )
 }
 
+const mapDispatchToProps = (dispatch) => ({
+  updateUserInfo: () => dispatch(accounts.checkLogin()),
+})
+
 const mapStateToProps = (state) => ({
   user: state.accounts.user,
 })
 
 Landing.propTypes = {
   user: PropTypes.object,
+  updateUserInfo: PropTypes.func,
 }
 
-export default connect(mapStateToProps, null)(Landing)
+export default connect(mapStateToProps, mapDispatchToProps)(Landing)

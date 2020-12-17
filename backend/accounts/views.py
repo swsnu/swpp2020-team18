@@ -16,6 +16,7 @@ from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from .models import DailyRecord
 import datetime
+from article.recommend import *
 
 User = get_user_model()
 
@@ -93,6 +94,7 @@ def signup(request):
                 "email": user.email,
                 "score": user.score,
                 "weekly_score": getWeeklyScore(user),
+                "recommendation_list": get_recommendation_list(user)[:3],
             },
             safe=False,
             status=201,
@@ -130,6 +132,7 @@ def signin(request):
                     "email": user.email,
                     "score": user.score,
                     "weekly_score": getWeeklyScore(user),
+                    "recommendation_list": get_recommendation_list(user)[:3],
                 },
                 safe=False,
                 status=200,
@@ -153,6 +156,7 @@ def signin(request):
                     "email": user.email,
                     "score": user.score,
                     "weekly_score": getWeeklyScore(user),
+                    "recommendation_list": get_recommendation_list(user)[:3],
                 },
                 safe=False,
                 status=200,
