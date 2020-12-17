@@ -22,7 +22,10 @@ const useStyles = makeStyles(() => ({
     padding: '5vh',
   },
   button: {
-    margin: '5vh',
+    minHeight: 0,
+    minWidth: 0,
+    width: '100px',
+    margin: '0 auto',
   },
   test: {
     width: '70%',
@@ -149,10 +152,13 @@ function ReviewTest(props) {
                 />
               </RadioGroup>
               {questionNumber + 1} / {testData.length}
+              <br></br>
+              <br></br>
               <Button
+                variant='contained'
                 disabled={value === ''}
-                className={classes.Button}
-                color='inherit'
+                className={classes.button}
+                color='primary'
                 onClick={() => {
                   if (questionNumber == testData.length - 1) {
                     let tempAnswer = answers
@@ -188,6 +194,7 @@ function ReviewTest(props) {
         <div className={classes.root}>
           <h1 className={classes.title}>Review Test</h1>
           <div className={classes.test}>There are no words to review</div>
+          <br></br>
           <Button
             variant='contained'
             color='primary'
