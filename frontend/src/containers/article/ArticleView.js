@@ -23,6 +23,7 @@ import Copyright from '../../components/details/Copyright'
 import CustomAppBar from '../../components/details/CustomAppBar'
 import StickyBox from 'react-sticky-box'
 import * as wordtest from '../../ducks/wordtest'
+import ReactLoading from 'react-loading'
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -228,7 +229,36 @@ function ArticleView(props) {
     !props.article.content ||
     !props.article.phrases
   ) {
-    return null
+    return (
+      <>
+        <CustomAppBar />
+        <Container component='main' maxWidth='md'>
+          <CssBaseline />
+          <Grid
+            container
+            justify='center'
+            alignItems='center'
+            style={{ minHeight: '100vh' }}
+          >
+            <Grid
+              container
+              justify='center'
+              direction='column'
+              alignItems='center'
+              style={{ minHeight: '100vh' }}
+            >
+              <ReactLoading
+                type={'spin'}
+                color={'#000'}
+                height={'20%'}
+                width={'20%'}
+                margin={'0 auto'}
+              />
+            </Grid>
+          </Grid>
+        </Container>
+      </>
+    )
   }
 
   const articleObject = props.article
