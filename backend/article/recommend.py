@@ -8,6 +8,8 @@ User = get_user_model()
 
 users = []
 words = []
+articles = []
+article_frequency_matrix = None
 
 def makeMatrix():
     """
@@ -99,3 +101,26 @@ def fillMatrix(matrix):
             filled_matrix[user_idx][word_idx] = expected_confidence
                     
     return filled_matrix
+ 
+
+def makeFrequencyMatrix():
+    global articles
+    global users
+    global words
+    global article_frequency_matrix # num_article * num_word
+
+    matrix = fillMatrix(makeMatrix())
+
+    if len(articles) != Article.objects.all().count():
+        articles = list(Article.objects.all())
+        article_frequency_matrix = np.empty((0, len(words)), dtype=np.float32)
+        article_frequency_row_vector = [0.0]*len(words)
+        for article in articles:
+            num_word_in_article = article.phrases.all().count()
+            for phrase in article.phrases.all()
+                article_frequency_row_vector[words.index(phrase.word)] += 1/num_word_in_article
+            article_frequency_matrix = np.append(article_frequency_matrix, np.array([article_frequency_row_vector]), axis=0)
+    
+    return article_frequency_matrix
+
+
