@@ -186,7 +186,7 @@ def get_recommendation_list(user):
     random.shuffle(article_hard_idx_list)
     article_idx_list = article_medium_idx_list + article_easy_idx_list + article_hard_idx_list
 
-    article_idx_list = map(lambda idx: idx+1, article_idx_list)
+    article_idx_list = list(map(lambda idx: idx+1, article_idx_list))
 
     return article_idx_list
 
