@@ -248,7 +248,7 @@ function ArticleView(props) {
               style={{ minHeight: '100vh' }}
             >
               <ReactLoading
-                type={'spin'}
+                type={'bars'}
                 color={'#000'}
                 height={'20%'}
                 width={'20%'}
