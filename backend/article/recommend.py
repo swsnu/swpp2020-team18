@@ -5,11 +5,20 @@ from wordtest.models import History, HistoryWord
 from wordlist.models import Word
 from django.contrib.auth import get_user_model
 User = get_user_model()
+import warnings
+
+warnings.filterwarnings("ignore", message="Mean of empty slice")
+
+DEFAULT_VALUE = 1.5
 
 users = []
 words = []
 articles = []
+
+
+confidence_matrix = None
 article_frequency_matrix = None
+readabilty_matrix = None
 
 def makeMatrix():
     """
@@ -46,10 +55,10 @@ def makeMatrix():
 def centeredCosineSimilarity(v1, v2):
     v1 = v1 - np.nanmean(v1)
     v2 = v2 - np.nanmean(v2)
-    v1 = np.nan_to_num(v1)
-    v2 = np.nan_to_num(v2)
+    v1 = np.nan_to_num(v1, nan=DEFAULT_VALUE)
+    v2 = np.nan_to_num(v2, nan=DEFAULT_VALUE)
 
-    cos_sim = np.dot(v1, v2)/( np.linalg.norm(v1) * np.linalg.norm(v2) + 0.00001 )
+    cos_sim = np.dot(v1, v2)/( np.linalg.norm(v1) * np.linalg.norm(v2) + 0.000001 )
 
     return cos_sim
 
@@ -59,9 +68,10 @@ def fillMatrix(matrix):
     Fill out matrix
     with collaborative filtering method
     """
-    filled_matrix = np.empty((0, len(words)), dtype=np.float32)
+    global confidence_matrix
+    filled_matrix = np.zeros((len(users), len(words)), dtype=np.float32)
     similarity_matrix = np.zeros((len(users), len(users)), dtype=np.float32)
-    DEFAULT_VALUE = 5
+    
     TOP_N = 3
 
     # Calculate similarity matrix
@@ -70,10 +80,12 @@ def fillMatrix(matrix):
             ccs = centeredCosineSimilarity(matrix[i], matrix[j])
             similarity_matrix[i][j] = ccs
             similarity_matrix[j][i] = ccs
+            # print((i,j, matrix[i], matrix[j]))
+    # print(similarity_matrix)
 
     for user_idx, user in enumerate(users):
         user_word_confidence_row_list = [np.nan]*len(words)
-        for word_idx, word in enumerate(word):
+        for word_idx, word in enumerate(words):
             if not np.isnan(matrix[user_idx][word_idx]):
                 expected_confidence = matrix[user_idx][word_idx]
             else:
@@ -96,10 +108,13 @@ def fillMatrix(matrix):
                     for sim, conf, i in zipped:
                        sum_weight += conf * sim
                        sum_similarity += sim
-                    expected_confidence = sum_weight / sum_similarity 
+                    expected_confidence = sum_weight / sum_similarity
+                    if (np.isnan(expected_confidence)):
+                        expected_confidence = DEFAULT_VALUE
 
             filled_matrix[user_idx][word_idx] = expected_confidence
-                    
+    
+    confidence_matrix = filled_matrix
     return filled_matrix
  
 
@@ -114,13 +129,27 @@ def makeFrequencyMatrix():
     if len(articles) != Article.objects.all().count():
         articles = list(Article.objects.all())
         article_frequency_matrix = np.empty((0, len(words)), dtype=np.float32)
-        article_frequency_row_vector = [0.0]*len(words)
         for article in articles:
+            article_frequency_row_vector = [0.0]*len(words)
             num_word_in_article = article.phrases.all().count()
-            for phrase in article.phrases.all()
+            for phrase in article.phrases.all():
                 article_frequency_row_vector[words.index(phrase.word)] += 1/num_word_in_article
             article_frequency_matrix = np.append(article_frequency_matrix, np.array([article_frequency_row_vector]), axis=0)
     
     return article_frequency_matrix
+
+
+def calculateReadabilityMatrix():
+    global article_frequency_matrix
+    global readabilty_matrix
+
+    global confidence_matrix
+
+    makeFrequencyMatrix()
+
+    readabilty_matrix = np.matmul(confidence_matrix/10.0, article_frequency_matrix.transpose())
+
+
+    return readabilty_matrix
 
 
