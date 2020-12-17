@@ -76,12 +76,9 @@ def fetch_article_nytimes():  # pylint: disable=too-many-locals
             article_model.save()
 
             korean_meanings_list = []
-            for (phrase, keyword) in zip(phrases, keywords_list):
-                try:
-                    korean_meaning = search_daum_endic(keyword)
-                    korean_meanings_list.append(korean_meaning)
-                except:
-                    logger.debug("Not able to find meaning")
+
+            for word in Word.objects.all():
+                korean_meanings_list.append(word.korean_meaning)
 
             for (phrase, keyword) in zip(phrases, keywords_list):
                 try:
@@ -92,11 +89,12 @@ def fetch_article_nytimes():  # pylint: disable=too-many-locals
                         content=keyword, korean_meaning=korean_meaning, difficulty=5
                         )
                         word_model.save()
+                        copied_korean_meanings_list.append(korean_meaning)
                     elif len(Word.objects.filter(content=keyword)) == 1:
                         word_model = Word.objects.get(content=keyword)
                     else:
                         word_model = Word.objects.filter(content=keyword).first()
-
+                    copied_korean_meanings_list = list(set(copied_korean_meanings_list))
                     copied_korean_meanings_list.remove(korean_meaning)
                     random.shuffle(copied_korean_meanings_list)
                     if len(copied_korean_meanings_list) >= 3:

@@ -158,6 +158,7 @@ function ReviewTest(props) {
                     let tempAnswer = answers
                     tempAnswer.push(value)
                     setAnswers(tempAnswer)
+                    setValue('')
                     props.onSubmitTest(words, answers, 'review').then((res) => {
                       console.log(res.data)
                       history.push('/reviewtest/result')
@@ -167,6 +168,7 @@ function ReviewTest(props) {
                     let tempAnswer = answers
                     tempAnswer.push(value)
                     setAnswers(tempAnswer)
+                    setValue('')
                   }
                 }}
               >

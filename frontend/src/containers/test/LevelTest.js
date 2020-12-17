@@ -154,6 +154,7 @@ function LevelTest(props) {
                   let tempAnswer = answers
                   tempAnswer.push(value)
                   setAnswers(tempAnswer)
+                  setValue('')
                   console.log(words)
                   console.log(answers)
                   props.onSubmitTest(words, answers, 'new').then((res) => {
@@ -165,6 +166,7 @@ function LevelTest(props) {
                   let tempAnswer = answers
                   tempAnswer.push(value)
                   setAnswers(tempAnswer)
+                  setValue('')
                 }
               }}
             >
