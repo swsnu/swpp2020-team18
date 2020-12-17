@@ -81,11 +81,15 @@ function Landing(props) {
     props.updateUserInfo()
   }, [])
 
-  const article_url = `/article/${props.user.recommendation_list[0]}`
+  const random_number = 1 + Math.floor(Math.random() * 10)
 
   if (!props.user) {
     return <Redirect to='/signin' />
   }
+
+  let article_url = props.user.recommendation_list
+    ? `/article/${props.user.recommendation_list[0]}`
+    : `/article/${random_number}`
 
   return (
     <Fragment>

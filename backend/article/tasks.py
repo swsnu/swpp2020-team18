@@ -132,6 +132,109 @@ def fetch_article_nytimes():  # pylint: disable=too-many-locals
         logger.debug("Something went wrong: %s", repr(exceptions))
 
 
+
+@shared_task
+def fetch_article_nytimes_archive(year, month, num=-1):  # pylint: disable=too-many-locals
+    """
+    Fetch news from archive and
+    # Save it as **Article** model.
+    """
+    try:
+        url = (
+            r"https://api.nytimes.com/svc/archive/v1/%d/%d.json?api-key=%s"
+            % (year, month, sensitive.NYTIMES_API_KEY)
+        )
+        response = requests.get(url)
+        data = response.json()
+
+        results = data["response"]["docs"]
+        if(num==-1):
+            num = len(data["response"]["docs"])
+
+        logger.debug("Fetching articles from NYTimes...")
+        for result in results[:num]:
+            response = requests.get(result["web_url"])
+            original_url = result["web_url"]
+            title = result["headline"]["main"]
+            author = result["byline"]["original"]
+            if author.startswith("By "):
+                author = author[3:]
+            soup = BeautifulSoup(response.text, "html.parser")
+            # category = result["section"]
+            # subcategory = result["subsection"]
+
+            logger.debug("Fetching from: %s", original_url)
+            logger.debug("Title: %s", title)
+            logger.debug("Author: %s", author)
+
+            article = soup.select("article")[0]
+            section = article.select("section")[-1]
+            text = section.text
+            logger.debug("Content: %s", text)
+
+            phrases, keywords_list = extract_phrases_and_keywords(text, 7)
+
+            article_model = Article(title=title, author=author, content=text)
+            article_model.save()
+
+            korean_meanings_list = []
+
+            for word in Word.objects.all():
+                korean_meanings_list.append(word.korean_meaning)
+
+            for (phrase, keyword) in zip(phrases, keywords_list):
+                try:
+                    copied_korean_meanings_list = korean_meanings_list.copy()
+                    korean_meaning = search_daum_endic(keyword)
+                    if len(Word.objects.filter(content=keyword)) == 0:
+                        word_model = Word(
+                        content=keyword, korean_meaning=korean_meaning, difficulty=5
+                        )
+                        word_model.save()
+                        copied_korean_meanings_list.append(korean_meaning)
+                    elif len(Word.objects.filter(content=keyword)) == 1:
+                        word_model = Word.objects.get(content=keyword)
+                    else:
+                        word_model = Word.objects.filter(content=keyword).first()
+                    copied_korean_meanings_list = list(set(copied_korean_meanings_list))
+                    copied_korean_meanings_list.remove(korean_meaning)
+                    random.shuffle(copied_korean_meanings_list)
+                    if len(copied_korean_meanings_list) >= 3:
+                        phrase_model = Phrase(content=phrase, word=word_model)
+                        phrase_model.option_one = copied_korean_meanings_list.pop()
+                        phrase_model.option_two = copied_korean_meanings_list.pop()
+                        phrase_model.option_three = copied_korean_meanings_list.pop()
+                    elif len(copied_korean_meanings_list) == 2:
+                        phrase_model = Phrase(content=phrase, word=word_model)
+                        phrase_model.option_one = copied_korean_meanings_list.pop()
+                        phrase_model.option_two = copied_korean_meanings_list.pop()
+                        phrase_model.option_three = random.sample(fake_words, 1)[0]
+                    elif len(copied_korean_meanings_list) == 1:
+                        phrase_model = Phrase(content=phrase, word=word_model)
+                        phrase_model.option_one = copied_korean_meanings_list.pop()
+                        using_fake_words = random.sample(fake_words, 2)
+                        phrase_model.option_two = using_fake_words[0]
+                        phrase_model.option_three = using_fake_words[1]
+                    else:
+                        phrase_model = Phrase(content=phrase, word=word_model)
+                        using_fake_words = random.sample(fake_words, 3)
+                        phrase_model.option_one = using_fake_words[0]
+                        phrase_model.option_two = using_fake_words[1]
+                        phrase_model.option_three = using_fake_words[2]
+                    phrase_model.save()
+
+
+                    article_model.phrases.add(phrase_model.id)
+                except IntegrityError:
+                    logger.debug("Duplicate data")
+
+        logger.debug("Fetching Completed!")
+
+    except (requests.exceptions.RequestException, KeyError, IndexError) as exceptions:
+        logger.debug("Something went wrong: %s", repr(exceptions))
+
+
+
 def extract_phrases_and_keywords(content, number):
     """
     Return list of extracted phrases and keywords from content
