@@ -17,16 +17,24 @@ import {
 import Copyright from '../../components/details/Copyright'
 import CustomAppBar from '../../components/details/CustomAppBar'
 import PropTypes from 'prop-types'
-import { Redirect } from 'react-router-dom'
+import { useHistory, Redirect } from 'react-router-dom'
 import * as accounts from '../../ducks/accounts'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
+import Button from '@material-ui/core/Button'
 import Leaderboard from './Leaderboard'
 
 const useStyles = makeStyles(() => ({
   title: {
     margin: 0,
     padding: '5vh',
+  },
+  button: {
+    paddingTop: 30,
+    minHeight: 0,
+    minWidth: 0,
+    width: '18%',
+    margin: '0 auto',
   },
 }))
 
@@ -51,6 +59,7 @@ const mapToDayname = (num) => {
 
 function Statistics(props) {
   const classes = useStyles()
+  const history = useHistory()
   useEffect(() => {
     props.updateUserInfo().then(() => props.getScores())
   }, [])
@@ -124,6 +133,19 @@ function Statistics(props) {
           </div>
         )}
         <Leaderboard />
+        <div className={classes.button}>
+          <Grid container spacing={5}>
+            <Grid item xs={12}>
+              <Button
+                variant='contained'
+                color='primary'
+                onClick={() => history.push('/')}
+              >
+                OK
+              </Button>
+            </Grid>
+          </Grid>
+        </div>
         <Box mt={8}>
           <Copyright />
         </Box>
