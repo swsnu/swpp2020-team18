@@ -54,6 +54,20 @@ function ReviewTest(props) {
   const [words, setWords] = React.useState([])
   const [answers, setAnswers] = React.useState([])
 
+  // Event listner for Key Enter
+  // useEffect(() => {
+  //   const listener = event => {
+  //     if (event.code === "Enter" || event.code === "NumpadEnter") {
+  //       console.log("Enter key was pressed. Run your function.");
+  //       //callMyFunction();
+  //     }
+  //   };
+  //   document.addEventListener("keydown", listener);
+  //   return () => {
+  //     document.removeEventListener("keydown", listener);
+  //   };
+  // }, []);
+
   const handleChange = (event) => {
     setValue(event.target.value)
     console.log(value)
@@ -151,7 +165,7 @@ function ReviewTest(props) {
               {questionNumber + 1} / {testData.length}
               <Button
                 disabled={value === ''}
-                className={classes.Button}
+                className={classes.button}
                 color='inherit'
                 onClick={() => {
                   if (questionNumber == testData.length - 1) {

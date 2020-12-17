@@ -6,7 +6,8 @@ import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
 import Box from '@material-ui/core/Box'
 import { makeStyles } from '@material-ui/core/styles'
-import { Redirect } from 'react-router-dom'
+import { useHistory, Redirect } from 'react-router-dom'
+import Button from '@material-ui/core/Button'
 import {
   AreaChart,
   Area,
@@ -98,6 +99,13 @@ const useStyles = makeStyles(() => ({
   points: {
     color: '#228B22',
   },
+  subbutton: {
+    paddingTop: 30,
+    minHeight: 0,
+    minWidth: 0,
+    width: '18%',
+    margin: '0 auto',
+  },
 }))
 
 const mapToDayname = (num) => {
@@ -121,6 +129,7 @@ const mapToDayname = (num) => {
 
 function ArticleResult(props) {
   const classes = useStyles()
+  const history = useHistory()
 
   const [addedSet, setAddedSet] = React.useState([])
 
@@ -345,6 +354,28 @@ function ArticleResult(props) {
           </div>
         )}
         <Leaderboard />
+        <div className={classes.subbutton}>
+          <Grid container>
+            <Grid item xs={6}>
+              <Button
+                variant='contained'
+                color='primary'
+                onClick={() => history.push('/')}
+              >
+                OK
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                variant='contained'
+                color='primary'
+                onClick={() => history.push('/statistics')}
+              >
+                Statistics
+              </Button>
+            </Grid>
+          </Grid>
+        </div>
         <Box mt={8}>
           <Copyright />
         </Box>
