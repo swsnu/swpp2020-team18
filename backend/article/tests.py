@@ -11,6 +11,8 @@ from wordlist.models import Phrase, Word
 from .models import Article
 import nltk
 from nltk.stem import WordNetLemmatizer
+from wordtest.models import History, HistoryWord
+import json
 
 
 User = get_user_model()
@@ -43,6 +45,8 @@ class ArticleTestCase(TestCase):
         )
         phrase_model.save()
         article_model.phrases.add(phrase_model.id)
+        history_model = History.objects.first()
+        history_model.learned_word.add(word_model)
 
     def test_model(self):
         """
@@ -132,7 +136,7 @@ class ArticleTestCase(TestCase):
 
         response = client.get("/api/articles/1/quiz")
         self.assertEqual(response.status_code, 200)
-        response = client.post("/api/articles/1/quiz")
+        response = client.post("/api/articles/1/quiz", json.dumps({"answers": ["예시"]}), content_type="application/json")
         self.assertEqual(response.status_code, 200)
         response = client.put("/api/articles/1/quiz")
         self.assertEqual(response.status_code, 405)
