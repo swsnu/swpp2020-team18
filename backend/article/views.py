@@ -3,33 +3,24 @@ Views of article
 """
 
 import random
-# import json
+
+import json
 from json import JSONDecodeError
 from django.contrib.auth.decorators import login_required
 from django.http import (
     HttpResponse,
     HttpResponseNotAllowed,
-    HttpResponseBadRequest,
+    # HttpResponseBadRequest,
     JsonResponse,
 )
 from .models import Article
+from accounts.views import *
+from wordlist.models import Word, Phrase, Wordlist, WordlistPhrase
+from wordtest.models import History, HistoryWord
+from django.views.decorators.csrf import csrf_exempt
 
-
-fake_words = [
-    "참다",
-    "크기",
-    "독립",
-    "대기",
-    "화분",
-    "망원경",
-    "서랍",
-    "엉터리",
-    "전문직",
-    "제출",
-]
-
-
-@login_required
+# @login_required
+@csrf_exempt
 def article_one(request, article_id):
     """
     Return requested article in JSON format.
@@ -46,33 +37,29 @@ def article_one(request, article_id):
 
     """
     if request.method == "GET":
-        try:
-            article = Article.objects.get(pk=article_id)
-            title = article.title
-            author = article.author
-            content = article.content
-            phrases = list(
-                map(
-                    lambda phrase: {
-                        "content": phrase.content,
-                        "keyword": phrase.word.content,
-                    },
-                    article.phrases.all(),
-                )
-            )
-            return JsonResponse(
-                {
-                    "title": title,
-                    "author": author,
-                    "content": content,
-                    "phrases": phrases,
+        article = Article.objects.get(pk=article_id)
+        title = article.title
+        author = article.author
+        content = article.content
+        phrases = list(
+            map(
+                lambda phrase: {
+                    "content": phrase.content,
+                    "keyword": phrase.word.content,
                 },
-                safe=False,
-                status=200,
+                article.phrases.all(),
             )
-
-        except (KeyError, JSONDecodeError):
-            return HttpResponseBadRequest()
+        )
+        return JsonResponse(
+            {
+                "title": title,
+                "author": author,
+                "content": content,
+                "phrases": phrases,
+            },
+            safe=False,
+            status=200,
+        )
     else:
         return HttpResponseNotAllowed(["GET"])
 
@@ -96,59 +83,104 @@ def article_quiz(request, article_id):
     """
 
     if request.method == "GET":
-        try:
-            article = Article.objects.get(pk=article_id)
+        article = Article.objects.get(pk=article_id)
 
-            def mixup(korean_meaning):
-                choice = random.sample(fake_words, 3) + [korean_meaning]
-                random.shuffle(choice)
-                return choice
+        def mixup(phrase):
+            choice = [phrase.word.korean_meaning] + [phrase.option_one] + [phrase.option_two] + [phrase.option_three]
+            random.shuffle(choice)
+            return choice
 
-            phrases = list(
-                map(
-                    lambda phrase: {
-                        "content": phrase.content,
-                        "keyword": phrase.word.content,
-                        "choices": mixup(phrase.word.korean_meaning),
-                    },
-                    article.phrases.all(),
-                )
+        phrases = list(
+            map(
+                lambda phrase: {
+                    "content": phrase.content,
+                    "keyword": phrase.word.content,
+                    "choices": mixup(phrase),
+                },
+                article.phrases.all(),
             )
-            return JsonResponse({"phrases": phrases}, safe=False, status=200)
+        )
+        return JsonResponse({"phrases": phrases}, safe=False, status=200)
 
+    elif request.method == "POST":
+        try:
+            req_data = json.loads(request.body.decode())
+            answers = req_data["answers"]
         except (KeyError, JSONDecodeError):
             return HttpResponseBadRequest()
-    elif request.method == "POST":
-        # TODO: Scoring # pylint: disable=fixme
-        return HttpResponse()
+        user_history = request.user.history
+        article = Article.objects.get(pk=article_id)
+        phrases = list(
+            map(
+                lambda phrase: {
+                    "content": phrase.content,
+                    "keyword": phrase.word.content,
+                    "correct_answer": phrase.word.korean_meaning
+                },
+                article.phrases.all(),
+            )
+        )
+
+        correct_answer_count = 0
+        total_count = 0
+        scored_phrases = []
+
+        for (phrase, answer) in zip(phrases, answers):
+            isCorrect = False
+            if(phrase["correct_answer"]==answer):
+                isCorrect = True
+                found_word = Word.objects.get(content=phrase["keyword"])
+                if len(user_history.learned_word.filter(content=found_word.content)) == 0:
+                    return HttpResponse(status=404)
+                try:
+                    history_word = HistoryWord.objects.get(word=found_word, history=user_history)
+                except HistoryWord.DoesNotExist:
+                    return HttpResponse(status=404)
+                if history_word.confidence == 1:
+                    history_word.confidence = 5
+                elif history_word.confidence < 10:
+                    history_word.confidence += 1
+                else:
+                    history_word.confidence = 10
+                history_word.save()
+                correct_answer_count += 1
+            total_count += 1
+            scored_phrases.append({
+                "content": phrase["content"],
+                "keyword": phrase["keyword"],
+                "answer": answer,
+                "correct_answer": phrase["correct_answer"],
+                "is_correct": isCorrect,
+            })
+            
+        addScore(request.user, 10*correct_answer_count)
+
+        return JsonResponse({"scored_phrases": scored_phrases, "correct_answer_count": correct_answer_count, "total_count": total_count}, safe=False, status=200)
     else:
         return HttpResponseNotAllowed(["GET", "POST"])
 
 
 # TODO: Make more sophiscated way # pylint: disable=fixme
-@login_required
-def article_recommend(request):
-    """
-    Get article recommendation
+# @login_required
+# def article_recommend(request):
+#     """
+#     Get article recommendation
 
-    In **GET**: Get article recommendation
+#     In **GET**: Get article recommendation
 
-    :param request: a HTTP request
-    :type request: HttpRequest
+#     :param request: a HTTP request
+#     :type request: HttpRequest
 
-    :returns: a JSON response
-    :rtype: JsonResponse
+#     :returns: a JSON response
+#     :rtype: JsonResponse
 
-    """
+#     """
 
-    if request.method == "GET":
-        try:
-            count = Article.objects.all.count()
-            article_id = random.randint(1, count + 1)
+#     if request.method == "GET":
+#         count = Article.objects.all.count()
+#         article_id = random.randint(1, count + 1)
 
-            return JsonResponse({"recommendation": [article_id]}, safe=False, status=200)
+#         return JsonResponse({"recommendation": [article_id]}, safe=False, status=200)
 
-        except (KeyError, JSONDecodeError):
-            return HttpResponseBadRequest()
-    else:
-        return HttpResponseNotAllowed(["GET"])
+#     else:
+#         return HttpResponseNotAllowed(["GET"])

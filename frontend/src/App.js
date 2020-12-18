@@ -9,7 +9,6 @@ import SignUp from './components/accounts/SignUp'
 import './App.css'
 import { ThemeProvider } from '@material-ui/styles'
 import { createMuiTheme } from '@material-ui/core/styles'
-import Article from 'containers/article/Article'
 import Wordlist from 'containers/wordlist/Wordlist'
 import Statistics from 'containers/statistics/Statistics'
 import ReviewTest from 'containers/test/ReviewTest'
@@ -17,6 +16,9 @@ import LevelTest from 'containers/test/LevelTest'
 import { connect } from 'react-redux'
 import * as accounts from './ducks/accounts'
 import ArticleView from './containers/article/ArticleView'
+import ArticleResult from './containers/article/ArticleResult'
+import LevelTestResult from './containers/test/LevelTestResult'
+import ReviewTestResult from './containers/test/ReviewTestResult'
 
 const theme = createMuiTheme({
   palette: {
@@ -35,7 +37,7 @@ function App(props) {
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     setLoading(true)
-    document.title = "Term'inator"
+    // document.title = "Term'inator"
     props.getAuthentication().then(() => setLoading(false))
   }, [])
 
@@ -52,15 +54,6 @@ function App(props) {
               render={() => (
                 <>
                   <Landing />
-                </>
-              )}
-            />
-            <Route
-              path='/article'
-              exact
-              render={() => (
-                <>
-                  <Article />
                 </>
               )}
             />
@@ -83,6 +76,11 @@ function App(props) {
               )}
             />
             <Route
+              path='/reviewtest/result'
+              exact
+              component={ReviewTestResult}
+            />
+            <Route
               path='/leveltest'
               exact
               render={() => (
@@ -91,6 +89,7 @@ function App(props) {
                 </>
               )}
             />
+            <Route path='/leveltest/result' exact component={LevelTestResult} />
             <Route
               path='/statistics'
               exact
@@ -103,6 +102,7 @@ function App(props) {
             <Route path='/signin' exact render={() => <SignIn />} />
             <Route path='/signup' exact render={() => <SignUp />} />
             <Route path='/article/:id' exact component={ArticleView} />
+            <Route path='/article/:id/result' exact component={ArticleResult} />
             <Redirect exact from='/' to='terminator' />
             <Route render={() => <h1>Not Found</h1>} />
           </Switch>

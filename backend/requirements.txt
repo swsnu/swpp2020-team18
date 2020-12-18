@@ -57,6 +57,7 @@ pytz==2020.1
 PyYAML==5.3.1
 regex==2020.10.28
 requests==2.24.0
+responses==0.12.1
 scipy==1.5.4
 six==1.15.0
 smart-open==3.0.0

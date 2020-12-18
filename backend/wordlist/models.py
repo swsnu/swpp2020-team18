@@ -35,12 +35,13 @@ class Phrase(models.Model):
     :type content: class:`django.db.models.TextField`
     :param word: keyword in phrase
     :type word: class:`django.db.models.ForeignKey`
-    :param confidence: user's confidence about phrase
-    :type confidence: class:`django.db.models.IntegerField`
     """
     objects = models.Manager()
     content = models.TextField(blank=False, unique=True)
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
+    option_one = models.CharField(max_length=100, null=True)
+    option_two = models.CharField(max_length=100, null=True)
+    option_three = models.CharField(max_length=100, null=True)
 
     def __str__(self):
         return f"문장: {str(self.content)}, 단어: {str(self.word.content)}"
@@ -98,4 +99,3 @@ class WordlistPhrase(models.Model):
     wordlist = models.ForeignKey(Wordlist, on_delete=models.CASCADE)
     phrase = models.ForeignKey(Phrase, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    confidence = models.IntegerField(default=1)

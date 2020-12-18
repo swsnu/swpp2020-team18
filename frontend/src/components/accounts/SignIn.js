@@ -3,11 +3,10 @@ import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import TextField from '@material-ui/core/TextField'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
 import Link from '@material-ui/core/Link'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
+import Alert from '@material-ui/lab/Alert'
 import SchoolIcon from '@material-ui/icons/School'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
@@ -17,19 +16,7 @@ import * as accounts from '../../ducks/accounts'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Redirect } from 'react-router-dom'
-
-function Copyright() {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {'Copyright © '}
-      <Link color='inherit' href='/'>
-        Term&#39;inator
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  )
-}
+import Copyright from '../details/Copyright'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -56,6 +43,7 @@ function SignIn(props) {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [message, setMessage] = useState('')
 
   const submitHandler = () => {
     console.log('Submit')
@@ -101,10 +89,6 @@ function SignIn(props) {
             autoComplete='current-password'
             onChange={(event) => setPassword(event.target.value)}
           />
-          <FormControlLabel
-            control={<Checkbox value='remember' color='primary' />}
-            label='Remember me'
-          />
           <Button
             type='submit'
             fullWidth
@@ -115,9 +99,18 @@ function SignIn(props) {
           >
             Sign In
           </Button>
+          {props.error_message && (
+            <Alert severity='error'>{props.error_message}</Alert>
+          )}
+          {message && <Alert severity='info'>{message}</Alert>}
           <Grid container>
             <Grid item xs>
-              <Link href='#' variant='body2'>
+              <Link
+                onClick={() =>
+                  setMessage('Please send email to sjosjo1204@gmail.com')
+                }
+                variant='body2'
+              >
                 Forgot password?
               </Link>
             </Grid>
@@ -137,6 +130,7 @@ function SignIn(props) {
 }
 
 const mapStateToProps = (state) => ({
+  error_message: state.accounts.error_message,
   user: state.accounts.user,
 })
 
@@ -146,6 +140,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 SignIn.propTypes = {
   user: PropTypes.object,
+  error_message: PropTypes.string,
   onSignIn: PropTypes.func,
 }
 

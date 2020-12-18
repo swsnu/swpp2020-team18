@@ -2,7 +2,6 @@ import React from 'react'
 import { useEffect } from 'react'
 // import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
-import Link from '@material-ui/core/Link'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
@@ -10,6 +9,7 @@ import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
 import { Redirect } from 'react-router-dom'
 import * as article from '../../ducks/article'
+import * as accounts from '../../ducks/accounts'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Stepper from '@material-ui/core/Stepper'
@@ -19,45 +19,27 @@ import Divider from '@material-ui/core/Divider'
 import { makeStyles } from '@material-ui/core/styles'
 import ArticleSideTest from '../../components/article/ArticleSideTest'
 import { withRouter } from 'react-router-dom'
-
-function Copyright() {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {'Copyright © '}
-      <Link color='inherit' href='/'>
-        Term&#39;inator
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  )
-}
+import Copyright from '../../components/details/Copyright'
+import CustomAppBar from '../../components/details/CustomAppBar'
+import StickyBox from 'react-sticky-box'
+import * as wordtest from '../../ducks/wordtest'
+import ReactLoading from 'react-loading'
 
 const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+  title: {
+    margin: 0,
+    padding: '5vh',
   },
   stepper: {
     backgroundColor: '#fafafa',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
   highlighted: {
-    color: 'red',
+    color: 'black',
     display: 'inline',
-    backgroundColor: '#FFFF00',
+    backgroundColor: '#fff2a8',
     cursor: 'pointer',
   },
   greylighted: {
@@ -69,9 +51,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'inline',
   },
   highlightedWord: {
-    color: 'red',
+    color: 'black',
     display: 'inline',
-    backgroundColor: '#FFBC42',
+    backgroundColor: '#ff9800',
     cursor: 'pointer',
   },
   greylightedWord: {
@@ -87,7 +69,13 @@ function ArticleView(props) {
   const [activeStep, setActiveStep] = React.useState(0)
   useEffect(() => {
     setLoading(true)
-    props.getArticle(props.match.params.id).then(() => {
+    props.getArticle(props.match.params.id).then((res) => {
+      console.log(res.data.phrases)
+      let keywordList = []
+      for (var i = 0; i < res.data.phrases.length; i++) {
+        keywordList.push(res.data.phrases[i].keyword)
+      }
+      props.makeHistory(keywordList)
       props.getArticleTest(props.match.params.id).then(() => setLoading(false))
     })
   }, [])
@@ -106,7 +94,16 @@ function ArticleView(props) {
   }
   const handleSubmit = () => {
     console.log('Submit!')
-    props.history.push('/')
+    console.log(props.submitArticleTest)
+    console.log(props.match.params.id)
+    console.log(selectedAnswers)
+    props.submitArticleTest(props.match.params.id, selectedAnswers).then(() => {
+      props.getScores().then(() => {
+        props.updateUserInfo().then(() => {
+          props.history.push('/article/' + props.match.params.id + '/result')
+        })
+      })
+    })
   }
 
   const nthIndex = (content, word, index) => {
@@ -232,7 +229,36 @@ function ArticleView(props) {
     !props.article.content ||
     !props.article.phrases
   ) {
-    return null
+    return (
+      <>
+        <CustomAppBar />
+        <Container component='main' maxWidth='md'>
+          <CssBaseline />
+          <Grid
+            container
+            justify='center'
+            alignItems='center'
+            style={{ minHeight: '100vh' }}
+          >
+            <Grid
+              container
+              justify='center'
+              direction='column'
+              alignItems='center'
+              style={{ minHeight: '100vh' }}
+            >
+              <ReactLoading
+                type={'bars'}
+                color={'#000'}
+                height={'20%'}
+                width={'20%'}
+                margin={'0 auto'}
+              />
+            </Grid>
+          </Grid>
+        </Container>
+      </>
+    )
   }
 
   const articleObject = props.article
@@ -254,112 +280,127 @@ function ArticleView(props) {
   console.log(completed)
 
   return (
-    <Container component='main' maxWidth='md'>
-      <CssBaseline />
-      <Grid container justify='center' alignItems='center'>
-        <Typography variant='h3' component='h2' gutterBottom>
-          Practice with Article!
-        </Typography>
-      </Grid>
-      <div>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Stepper
-              alternativeLabel
-              nonLinear
-              className={classes.stepper}
-              activeStep={activeStep}
-            >
-              {!steps
-                ? null
-                : steps.map((label, index) => (
-                    <Step key={label}>
-                      <StepButton
-                        onClick={handleStep(index)}
-                        completed={completed[index]}
-                      >
-                        {label}
-                      </StepButton>
-                    </Step>
-                  ))}
-            </Stepper>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container justify='center' alignItems='center'>
-              <Typography variant='h4' component='h3' gutterBottom>
-                {!articleObject ? null : articleObject.title}
-              </Typography>
+    <>
+      <CustomAppBar />
+      <Container component='main' maxWidth='md'>
+        <CssBaseline />
+        <Grid container justify='center' alignItems='center'>
+          <Typography
+            className={classes.title}
+            variant='h3'
+            component='h2'
+            gutterBottom
+          >
+            Practice with Article!
+          </Typography>
+        </Grid>
+        <div>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Stepper
+                alternativeLabel
+                nonLinear
+                className={classes.stepper}
+                activeStep={activeStep}
+              >
+                {!steps
+                  ? null
+                  : steps.map((label, index) => (
+                      <Step key={label}>
+                        <StepButton
+                          onClick={handleStep(index)}
+                          completed={completed[index]}
+                        >
+                          {label}
+                        </StepButton>
+                      </Step>
+                    ))}
+              </Stepper>
             </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container justify='center' alignItems='center'>
-              <Typography variant='h6' component='h6' gutterBottom>
-                {!articleObject ? null : articleObject.author}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item xs={8}>
-            <div>{!articleObject ? null : processdContent}</div>
-          </Grid>
-          <Divider flexItem orientation='vertical' />
-          <Grid item xs={3}>
-            <Grid container spacing={8}>
-              <Grid item xs={12}>
-                {!articleObject || !articleObject.phrases ? null : (
-                  <ArticleSideTest
-                    selectedPhrase={articleObject.phrases[sort_map[activeStep]]}
-                    onAnswerChoice={handleAnswerChoice(sort_map[activeStep])}
-                    answer={selectedAnswers[sort_map[activeStep]]}
-                  />
-                )}
+            <Grid item xs={12}>
+              <Grid container justify='center' alignItems='center'>
+                <Typography variant='h4' component='h3' gutterBottom>
+                  {!articleObject ? null : articleObject.title}
+                </Typography>
               </Grid>
-              <Grid item xs={12}>
-                <Grid container>
-                  <Grid item xs={6}>
-                    <Button
-                      variant='outlined'
-                      disabled={activeStep === 0}
-                      onClick={() => handleStep(activeStep - 1)()}
-                    >
-                      Prev
-                    </Button>
-                  </Grid>
-                  <Grid item xs={6}>
-                    {activeStep === steps.length - 1 ? (
-                      <Button
-                        variant='contained'
-                        color='primary'
-                        disabled={completed.some((e) => e === false)}
-                        onClick={() => handleSubmit()}
-                      >
-                        Submit
-                      </Button>
-                    ) : (
-                      <Button
-                        variant='outlined'
-                        color='primary'
-                        onClick={() => handleStep(activeStep + 1)()}
-                      >
-                        Next
-                      </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container justify='center' alignItems='center'>
+                <Typography variant='h6' component='h6' gutterBottom>
+                  {!articleObject ? null : articleObject.author}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item xs={8}>
+              <div>{!articleObject ? null : processdContent}</div>
+            </Grid>
+            <Divider flexItem orientation='vertical' />
+
+            <Grid item xs={3}>
+              <StickyBox offsetTop={10} offsetBottom={10}>
+                <Grid container spacing={8}>
+                  <Grid item xs={12}>
+                    {!articleObject || !articleObject.phrases ? null : (
+                      <ArticleSideTest
+                        selectedPhrase={
+                          articleObject.phrases[sort_map[activeStep]]
+                        }
+                        onAnswerChoice={handleAnswerChoice(sort_map[activeStep])}
+                        answer={selectedAnswers[sort_map[activeStep]]}
+                      />
                     )}
                   </Grid>
+                  <Grid item xs={12}>
+                    <Grid container>
+                      <Grid item xs={6}>
+                        <Button
+                          variant='outlined'
+                          disabled={activeStep === 0}
+                          onClick={() => handleStep(activeStep - 1)()}
+                        >
+                          Prev
+                        </Button>
+                      </Grid>
+                      <Grid item xs={6}>
+                        {activeStep === steps.length - 1 ? (
+                          <Button
+                            variant='contained'
+                            color='primary'
+                            disabled={completed.some((e) => e === false)}
+                            onClick={() => handleSubmit()}
+                          >
+                            Submit
+                          </Button>
+                        ) : (
+                          <Button
+                            variant='outlined'
+                            color='primary'
+                            onClick={() => handleStep(activeStep + 1)()}
+                          >
+                            Next
+                          </Button>
+                        )}
+                      </Grid>
+                    </Grid>
+                  </Grid>
                 </Grid>
-              </Grid>
+              </StickyBox>
             </Grid>
           </Grid>
-        </Grid>
-      </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
-    </Container>
+        </div>
+        <Box mt={5}>
+          <Copyright />
+        </Box>
+      </Container>
+    </>
   )
 }
 
 const mapStateToProps = (state) => ({
   user: state.accounts.user,
   article: state.article.article,
+  result: state.article.result,
+  scores: state.accounts.scores,
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -367,6 +408,13 @@ const mapDispatchToProps = (dispatch) => ({
     return dispatch(article.getArticle(id))
   },
   getArticleTest: (id) => dispatch(article.getArticleTest(id)),
+  submitArticleTest: (id, answers) =>
+    dispatch(article.submitArticleTest({ id: id, answers: answers })),
+  getScores: () => {
+    return dispatch(accounts.getScores())
+  },
+  makeHistory: (words) => dispatch(wordtest.makeHistory(words)),
+  updateUserInfo: () => dispatch(accounts.checkLogin()),
 })
 
 ArticleView.propTypes = {
@@ -374,12 +422,17 @@ ArticleView.propTypes = {
   article: PropTypes.object,
   getArticle: PropTypes.func,
   getArticleTest: PropTypes.func,
+  submitArticleTest: PropTypes.func,
+  getScores: PropTypes.func,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.number,
     }),
   }),
   history: PropTypes.any,
+  result: PropTypes.object,
+  makeHistory: PropTypes.func,
+  updateUserInfo: PropTypes.func,
 }
 
 export default connect(

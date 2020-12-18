@@ -8,6 +8,7 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 // Actions
 const GETARTICLE = 'article/GETARTICLE'
 const GETARTICLETEST = 'article/GETARTICLETEST'
+const SUBMITARTICLETEST = 'article/SUBMITARTICLETEST'
 
 // Action Creators
 export const getArticle = createAction(
@@ -26,6 +27,18 @@ export const getArticleTest = createAction(
   (payload) => {
     return axios
       .get(`/api/articles/${payload}/quiz`)
+      .then((res) => res)
+      .catch((err) => err)
+  }
+)
+export const submitArticleTest = createAction(
+  // payload = { id: _, answers: [...] }
+  SUBMITARTICLETEST,
+  (payload) => {
+    return axios
+      .post(`/api/articles/${payload['id']}/quiz`, {
+        answers: payload['answers'],
+      })
       .then((res) => res)
       .catch((err) => err)
   }
@@ -84,6 +97,17 @@ export default handleActions(
         }
       },
     }),
+    ...pender({
+      type: SUBMITARTICLETEST,
+      onSuccess: (state, action) => {
+        console.log(action.payload.data)
+        return {
+          ...state,
+          result: action.payload.data,
+        }
+      },
+    }),
   },
+
   initialState
 )

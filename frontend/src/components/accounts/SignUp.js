@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField'
 import Link from '@material-ui/core/Link'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
+import Alert from '@material-ui/lab/Alert'
 import SchoolIcon from '@material-ui/icons/School'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
@@ -15,19 +16,7 @@ import { Redirect } from 'react-router-dom'
 import * as accounts from '../../ducks/accounts'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-
-function Copyright() {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {'Copyright © '}
-      <Link color='inherit' href='/'>
-        Term&#39;inator
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  )
-}
+import Copyright from '../details/Copyright'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -55,9 +44,30 @@ function SignUp(props) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
+  const [validationMessage, setValidationMessage] = useState('')
 
   const submitHandler = () => {
     console.log('Submit')
+
+    // Form validation
+    if (!(username && email && password)) {
+      setValidationMessage('Empty field is not allowed.')
+      return
+    }
+    if (
+      !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+        email
+      )
+    ) {
+      setValidationMessage('Not valid email format.')
+      return
+    }
+    if (password.length < 6) {
+      setValidationMessage('Too short password.')
+      return
+    }
+
+    setValidationMessage('')
     props.onSignUp({ email: email, username: username, password: password })
   }
 
@@ -125,6 +135,12 @@ function SignUp(props) {
           >
             Sign Up
           </Button>
+          {props.error_message && (
+            <Alert severity='error'>{props.error_message}</Alert>
+          )}
+          {validationMessage && (
+            <Alert severity='error'>{validationMessage}</Alert>
+          )}
           <Grid container justify='flex-end'>
             <Grid item>
               <Link href='/signin' variant='body2'>
@@ -143,6 +159,7 @@ function SignUp(props) {
 
 const mapStateToProps = (state) => ({
   user: state.accounts.user,
+  error_message: state.accounts.error_message,
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -152,6 +169,7 @@ const mapDispatchToProps = (dispatch) => ({
 SignUp.propTypes = {
   user: PropTypes.object,
   onSignUp: PropTypes.func,
+  error_message: PropTypes.string,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignUp)

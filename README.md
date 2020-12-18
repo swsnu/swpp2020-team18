@@ -74,7 +74,14 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-5. Make documentation [optional]
+5. Run test
+
+``` bash
+coverage run --source='.' manage.py test
+coverage report -m
+```
+
+6. Make documentation [optional]
 
 ``` bash
 cd backend/docs
@@ -87,6 +94,7 @@ make html
 1. Install dependencies
 
 ``` bash
+cd swpp2020-team18/frontend
 yarn
 ```
 
@@ -94,4 +102,10 @@ yarn
 
 ``` bash
 yarn start
+```
+
+3. Run test
+
+``` bash
+yarn test --coverage --watchAll=false
 ```
