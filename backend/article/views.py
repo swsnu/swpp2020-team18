@@ -17,8 +17,10 @@ from .models import Article
 from accounts.views import *
 from wordlist.models import Word, Phrase, Wordlist, WordlistPhrase
 from wordtest.models import History, HistoryWord
+from django.views.decorators.csrf import csrf_exempt
 
-@login_required
+# @login_required
+@csrf_exempt
 def article_one(request, article_id):
     """
     Return requested article in JSON format.

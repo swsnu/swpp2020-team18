@@ -103,7 +103,8 @@ def signup(request):
         return HttpResponseNotAllowed(["POST"])
 
 
-@ensure_csrf_cookie
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt
 def signin(request):
     """
     Log in to the provided account.

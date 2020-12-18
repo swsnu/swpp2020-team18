@@ -172,6 +172,9 @@ def get_readability_vector(user):
 
 
 def get_recommendation_list(user):
+    if Article.objects.all().count() == 0 or User.objects.all().count == 0:
+        return []
+
     rv = get_readability_vector(user)
     rv_list = rv.tolist()
     idx_sorted = sorted(range(len(rv_list)), key=lambda k: rv_list[k])
