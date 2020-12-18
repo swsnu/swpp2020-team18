@@ -75,6 +75,70 @@ class WordtestTestCase(TestCase):
             content_type="application/json"
         )
         self.assertEqual(response.status_code, 404)
+    
+    def test_history_patch(self):
+        """
+        Test get method of api/wordlist
+        """
+        client = Client()
+        client.login(email="testuser1@test.com", password="TEST_PASSWORD_1")
+        response = client.patch(
+            "/api/wordtest/",
+            json.dumps({"words": ["example"], "answers": ["예시"], "type": "new"}),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_history_patch_review(self):
+        """
+        Test get method of api/wordlist
+        """
+        client = Client()
+        client.login(email="testuser1@test.com", password="TEST_PASSWORD_1")
+        response = client.patch(
+            "/api/wordtest/",
+            json.dumps({"words": ["example"], "answers": ["예시"], "type": "review"}),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_history_patch_not_existing_word(self):
+        """
+        Test get method of api/wordlist
+        """
+        client = Client()
+        client.login(email="testuser1@test.com", password="TEST_PASSWORD_1")
+        response = client.patch(
+            "/api/wordtest/",
+            json.dumps({"words": ["없음"], "answers": ["없음"], "type": "new"}),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_history_patch_wrong_method(self):
+        """
+        Test get method of api/wordlist
+        """
+        client = Client()
+        client.login(email="testuser1@test.com", password="TEST_PASSWORD_1")
+        response = client.put(
+            "/api/wordtest/",
+            json.dumps({"words": ["example"], "answers": ["예시"], "type": "review"}),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 405)
+
+    def test_history_patch_not_logged_in(self):
+        """
+        Test get method of api/wordlist
+        """
+        client = Client()
+        response = client.patch(
+            "/api/wordtest/",
+            json.dumps({"words": ["example"], "answers": ["예시"], "type": "review"}),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 401)
 
     def test_review_test_get(self):
         client = Client()
