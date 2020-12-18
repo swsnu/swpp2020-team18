@@ -80,6 +80,8 @@ function LevelTestResult(props) {
     return <Redirect to='/signin' />
   }
 
+  console.log(props.result)
+
   return (
     <div>
       <CustomAppBar />

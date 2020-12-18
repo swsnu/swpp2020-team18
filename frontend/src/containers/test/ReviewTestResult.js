@@ -76,6 +76,8 @@ function ReviewTestResult(props) {
   const classes = useStyles()
   const history = useHistory()
 
+  console.log(props.result)
+
   if (!props.user) {
     return <Redirect to='/signin' />
   }

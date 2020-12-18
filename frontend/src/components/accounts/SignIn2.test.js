@@ -10,8 +10,7 @@ import { Route, Switch } from 'react-router-dom'
 import { createMount } from '@material-ui/core/test-utils'
 
 const stubInitialState = {
-  user: null,
-  error_message: 'dddfd',
+  user: { username: 'sss' },
 }
 
 const mockStore = getMockStore(stubInitialState)
@@ -37,32 +36,6 @@ describe('<SignIn />', () => {
     const component = mount(signIn)
     // console.log(component.debug())
     const wrapper = component.find('SignIn')
-    expect(wrapper.length).toBe(1)
-  })
-
-  it('should change input values', () => {
-    const component = mount(signIn)
-    // console.log(component.debug())
-    const wrapper = component.find('input#password')
-    wrapper.simulate('change', { target: { value: 'Hello' } })
-    const wrapper2 = component.find('input#email')
-    wrapper2.simulate('change', { target: { value: 'ee@ee.com' } })
-    expect(wrapper.length).toBe(1)
-  })
-
-  it('should click forgot password', () => {
-    const component = mount(signIn)
-    // console.log(component.debug())
-    const wrapper = component.find('a#forgot-password')
-    wrapper.simulate('click')
-    expect(wrapper.length).toBe(1)
-  })
-
-  it('should render without errors', () => {
-    const component = mount(signIn)
-    // console.log(component.debug())
-    const wrapper = component.find('button')
-    wrapper.simulate('click')
     expect(wrapper.length).toBe(1)
   })
 })

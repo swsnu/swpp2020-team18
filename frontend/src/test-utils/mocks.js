@@ -20,6 +20,9 @@ export const getMockStore = (initialState) => {
   const mockReducer = getMockReducer(initialState)
   const rootReducer = combineReducers({
     accounts: mockReducer,
+    article: mockReducer,
+    wordlist: mockReducer,
+    wordtest: mockReducer,
     router: connectRouter(history),
   })
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose

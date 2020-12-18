@@ -106,6 +106,7 @@ function SignIn(props) {
           <Grid container>
             <Grid item xs>
               <Link
+                id='forgot-password'
                 onClick={() =>
                   setMessage('Please send email to sjosjo1204@gmail.com')
                 }
