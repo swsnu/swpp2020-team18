@@ -5,7 +5,7 @@ import json
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from .models import Phrase, Wordlist, Word
-
+from wordtest.models import History, HistoryWord
 
 User = get_user_model()
 
@@ -29,6 +29,8 @@ class WordlistTestCase(TestCase):
         phrase_to_add = Phrase(content="example sentence to add", word=word)
         phrase_to_add.save()
         user.wordlist.added_phrase.add(phrase)
+        history = History.objects.first()
+        history.learned_word.add(word)
 
     # model test
     def test_phrase_print(self):
