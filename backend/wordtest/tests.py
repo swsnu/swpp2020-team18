@@ -23,6 +23,10 @@ class WordtestTestCase(TestCase):
         )
         word = Word(content="example", korean_meaning="예시", difficulty=1)
         word.save()
+        word1 = Word(content="example1", korean_meaning="예시1", difficulty=1)
+        word1.save()
+        word2 = Word(content="example2", korean_meaning="예시2", difficulty=1)
+        word2.save()
         phrase = Phrase(content="example sentence", word=word)
         phrase.save()
         phrase1 = Phrase(content="example sentence1", word=word)
@@ -48,7 +52,19 @@ class WordtestTestCase(TestCase):
         user.wordlist.added_phrase.add(phrase)
         history = History.objects.first()
         history.learned_word.add(word)
+        history.learned_word.add(word2)
+        hw = HistoryWord.objects.get(word=word2, history=history)
+        hw.confidence = 5
+        hw.save()
 
+    def test_history_print(self):
+        """
+        Test history model
+        """
+        history = History.objects.first()
+        self.assertEqual(
+            str(history), f"{str(history.user.username)}의 학습 데이터"
+        )
 
     def test_history_post(self):
         """
@@ -88,6 +104,73 @@ class WordtestTestCase(TestCase):
             content_type="application/json"
         )
         self.assertEqual(response.status_code, 200)
+
+    def test_history_patch_not_added_in_history(self):
+        """
+        Test get method of api/wordlist
+        """
+        client = Client()
+        client.login(email="testuser1@test.com", password="TEST_PASSWORD_1")
+        response = client.patch(
+            "/api/wordtest/",
+            json.dumps({"words": ["example1"], "answers": ["예시1"], "type": "new"}),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_history_patch_not_added_in_history_new_to_article(self):
+        """
+        Test get method of api/wordlist
+        """
+        client = Client()
+        client.login(email="testuser1@test.com", password="TEST_PASSWORD_1")
+        response = client.patch(
+            "/api/wordtest/",
+            json.dumps({"words": ["example2"], "answers": ["예시2"], "type": "new"}),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_history_patch_not_added_in_history_wrong_type_param(self):
+        """
+        Test get method of api/wordlist
+        """
+        client = Client()
+        client.login(email="testuser1@test.com", password="TEST_PASSWORD_1")
+        response = client.patch(
+            "/api/wordtest/",
+            json.dumps({"words": ["example2"], "answers": ["예시2"], "type": "awsome"}),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_history_patch_wrong_answer(self):
+        """
+        Test get method of api/wordlist
+        """
+        client = Client()
+        client.login(email="testuser1@test.com", password="TEST_PASSWORD_1")
+        response = client.patch(
+            "/api/wordtest/",
+            json.dumps({"words": ["example2"], "answers": ["하하하"], "type": "new"}),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_history_patch_wrong_answer_review(self):
+        """
+        Test get method of api/wordlist
+        """
+        client = Client()
+        client.login(email="testuser1@test.com", password="TEST_PASSWORD_1")
+        response = client.patch(
+            "/api/wordtest/",
+            json.dumps({"words": ["example2"], "answers": ["하하하"], "type": "review"}),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+
+
 
     def test_history_patch_review(self):
         """

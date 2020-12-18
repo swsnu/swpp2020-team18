@@ -205,3 +205,37 @@ class AccountsTestCase(TestCase):
 
         response = client2.get("/api/accounts/signout")
         self.assertEqual(response.status_code, 204)
+
+    def test_user_scores(self):
+        client = Client()
+        client.login(email="testuser1@test.com", password="TEST_PASSWORD_1")
+        response = client.get("/api/accounts/scores")
+        self.assertEqual(response.status_code, 200)
+
+    def test_user_scores_wrong_method(self):
+        client = Client()
+        client.login(email="testuser1@test.com", password="TEST_PASSWORD_1")
+        response = client.delete("/api/accounts/scores")
+        self.assertEqual(response.status_code, 405)
+
+    def test_user_scores_not_logged_in(self):
+        client = Client()
+        response = client.get("/api/accounts/scores")
+        self.assertEqual(response.status_code, 302)
+
+    def test_user_ranking(self):
+        client = Client()
+        client.login(email="testuser1@test.com", password="TEST_PASSWORD_1")
+        response = client.get("/api/accounts/ranking")
+        self.assertEqual(response.status_code, 200)
+
+    def test_user_ranking_wrong_method(self):
+        client = Client()
+        client.login(email="testuser1@test.com", password="TEST_PASSWORD_1")
+        response = client.delete("/api/accounts/ranking")
+        self.assertEqual(response.status_code, 405)
+
+    def test_user_ranking_not_logged_in(self):
+        client = Client()
+        response = client.get("/api/accounts/ranking")
+        self.assertEqual(response.status_code, 302)

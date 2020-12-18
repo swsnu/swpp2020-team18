@@ -61,8 +61,6 @@ def history(request):
                         correct_answer_count += 1
                         is_correct = True
                     else:
-                        print(found_word.korean_meaning)
-                        print(answer_data)
                         history_word.confidence = 1
                 elif test_type == "review":
                     if found_word.korean_meaning == answer_data:
