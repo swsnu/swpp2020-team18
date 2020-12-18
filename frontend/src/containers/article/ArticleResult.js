@@ -147,6 +147,8 @@ function ArticleResult(props) {
 
   // console.log(arr)
 
+  console.log(props.result)
+
   console.log('Render ArticleResult!')
 
   return (
